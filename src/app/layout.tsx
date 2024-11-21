@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { useState } from "react";
 import Link from 'next/link'
 import localFont from "next/font/local";
-import Navbar from "./components/Navbar";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -33,13 +32,10 @@ export default function RootLayout({
       <body>
       <div style={{ height: "100px", background: "red"}}>
         <div>
+      <Link href="/"></Link>
       <Link href="/portfolio">Portfolio</Link>
-      <Link href="/dashboard/analytics">analytics</Link>
-      <Link href="/dashboard/settings/profile">profile</Link>
-      <Link href="/dashboard/settings/password">password</Link>
         </div>
       <div>
-        <Navbar />
       </div>
       </div>
       {children}
