@@ -1,19 +1,17 @@
 "use client";
 import { useState } from "react";
-import Link from 'next/link'
-
-
+import Link from "next/link";
 export default function Navbar() {
   const [cities, setCities] = useState(["paris", "london"]);
   const [value, setValue] = useState("");
   const handleChange = (e) => {
     setValue(e.target.value);
-  }
+  };
   const handleSubmit = (e) => {
-    e.preventDefault()
-    setCities([...cities, value])
-    setValue("")
-  }
+    e.preventDefault();
+    setCities([...cities, value]);
+    setValue("");
+  };
   return (
     <div>
         <form onSubmit={handleSubmit}>
@@ -25,12 +23,9 @@ export default function Navbar() {
       {cities.map((city) => (
         <li key={city}>
          <Link href={`/city/${city}`}>{city.toUpperCase()}</Link>   
-        </li>
-        
+        </li>        
       ))}
       </ul>
-    </div>
-    
-      
+    </div>      
   );
 }
