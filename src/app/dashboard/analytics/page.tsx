@@ -1,8 +1,7 @@
-export default function City({ params }: { params: { cityId: string }}) {
+export default function City() {
     return (
       <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-       
-       Analytics Page
+        Analytics Page
       </div>
-    )
+    );
   }
