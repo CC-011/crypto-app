@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+console.log("hello")
 export default function Navbar() {
   const [cities, setCities] = useState(["paris", "london"]);
   const [value, setValue] = useState("");
