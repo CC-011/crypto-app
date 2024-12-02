@@ -4,10 +4,10 @@ import Link from "next/link";
 export default function Navbar() {
   const [cities, setCities] = useState(["paris", "london"]);
   const [value, setValue] = useState("");
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setValue(e.target.value);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     setCities([...cities, value]);
     setValue("");
