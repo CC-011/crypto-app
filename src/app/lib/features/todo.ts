@@ -8,11 +8,9 @@ type Todo = {
 
 type TodosState = Todo[];
 
-const initialState: TodosState = [];
-
 export const todosSlice = createSlice({
   name: "todos",
-  initialState,
+  initialState: [] as TodosState,
   reducers: {
     addTodo: (state, action: PayloadAction<string>) => {
       const newTodo: Todo = {

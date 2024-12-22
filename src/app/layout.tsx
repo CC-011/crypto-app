@@ -17,6 +17,7 @@ export default function RootLayout({
         <div>
       <Link href="/"></Link>
       <Link href="/portfolio">Portfolio</Link>
+      <Link href="/coins">Coins</Link>
         </div>
       <div>
       </div>
