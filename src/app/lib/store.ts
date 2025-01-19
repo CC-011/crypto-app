@@ -1,15 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
-import todosReducer from "./features/todo"; // Adjust the path as needed
-import userSlice from "./features/coins"; // Adjust the path as needed
-
+import todosReducer from "./features/todo"; 
+import userSlice from "./features/coins"; 
+import marketSlice from "../marketdata/marketdatacap";
 const store = configureStore({
   reducer: {
-    todos: todosReducer, // Add todos slice
-    user: userSlice,   // Add user slice
+    todos: todosReducer, 
+    user: userSlice,   
+    market: marketSlice
   },
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
