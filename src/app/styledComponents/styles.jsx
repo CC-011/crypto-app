@@ -126,6 +126,11 @@ gap: 0px;
 border: solid white 1px;
 opacity: 0px;
 `;
+
+const Flex = style.div`
+display: flex;
+`;
+
 export { 
     SearchBar, 
     Currency, 
@@ -145,5 +150,6 @@ export {
      MarketDataEth,
      GlobalStyle,
      darktheme,
-     lightheme
+     lightheme,
+     Flex
  };
