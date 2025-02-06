@@ -3,12 +3,14 @@ import todosReducer from "./features/todo";
 import userSlice from "./features/coins"; 
 import marketSlice from "../marketdata/marketdatacap";
 import chartSlice from "../landingPageChart/landingPageChart";
+import tableSlice from "../tableChart/table";
 const store = configureStore({
   reducer: {
     todos: todosReducer, 
     user: userSlice,   
     market: marketSlice,
-    chart: chartSlice
+    chart: chartSlice,
+    table: tableSlice
   },
 });
 

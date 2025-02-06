@@ -131,6 +131,22 @@ const Flex = style.div`
 display: flex;
 `;
 
+const ContainerForTableChart = style.div`
+display: flex;
+justify-content: center;
+`;
+
+const Table = style.table`
+overflow: hidden;
+width: 85pc;
+`;
+
+const TableCaption = style.caption`
+font-size: 30px;
+font-style: bold;
+color: white;
+`;
+
 export { 
     SearchBar, 
     Currency, 
@@ -151,5 +167,8 @@ export {
      GlobalStyle,
      darktheme,
      lightheme,
-     Flex
+     Flex,
+     Table,
+     ContainerForTableChart,
+     TableCaption
  };
