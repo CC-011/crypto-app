@@ -138,7 +138,7 @@ justify-content: center;
 
 const Table = style.table`
 overflow: hidden;
-width: 85pc;
+width: 65pc;
 `;
 
 const TableCaption = style.caption`
@@ -147,28 +147,58 @@ font-style: bold;
 color: white;
 `;
 
+const  Container = style.div`
+    height: .8rem;
+    width: ${({ width }) => width}%;
+    background-color: #2172E5;
+    position: relative;
+    border-radius: 10px;
+    margin: auto 0;
+    overflow: hidden;
+    border:none;
+    margin-right: auto;
+`;
+
+const BaseBox = style.div`
+    height: 100%;
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 5px;
+    border:none;
+`;
+
+const Progress = style(BaseBox)`
+    background: #FFFFFF;
+    width: ${({ percent }) => percent}%;
+    min-width: ${({ percent }) => percent < 2 ? "2" : percent}%;
+    `;
+
 export { 
     SearchBar, 
     Currency, 
     ThemeButton, 
     Profile, 
     NavbarContainer,
-     NavBarRight, 
-     Text, 
-     NavBarLeft, 
-     Img, 
-     MarketDataContainer,
-     MarketDataCoins,
-     MarketDataExchange,
-     MarketDataCap,
-     MarketDataVolume,
-     MarketDataBtc,
-     MarketDataEth,
-     GlobalStyle,
-     darktheme,
-     lightheme,
-     Flex,
-     Table,
-     ContainerForTableChart,
-     TableCaption
+    NavBarRight, 
+    Text, 
+    NavBarLeft, 
+    Img, 
+    MarketDataContainer,
+    MarketDataCoins,
+    MarketDataExchange,
+    MarketDataCap,
+    MarketDataVolume,
+    MarketDataBtc,
+    MarketDataEth,
+    GlobalStyle,
+    darktheme,
+    lightheme,
+    Flex,
+    Table,
+    ContainerForTableChart,
+    TableCaption,
+    Progress,
+    Container
  };

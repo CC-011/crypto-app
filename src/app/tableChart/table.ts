@@ -15,6 +15,11 @@ interface tableChartData {
     price_change_percentage_7d_in_currency: number,
     market_cap_change_24h: number,
     circulating_supply: number,
+    total_volume: number,
+    market_cap: number,
+    total_supply: number,
+    current_price: number,
+    price_change_percentage_24h: number
     sparkline_in_7d: {
      price: number[]
     }

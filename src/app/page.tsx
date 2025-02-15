@@ -5,15 +5,16 @@ import { useSelector } from "react-redux";
 import { RootState } from "./lib/store";
 import { fetchChartData } from "./landingPageChart/landingPageChart";
 import { fetchTableChart } from "./tableChart/table";
-import { Line } from "react-chartjs-2";
+import { Line, Chart } from "react-chartjs-2";
 import { 
   Flex, 
   ContainerForTableChart,
   Table,
-  TableCaption
+  TableCaption,
+  Progress,
+  Container
  } from "./styledComponents/styles";
 import Image from "next/image";
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,6 +25,9 @@ import {
   Tooltip,
   Legend,
   Filler, 
+  registerables,
+  ChartOptions,
+  ChartData
 } from "chart.js";
 
 ChartJS.register(
@@ -34,7 +38,8 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  ...registerables
 );
 import {
   TableBody,
@@ -49,7 +54,6 @@ function List () {
   const dispatch = useAppDispatch();
   const { chartData } = useSelector((state: RootState) => state.chart);
   const { tableChart } = useSelector((state: RootState) => state.table);
-
   useEffect(() => {
     dispatch(fetchChartData());
   }, [dispatch]); 
@@ -57,7 +61,7 @@ function List () {
   useEffect(() => {
     dispatch(fetchTableChart());
   }, [dispatch]);
-
+ 
   const chartDataL = {
     labels: chartData?.prices.map((data) => new Date(data[0] / 1000).getHours()), 
     datasets: [
@@ -68,14 +72,13 @@ function List () {
         backgroundColor: "rgba(75, 192, 192, 0.2)", 
        borderColor: "rgba(75, 192, 192, 1)", 
        borderWidth: 2,
-        tension: 0.4,  
+        tension: 0.9,  
       },
     ],
   };
   
   const options = {
     responsive: true,
-    maintainAspectRatio: false,
     scales: {
       x: {
         title: {
@@ -102,21 +105,63 @@ function List () {
       },
     ],
   };
-  const tableChartForCoins = {
-    labels:  tableChart?.map((data: any, i: any) =>  i),
-    datasets: [
-      {
-        data: tableChart?.map((data: any) => data.sparkline_in_7d.price),
-        fill: false,
-        label: "Volume traded",
-        backgroundColor: "rgba(75, 192, 192, 0.6)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        tension: 0.4,
-      },
-    ],
-  }; 
 
+  interface TablePropsData {
+    dataProp?: number[];
+  }
+
+  const TableChartForCoins = ({ dataProp = [] }: TablePropsData) => {
+    
+    const chartData: ChartData<"line"> = { 
+      labels: dataProp.map((data,_) => _),
+      datasets: [
+        {
+          data: dataProp.map((data) => data),
+          fill: false,
+          label: "Dataset",
+          backgroundColor: "black",
+          borderWidth: 4,
+          borderColor: "red",
+          tension: 0.5,
+          pointStyle: false,
+        },
+      ],
+    };
+  
+    const options: ChartOptions<"line"> = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        x: { display: false },
+        y: {
+          display: false,
+          beginAtZero: true,
+        },
+      },
+    };
+  
+    return <Chart type="line" data={chartData} options={options} />;
+  };
+
+  interface marketData {
+    marketNumbers: number
+  }
+
+   const ShowMarketNumbersInCompactForm = ({ marketNumbers }: marketData) => {
    return (
+    <>
+      {new Intl.NumberFormat("en-US", { notation: "compact",
+  compactDisplay: "short",} ).format(marketNumbers)}
+    </>
+   );
+   };
+   
+  return (
     <div>
       <Flex style={{
         width: 700,
@@ -145,22 +190,57 @@ function List () {
       <TableBody>
 {tableChart?.map((data) => (
           <TableRow key={data.id}>
-            
             <TableCell className="font-medium">{data.name}
-             <Image src={data.image} alt="Image not found" height={30} width={30}/> 
+            <Image src={data.image} alt="Image not found" height={30} width={30}/>
             </TableCell>
-            <TableCell>{data.high_24h}</TableCell>
-            <TableCell>{data.price_change_percentage_1h_in_currency}</TableCell>
-            <TableCell className="text-right">{data.price_change_24h}</TableCell>
-            <TableCell className="text-right">{data.price_change_percentage_7d_in_currency}</TableCell>
-            <TableCell className="text-right">{data.market_cap_change_24h}</TableCell>
-            <TableCell className="text-right">{data.circulating_supply}</TableCell>
+            <TableCell>{new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(data.current_price)}
+            </TableCell>
+             <TableCell style={{ 
+              color: data.price_change_percentage_1h_in_currency >= 0 ? "#00FC2A" : "#FE1040",
+             }}>
+             {data.price_change_percentage_1h_in_currency >= 0 ? <svg xmlns="http://www.w3.org/2000/svg" fill="#00FC2A" viewBox="0 0 24 24" strokeWidth={0} stroke="currentColor" className="size-6"> <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" /> </svg> : <svg xmlns="http://www.w3.org/2000/svg" fill="#FE1040" viewBox="0 0 24 24" strokeWidth={0} stroke="currentColor" className="size-6"> <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /> </svg>}  
+              {Math.abs(data.price_change_percentage_1h_in_currency).toFixed(2)}% 
+             </TableCell>
+                <TableCell style={{
+                color: data.price_change_percentage_24h >= 0 ? "#00FC2A" : "#FE1040",
+              }}>
+                {data.price_change_percentage_24h >= 0 ? <svg xmlns="http://www.w3.org/2000/svg" fill="#00FC2A" viewBox="0 0 24 24" strokeWidth={0} stroke="currentColor" className="size-6"> <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" /> </svg> : <svg xmlns="http://www.w3.org/2000/svg" fill="#FE1040" viewBox="0 0 24 24" strokeWidth={0} stroke="currentColor" className="size-6"> <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /> </svg>}
+                {Math.abs(data.price_change_percentage_24h).toFixed(2)}%  
+                </TableCell>
+              <TableCell style={{ 
+                color: data.price_change_percentage_7d_in_currency >= 0 ? "#00FC2A" : "#FE1040",
+             }}>
+              {data.price_change_percentage_7d_in_currency >= 0 ? <svg xmlns="http://www.w3.org/2000/svg" fill="#00FC2A" viewBox="0 0 24 24" strokeWidth={0} stroke="currentColor" className="size-6"> <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" /> </svg> : <svg xmlns="http://www.w3.org/2000/svg" fill="#FE1040" viewBox="0 0 24 24" strokeWidth={0} stroke="currentColor" className="size-6"> <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" /> </svg>} 
+              {Math.abs(data.price_change_percentage_7d_in_currency).toFixed(2)}%     
+              </TableCell>
+            <TableCell>
+           <ShowMarketNumbersInCompactForm marketNumbers={data?.total_volume} /> 
+           -
+           <ShowMarketNumbersInCompactForm marketNumbers={data?.market_cap} /> 
+            <Container style={{
+              width: 100
+            }} >
+            <Progress style={{
+              width: data.total_volume / data.market_cap * 100 }} />
+            </Container>
+            </TableCell>
+            <TableCell>
+            <ShowMarketNumbersInCompactForm marketNumbers={data?.circulating_supply} />
+            -
+            <ShowMarketNumbersInCompactForm marketNumbers={data?.total_supply} /> 
+              <Container style={{
+              width: 100
+            }} >
+                <Progress style={{
+                 width: data.circulating_supply / data.total_volume * 100
+                }} />
+              </Container>
+            </TableCell>
             <TableCell>
             <div style={{
-        width: 150,
-        height: 150}}>
-            <Line 
-          data={tableChartForCoins} options={options}  />
+        width: 200,
+        height: 200}}>
+            <TableChartForCoins dataProp={data?.sparkline_in_7d.price} />
           </div>
           </TableCell>
           </TableRow>

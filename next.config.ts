@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "coin-images.coingecko.com",
         port: "",
-        pathname: "/coins/images/**", // Corrected to allow all CoinGecko coin images
+        pathname: "/coins/images/**", 
       },
     ],
   },
