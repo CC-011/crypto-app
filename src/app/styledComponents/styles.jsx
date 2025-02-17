@@ -147,7 +147,7 @@ font-style: bold;
 color: white;
 `;
 
-const  Container = style.div`
+const Container = style.div`
     height: .8rem;
     width: ${({ width }) => width}%;
     background-color: #2172E5;

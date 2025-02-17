@@ -3,7 +3,6 @@ interface marketData {
 }
 
 const ShowMarketNumbersInCompactForm = ({ marketNumbers }: marketData) => {
-  //const compact = {new Intl.NumberFormat("en-US", { notation: "compact", compactDisplay: "short", }).format(marketNumbers)}
   return new Intl.NumberFormat("en-US", {
     notation: "compact",
     compactDisplay: "short",

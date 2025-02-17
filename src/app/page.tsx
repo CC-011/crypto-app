@@ -9,7 +9,7 @@ import { Line, Chart } from "react-chartjs-2";
 import {
   ShowMarketNumbersInCompactForm,
   ShowCoinPricesInUsDollars,
-} from "./FormatNumbers/formatnumbers";
+} from "./Utils/formatNumbers";
 import {
   Flex,
   ContainerForTableChart,
