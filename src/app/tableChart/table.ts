@@ -1,6 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-export const fetchTableChart = createAsyncThunk("table/fetchTableData", async() => {
-    const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d");
+
+interface inputValues {
+    defaultMarket: string,
+    chartCurrencyEPage: string
+}
+
+export const fetchTableChart = createAsyncThunk("table/fetchTableData", async({defaultMarket, chartCurrencyEPage}: inputValues) => {
+    const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${chartCurrencyEPage}&order=${defaultMarket}&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`);
     const jsonData = await response.json();
     return jsonData;
 });
@@ -9,6 +15,7 @@ interface tableChartData {
     name: string,
     id: number,
     image: string,
+    symbol: string,
     high_24h: number,
     price_change_percentage_1h_in_currency: number,
     price_change_24h: number,

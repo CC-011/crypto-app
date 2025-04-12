@@ -1,8 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+interface inputValues {
+  chartNameEPage: string,
+  chartCurrencyEPage: string
+}
+
 export const fetchChartData = createAsyncThunk("chart/fetchChartData",
-async() => {
-const response = await fetch("https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=180&interval=daily");
+async({chartNameEPage, chartCurrencyEPage}: inputValues) => {
+const response = await fetch(`https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=180&interval=daily`);
 const jsonData = await response.json();
 return jsonData;
 });

@@ -1,3 +1,4 @@
+import { CardDescription } from "@/components/ui/card";
 import type { Config } from "tailwindcss";
 
 export default {
@@ -12,6 +13,29 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			primarycard: {
+				DEFAULT: 'hsl(var(--primarycard))',
+				foreground: 'hsl(var(--primarycardforeground))'
+			},
+			copybutton: {
+				DEFAULT: 'hsl(var(--copybutton))',
+				foreground: 'hsl(var(--copy-button-foreground))'
+			},
+			carouselBackground: {
+				DEFAULT: 'hsl(var(--carouselBackground))'
+			},
+			popup: {
+				DEFAULT: 'hsl(var(--popup))',
+				foreground: 'hsl(var(--popup-foreground))'
+			},
+			navbar: {
+				DEFAULT: 'hsl(var(--navbar))',
+				foreground: 'hsl(var(--foreground))',
+			},
+			progressbar: {
+				DEFAULT: 'hsl(var(--progressbar))',
+				foreground: 'hsl(var(--progressbar-foreground))'
+			},
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
@@ -56,7 +80,8 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		}
-  	}
+  	},
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+

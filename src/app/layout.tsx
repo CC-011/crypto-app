@@ -1,57 +1,38 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import StoreProvider from "./StoreProvided";
 import List from "./navbarComponent/navbar";
-import { ThemeProvider } from "styled-components";
-import {
-  SearchBar,
-  Currency,
-  ThemeButton,
-  Profile,
-  NavbarContainer,
-  NavBarRight,
-  NavBarLeft,
-  Img,
-  GlobalStyle,
-  lightheme,
-  darktheme
-} from "./styledComponents/styles";
+import { ThemeProvider } from "../components/ui/theme-provider";
+import { Theme } from "./navbarComponent/theme-settings";
+import { Card } from "@/components/ui/card";
 import "./globals.css";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) { 
-  const [Light, setLight] = useState(false);
+}>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-      <StoreProvider>
-        <ThemeProvider theme={Light ? lightheme : darktheme }>
-          <GlobalStyle />
-        <div>
-          <List />
-          <NavbarContainer>
-            <NavBarRight>
-              <Img src="https://i.ibb.co/f4HZnZF/Logoipsm.png">
-              </Img>
-              Logoisum
-            </NavBarRight>
-            <NavBarLeft>
-              <SearchBar type="search" placeholder="search" />
-              <Currency></Currency>
-              <ThemeButton onClick={() => setLight(!Light)}>{Light ? "light" : "dark"}</ThemeButton>
-              <Profile></Profile>
-            </NavBarLeft>
-          </NavbarContainer>
-          <Link href="/"></Link>
-          <Link href="/portfolio">Portfolio</Link>
-          <Link href="/coins">Coins</Link> 
-        </div>
-        {children}
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider attribute="class" disableTransitionOnChange>
+            <div>
+              <List />
+              <div className="coinLandingPageContainer">
+                <Theme />
+              </div>
+              <div className="coinsButton">
+                <div className="coinLandingPage">
+                  <Card>
+                    <Link href="/coins">Coins</Link>
+                  </Card>
+                </div>
+              </div>
+            </div>
+            {children}
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

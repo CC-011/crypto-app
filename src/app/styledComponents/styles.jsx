@@ -5,13 +5,13 @@ import style, {
   
 const MarketDataContainer = style.div`
 display: flex;
-gap: 20px;
 justify-content: center;
+gap: 20px;
 `;
 const darktheme = {
     red: "#B80C09",
     blue: "#0B4F6C",
-    main: "#040F16",
+    main: "#13121A",
     secondary: "#FBFBFF"
   };
   
@@ -23,11 +23,12 @@ const darktheme = {
   };
   
   const GlobalStyle = createGlobalStyle`
-    body {
+
+  body {
       margin: 0;
-      background: ${(props) => props.theme.main};
+      background: ${(props) => props.theme.main} ;
     }
-  
+    
     ul {
       list-style: none;
       padding: 0;
@@ -38,28 +39,35 @@ const darktheme = {
       margin: 0;
     }
   
-    * {
+   * {
         font-family: sans-serif;
         color: ${(props) => props.theme.secondary};
     }
   `;
 const MarketDataCoins = style.div`
 display: flex;
+padding-right: 40px;
 `;
 const MarketDataExchange = style.div`
 display: flex;
+gap: 10px;
 `;
 const MarketDataCap = style.div`
 display: flex;
+gap: 10px;
+padding-right: 40px;
 `;
 const MarketDataVolume = style.div`
 display: flex;
+gap: 10px;
 `;
 const MarketDataBtc = style.div`
 display: flex;
+gap: 10px;
 `;
 const MarketDataEth = style.div`
 display: flex;
+gap: 10px;
 `;
 
 const NavbarContainer = style.div`
@@ -123,7 +131,6 @@ const Profile = style.div`
 width: 40px;
 height: 40px;
 gap: 0px;
-border: solid white 1px;
 opacity: 0px;
 `;
 
@@ -137,8 +144,7 @@ justify-content: center;
 `;
 
 const Table = style.table`
-overflow: hidden;
-width: 65pc;
+
 `;
 
 const TableCaption = style.caption`
@@ -148,9 +154,9 @@ color: white;
 `;
 
 const Container = style.div`
-    height: .8rem;
+    height: 6px;
     width: ${({ width }) => width}%;
-    background-color: #2172E5;
+    background-color: grey;
     position: relative;
     border-radius: 10px;
     margin: auto 0;
@@ -170,7 +176,7 @@ const BaseBox = style.div`
 `;
 
 const Progress = style(BaseBox)`
-    background: #FFFFFF;
+    background: rgba(0, 177, 167, 1);
     width: ${({ percent }) => percent}%;
     min-width: ${({ percent }) => percent < 2 ? "2" : percent}%;
     `;
