@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-export const fetchIndividuallCoinInfo = createAsyncThunk("coin/fetchIndividuallCoinInfo", async( data: string ) => {
+export const fetchIndividualCoinInfo = createAsyncThunk("coin/fetchIndividualCoinInfo", async( data: string ) => {
     const response = await fetch(`https://api.coingecko.com/api/v3/coins/${data}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=false&sparkline=false`);
     const jsonData = await response.json();
     return jsonData;
@@ -19,13 +19,13 @@ interface IndividualCoinInfo {
     error: string
 }
 
-interface fetchIndividualCoinInfo {
+interface fetchIndividualCoinInfoPage {
     coinDescription: IndividualCoinInfo | null,
     loading: boolean,
     error: string | null 
 }
 
-const initialState: fetchIndividualCoinInfo = {
+const initialState: fetchIndividualCoinInfoPage = {
     coinDescription: null,
     loading: false,
     error: null
@@ -37,10 +37,10 @@ export const coinDescriptionSlice = createSlice({
   reducers: {},
     extraReducers: (builder) => {
        builder
-       .addCase(fetchIndividuallCoinInfo.pending, (state) => {
+       .addCase(fetchIndividualCoinInfo.pending, (state) => {
            state.loading = true;
        })
-       .addCase(fetchIndividuallCoinInfo.fulfilled, (state, action) => {
+       .addCase(fetchIndividualCoinInfo.fulfilled, (state, action) => {
            state.loading = false;
            state.coinDescription = action.payload;
        });

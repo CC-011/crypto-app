@@ -8,10 +8,10 @@ import { fetchChartData } from "./landingPageChart/landingPageChart";
 import { fetchTableChart } from "./tableChart/table";
 import { useState } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart } from "recharts";
+import { Progress } from "@/components/ui/progress";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -27,14 +27,6 @@ import {
   ShowMarketNumbersInCompactForm,
   ShowCoinPricesInUsDollars,
 } from "./Utils/formatNumbers";
-import {
-  Flex,
-  ContainerForTableChart,
-  Table,
-  TableCaption,
-  Progress,
-  Container,
-} from "./styledComponents/styles";
 import Image from "next/image";
 import {
   Chart as ChartJS,
@@ -63,6 +55,7 @@ ChartJS.register(
   ...registerables
 );
 import {
+  Table,
   TableBody,
   TableCell,
   TableFooter,
@@ -88,6 +81,33 @@ function List() {
     dispatch(fetchChartData({chartNameEPage, chartCurrencyEPage}));
   }, [dispatch, chartNameEPage, chartCurrencyEPage]);
 
+  interface barPercentage {
+    number: number
+  }
+
+  function ProgressCustom({number}: barPercentage) {
+    const [progress, setProgress] = React.useState(0);
+  
+    React.useEffect(() => {
+      const timer = setTimeout(() => setProgress(number), 500);
+      return () => clearTimeout(timer);
+    }, [number]);
+  
+    return <Progress value={progress} className="w-[100%]" />;
+  }
+
+  let totalDesktop = 0;
+
+  chartData?.total_volumes.forEach((data) => {
+    totalDesktop += data[0] ?? 0;
+  });
+
+  let marketCapTotal = 0;
+
+  chartData?.market_caps.forEach((data) => {
+    marketCapTotal += data[1] ?? 0;
+  });
+  
   interface TablePropsData {
     dataProp?: number[];
   }
@@ -100,11 +120,11 @@ function List() {
           data: dataProp.map((data) => data),
           fill: false,
           label: "Dataset",
-          backgroundColor: "black",
+          backgroundColor: "#39FF14",
           borderWidth: 4,
-          borderColor: "red",
-          tension: 0.5,
-          pointStyle: false,
+          borderColor: "#39FF14",
+          tension: 0.9,
+          pointRadius: 0
         },
       ],
     };
@@ -149,7 +169,7 @@ const barChartData =  months.map((month, index) => ({
     },
     mobile: {
       label: "Mobile",
-      color: "hsl(var(--chart-2))",
+      color: "#7474F2",
     },
   } satisfies ChartConfig;
 
@@ -171,18 +191,28 @@ const barChartData =  months.map((month, index) => ({
   useEffect(() => {
     dispatch(fetchTableChart({defaultMarket, chartCurrencyEPage}));
   }, [dispatch, defaultMarket, chartCurrencyEPage]);
+
+  const date = new Date();
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
   
+  const pretty = date.toLocaleDateString("en-US", options);
+
   return (
     <div className="coinLandingPageContainer">
       <div style={{ display: "flex", justifyContent: "center"}}>
-      <Carousel style={{ width: "1100px"}}>
+      <Carousel style={{ width: "1100px", margin: "100px 0px"}}>
       <CarouselContent >
         {tableChart?.map((data) => (
           <CarouselItem key={data.id}>
             <div className="bg-carouselBackground" style={{ borderRadius: "6px", paddingRight: "20px"}}>
               <Card style={{ display: "flex"}}> 
                 <div style={{ display: "flex", alignItems: "center", paddingRight: "15px"}}>
-                  <img width={35} height={35} src={data.image}/>
+                  <img width={35} height={35} src={data.image} alt="coin image"/>
                 </div>
                 <div> 
                   <div>
@@ -256,12 +286,14 @@ const barChartData =  months.map((month, index) => ({
       <CarouselNext style={{ background: "rgba(120, 120, 250, 1)"}}/>
     </Carousel>
     </div>
-      <Flex>
-    <Card style={{ width: 700}}>
+      <Card style={{ display: "flex", gap: "24px", padding: "50px" }}> 
+    <Card style={{ width: "700px", height: "460px" }} className="bg-leftChart">
       <CardHeader>
-        <CardTitle>{ChartNameBasedOnInput}({SymbolName.toLocaleUpperCase()})</CardTitle>
-        <CardDescription>      
-        </CardDescription>
+        <div style={{ display: "flex", flexDirection: "column", gap: "7px"}}>
+          <p style={{ fontSize: "20px"}}>{ChartNameBasedOnInput}({SymbolName.toLocaleUpperCase()})</p>
+          <CardTitle style={{ fontSize: "30px"}}><ShowMarketNumbersInCompactForm marketNumbers={marketCapTotal}/></CardTitle>
+          <p>{pretty}</p>
+        </div>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -328,14 +360,15 @@ const barChartData =  months.map((month, index) => ({
         </ChartContainer>
       </CardContent>
      <CardFooter>
-      
       </CardFooter> 
     </Card>
-
-    <Card style={{ width: 700}}>
+    <Card style={{ width: "700px", height: "460px"}} className="bg-barchart">
       <CardHeader>
-        <CardTitle>Volume 24h</CardTitle>
-        <CardDescription></CardDescription>
+        <div style={{ display: "flex", flexDirection: "column", gap: "7px"}}>
+          <p style={{ fontSize: "20px"}}>Volume 24h</p>
+          <CardTitle style={{ fontSize: "30px"}}><ShowMarketNumbersInCompactForm marketNumbers={totalDesktop}/></CardTitle>
+          <p>{pretty}</p>
+        </div>
       </CardHeader>
       <CardContent>
         <ChartContainer config={barChartConfig}>
@@ -358,10 +391,9 @@ const barChartData =  months.map((month, index) => ({
         </ChartContainer>
       </CardContent>
     </Card>
-      </Flex>
-      <ContainerForTableChart>
+    </Card>
+      <Card>
         <Table>
-          <TableCaption>TOP 50 BY Market CAP</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead
@@ -399,8 +431,8 @@ const barChartData =  months.map((month, index) => ({
           </TableHeader>
           <TableBody>
             {tableChart?.map((data) => (  
-               <TableRow  style={{ borderTop: "solid 4px background", borderRadius: "25px" }} className="bg-carouselBackground" key={data.id}>
-                 <TableCell style={{ display: "flex", height: "60px", alignItems: "center"}} className="font-medium">                   
+               <TableRow style={{ borderTop: "solid 10px", borderTopColor: "hsl(var(--borderTop))", borderRadius: "25px" }} className="bg-carouselBackground" key={data.id}>
+                 <TableCell style={{ display: "flex", height: "100px", alignItems: "center"}} className="font-medium">                   
                    <Image
                      src={data.image}
                      alt="Image not found"
@@ -553,6 +585,7 @@ const barChartData =  months.map((month, index) => ({
                      data.price_change_percentage_7d_in_currency
                    ).toFixed(2)}
                    %
+                  
                  </TableCell>
                  <TableCell>
                    <ShowMarketNumbersInCompactForm
@@ -562,17 +595,20 @@ const barChartData =  months.map((month, index) => ({
                    <ShowMarketNumbersInCompactForm
                      marketNumbers={data?.market_cap}
                    />
-                   <Container
+                   <Card
                      style={{
-                       width: 200,
+                      height: "10px",
+                      width: "120px",
+                      position: "relative",
+                      borderRadius: "10px",
+                      margin: "auto 0",
+                      overflow: "hidden",
+                      border: "none",
+                      marginRight: "auto"
                      }}
                    >
-                     <Progress
-                       style={{
-                         width: (data.total_volume / data.market_cap) * 100,
-                       }}
-                     />
-                   </Container>
+                    <ProgressCustom number={(data.total_volume / data.market_cap) * 100 } />
+                   </Card>
                  </TableCell>
                  <TableCell>
                    <ShowMarketNumbersInCompactForm
@@ -582,25 +618,26 @@ const barChartData =  months.map((month, index) => ({
                    <ShowMarketNumbersInCompactForm
                      marketNumbers={data?.total_supply}
                    />
-                   <Container
+                   <Card
                      style={{
-                       width: 200,
+                      height: "10px",
+                      width: "120px",
+                      position: "relative",
+                      borderRadius: "10px",
+                      margin: "auto 0",
+                      overflow: "hidden",
+                      border: "none",
+                      marginRight: "auto"
                      }}
                    >
-                     <Progress
-                       style={{
-                         width:
-                           (data.circulating_supply / data.total_volume) *
-                           100,
-                       }}
-                     />
-                   </Container>
+                     <ProgressCustom number={(data.circulating_supply / data.total_volume) * 100 } />
+                   </Card>
                  </TableCell>
                  <TableCell>
                    <div
                      style={{
-                       width: 120,
-                       height: 37,
+                       width: "120px",
+                       height: "90px",
                      }}
                    >
                      <TableChartForCoins 
@@ -608,13 +645,12 @@ const barChartData =  months.map((month, index) => ({
                      />
                    </div>
                  </TableCell>
-               </TableRow>
-               
+               </TableRow>               
              ))}
           </TableBody>
           <TableFooter></TableFooter>
         </Table> 
-        </ContainerForTableChart> 
+        </Card> 
         </div>
   );
 }

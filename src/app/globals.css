@@ -16,13 +16,21 @@ body {
   align-items: center;
   width: 90px;
 }
-  {/*
-.firstProgressBarColor {
-  background: gray;
-  width: 190px;
-} */}
 
+.bitcoin {
+  background-color: #F7931A;
+  display: flex;
+  align-items: center;
+  width: 90px;
+}
 
+.eth {
+  background-color: #849DFF;
+  display: flex;
+  align-items: center;
+  width: 90px;
+}
+  
 .navbarCoinGap {
   display: flex;
   align-items: center;
@@ -64,7 +72,7 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 220, 33%, 96%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -75,11 +83,17 @@ body {
     --primarycard: 0 0% 100%;
     --primarycardforeground: 0% 0 0;
     --copybutton: 0, 0%, 0%;
+    --borderTop: 0, 0%, 96%;
     --navbar:  240, 36%, 32%;
+    --navbarColor: 0 0% 98%; 
     --progressbar: 0, 0%, 100%;
     --progressbar-foreground: 0, 0%, 50%;
     --copy-button-foreground: 0 0% 100%;
     --carouselBackground: 223.81 -173% 100%;
+    --leftChart: 223.81 -173% 100%;
+    --bar-chart: 223.81 -173% 100%;
+    --titleCardPortfolio: 223.81 -173% 100%;
+    --infoCardPortfolio: 223.81 -173% 100%;
     --popup: 0, 0%, 100%;
     --popup-foreground: 0 0% 3.9%;
     --secondary: 0 0% 96.1%;
@@ -112,11 +126,17 @@ body {
     --primarycard: 252 33% 15%; 
     --primarycardforeground: 0.00	0.00	1.00;
     --copybutton: 0 0% 100%;
+    --borderTop: 248, 18%, 9%;
     --navbar:  252, 33%, 15%;
+    --navbarColor: 0 0% 98%;
     --progressbar: 0, 0%, 100%;
     --progressbar-foreground: 0, 0%, 50%;
     --copy-button-foreground: 0, 0%, 0%;
     --carouselBackground: 240.01 19% 12%;
+    --leftChart: 240, 33%, 15%;
+    --bar-chart: 252, 33%, 15%;
+    --titleCardPortfolio: 252, 33%, 15%;
+    --infoCardPortfolio: 240, 33%, 15%;
     --popup: 248, 18%, 9%;
     --popup-foreground: 0 0% 98%;
     --secondary: 0 0% 14.9%;

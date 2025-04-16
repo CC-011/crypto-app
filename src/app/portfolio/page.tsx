@@ -1,14 +1,13 @@
 "use client";
 import { useAppDispatch } from "@/app/lib/hooks";
-import { useSelector } from "react-redux";
-import React, { useEffect } from "react";
+import storage from "local-storage-fallback";
+import React from "react";
 import { RootState } from "../lib/store";
-import { coinPortfolioInfo } from "./portfolio";
-import { coinValueAfterPurchase } from "./uniqueCoin";
 import { coinValueDataAfterPurchase } from "./gainedValue";
+import { useSelector } from "react-redux";
 import { useState } from "react";
 import { ShowCoinPricesInUsDollars } from "../Utils/formatNumbers";
-import { Container, Progress } from "../styledComponents/styles";
+import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -17,64 +16,83 @@ function PortfolioPage() {
   const { coinAfterPurchase } = useSelector(
     (state: RootState) => state.coinAfterPurchase
   );
+
+  const { tableChart } = useSelector((state: RootState) => state.table);
+
   interface CoinEntry {
     id: string;
     date: string;
     amount: number;
   }
-  const [ar, setArr] = useState<CoinEntry[]>([]);
+
+  const [arr, setArr] = useState<CoinEntry[]>([]);
   const [name, setName] = useState("bitcoin");
   const [purchasedDate, setPurchasedDate] = useState("");
   const [purchasedAmount, setPurchasedAmount] = useState(0);
-  const [newFormatedDate, setNewFormatedDate] = useState("23-03-2025");
+  const [newFormattedDate, setNewFormattedDate] = useState("23-03-2025");
   const [showPopup, setShowPopUp] = useState(false);
+  const [filterByName, setFilterByName] = useState("");
+  const filtered = tableChart?.filter((data) =>
+    data.name.toLocaleLowerCase().startsWith(filterByName)
+  );
 
-  //setLocalStorageArray("coinAfterPurchase", coinAfterPurchase!);
-  //const mySavedcoin = getLocalStorageArray("coinAfterPurchase");
-
-  useEffect(() => {
-    dispatch(coinValueAfterPurchase({ coin: name, date: newFormatedDate }));
-  }, [dispatch, name, newFormatedDate]);
-
+  let mySavedcoin = JSON.parse(storage.getItem("coinAfterPurchase") ?? "[]");
   const fetchDataBasedOnInput = () => {
-    const noDupps = ar.reduce<{ [key: string]: { currentPrice: number } }>(
+    const noDupps = arr.reduce<{ [key: string]: { currentPrice: number } }>(
       (acc, el) => {
         if (acc[el.id]) return acc;
-        return { ...acc, [el.id]: { currentPrice: 0 } }; // This is a placeholder
+        return { ...acc, [el.id]: { currentPrice: 0 } };
       },
       {}
     );
 
-    //dispatch(coinValueAfterPurchase({ coin: name, date: newFormatedDate }));
     dispatch(
-      coinValueDataAfterPurchase({ uniqueObject: noDupps, coinArray: ar })
+      coinValueDataAfterPurchase({ uniqueObject: noDupps, coinArray: arr })
     );
+
+    storage.setItem("coinAfterPurchase", JSON.stringify(coinAfterPurchase));
   };
 
-  useEffect(() => {
-    dispatch(coinPortfolioInfo());
-  }, [dispatch]);
   const item = {
     id: name,
-    date: newFormatedDate,
+    date: newFormattedDate,
     amount: purchasedAmount,
   };
-  //const copyArray = portfolio?.filter((data) => data);
 
   const addCoin = () => {
-    const newItem = [...ar, { ...item }];
+    const newItem = [...arr, { ...item }];
     setArr(newItem);
   };
 
   const splitted = purchasedDate.split("-");
   const newFormat = `${splitted[2]}-${splitted[1]}-${splitted[0]}`;
   const noFuturePurchases = new Date();
-  //console.log(coinValue, name, newFormatedDate);
-  //console.log(portfolio);
+
+  const removeCoin = (value: string) => {
+    const filtered = mySavedcoin.filter((el: any) => el.id !== value);
+    storage.setItem("coinAfterPurchase", JSON.stringify(filtered));
+    mySavedcoin = filtered;
+  };
+
+  interface barPercentage {
+    number: number;
+  }
+
+  function ProgressCustom({ number }: barPercentage) {
+    const [progress, setProgress] = React.useState(10);
+
+    React.useEffect(() => {
+      const timer = setTimeout(() => setProgress(number), 500);
+      return () => clearTimeout(timer);
+    }, [number]);
+
+    return <Progress value={progress} className="w-[100%]" />;
+  }
+
   return (
-    <div>
-      <div style={{ display: "flex", paddingBottom: "50px" }}>
-        <div
+    <Card>
+      <Card style={{ display: "flex", padding: "50px 0px" }}>
+        <Card
           style={{
             display: "flex",
             width: "100%",
@@ -82,7 +100,7 @@ function PortfolioPage() {
           }}
         >
           <h3 style={{ fontSize: "20px" }}>Your statics</h3>
-          <div></div>
+          <Card></Card>
           <h3
             style={{
               display: "flex",
@@ -98,9 +116,9 @@ function PortfolioPage() {
           >
             Add Asset
           </h3>
-        </div>
-      </div>
-      <div></div>
+        </Card>
+      </Card>
+      <Card></Card>
       <>
         {showPopup ? (
           <Card
@@ -139,13 +157,16 @@ function PortfolioPage() {
                   style={{
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center",
+                    flexDirection: "column",
+                    gap: "30px",
                     height: "241px",
                     width: "297px",
                     background: "rgba(25, 25, 50, 1)",
                   }}
                 >
-                  coin
+                  <p>1. Type coin name, then select from dropdown</p>
+                  <p>2. Type amount owned (default: 0)</p>
+                  <p>3 Type date Purchased (default today)</p>
                 </CardContent>
                 <CardContent
                   style={{
@@ -155,11 +176,13 @@ function PortfolioPage() {
                     height: "265px",
                   }}
                 >
-                  <div>
+                  <Card>
                     <input
                       type="text"
-                      value={name}
-                      onChange={(e) => setName(e.currentTarget.value)}
+                      value={filterByName}
+                      onChange={(e) => {
+                        setFilterByName(e.currentTarget.value);
+                      }}
                       placeholder="Select coins"
                       style={{
                         width: "461px",
@@ -168,8 +191,35 @@ function PortfolioPage() {
                         padding: "8px",
                       }}
                     />
-                  </div>
-                  <div>
+                    <Card
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        position: "absolute",
+                        background: "rgba(25, 25, 37, 1)",
+                      }}
+                    >
+                      {filterByName ? (
+                        <Card>
+                          {filtered?.map((data) => (
+                            <p
+                              key={data.id}
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setName(data.name.toLocaleLowerCase()),
+                                  setFilterByName(data.name);
+                              }}
+                            >
+                              {data.name}
+                            </p>
+                          ))}
+                        </Card>
+                      ) : (
+                        <></>
+                      )}
+                    </Card>
+                  </Card>
+                  <Card>
                     <input
                       min={"1"}
                       value={
@@ -187,8 +237,8 @@ function PortfolioPage() {
                         padding: "8px",
                       }}
                     />
-                  </div>
-                  <div>
+                  </Card>
+                  <Card>
                     <input
                       max={noFuturePurchases.toLocaleDateString()}
                       value={purchasedDate}
@@ -202,8 +252,8 @@ function PortfolioPage() {
                         padding: "8px",
                       }}
                     />
-                  </div>
-                  <div
+                  </Card>
+                  <Card
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
@@ -221,7 +271,9 @@ function PortfolioPage() {
                         cursor: "pointer",
                       }}
                       onClick={() => {
-                        addCoin(), setNewFormatedDate(newFormat), setName(name);
+                        addCoin(),
+                          setNewFormattedDate(newFormat),
+                          setName(name);
                         fetchDataBasedOnInput(), setShowPopUp(!showPopup);
                       }}
                     >
@@ -242,7 +294,7 @@ function PortfolioPage() {
                     >
                       Cancel
                     </p>
-                  </div>
+                  </Card>
                 </CardContent>
               </Card>
             </Card>
@@ -254,338 +306,391 @@ function PortfolioPage() {
       <Card style={{ display: "flex", justifyContent: "center" }}>
         <CardContent>
           <CardContent>
-            <>
-              <>
-                {coinAfterPurchase?.map((data) => (
-                  <Card
-                    style={{
-                      display: "flex",
-                      background: "rgba(25, 25, 50, 1)",
-                      width: "1260px",
-                      height: "300px",
-                      marginBottom: "40px",
-                    }}
-                    key={data.id}
-                  >
-                    <CardContent
+            <Card>
+              {mySavedcoin ? (
+                <Card>
+                  {mySavedcoin?.map((data: any) => (
+                    <Card
+                      key={data.idUnique}
                       style={{
                         display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        background: "rgba(30, 25, 50, 1)",
-                        width: "300px",
+                        width: "1260px",
                         height: "300px",
+                        marginBottom: "40px",
                       }}
+                      className="bg-titleCardPortfolio"
                     >
-                      <div
+                      <CardContent
                         style={{
                           display: "flex",
-                          flexDirection: "column",
+                          justifyContent: "center",
                           alignItems: "center",
+                          width: "300px",
+                          height: "300px",
                         }}
+                        className="bg-infoCardPortfolio"
                       >
-                        <div
-                          style={{
-                            width: "64px",
-                            height: "64px",
-                            padding: "16px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            background: "rgba(44, 44, 74, 1)",
-                            borderRadius: "8px",
-                            marginBottom: "25px",
-                          }}
-                        >
-                          <Avatar>
-                            <AvatarImage src={data.image} />
-                            <AvatarFallback>Coin Image</AvatarFallback>
-                          </Avatar>
-                        </div>
-                        <div style={{ fontSize: "28px" }}>
-                          {" "}
-                          {data.id ? data.id.toLocaleUpperCase() : data.id} (
-                          {data.symbol
-                            ? data.symbol.toLocaleUpperCase()
-                            : data.symbol}
-                          ){" "}
-                        </div>
-                      </div>
-                    </CardContent>
-                    <div>
-                      <Card
-                        style={{
-                          paddingTop: "20px",
-                          paddingLeft: "25px",
-                          width: "100%",
-                        }}
-                      >
-                        <CardTitle
-                          style={{
-                            fontSize: "20px",
-                            fontWeight: "normal",
-                            paddingBottom: "15px",
-                          }}
-                        >
-                          Market price:
-                        </CardTitle>
-                        <div
+                        <Card
                           style={{
                             display: "flex",
-                            justifyContent: "space-between",
+                            flexDirection: "column",
                             alignItems: "center",
                           }}
                         >
-                          <Card>
-                            <CardFooter>
-                              <p>Current price </p>
-                            </CardFooter>
-                            <CardContent>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                <ShowCoinPricesInUsDollars
-                                  cryptoPricesInUsDollars={data.currentPrice}
-                                />
-                              </p>
-                            </CardContent>
+                          <Card
+                            style={{
+                              width: "64px",
+                              height: "64px",
+                              padding: "16px",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              background: "rgba(44, 44, 74, 1)",
+                              borderRadius: "8px",
+                              marginBottom: "25px",
+                            }}
+                          >
+                            <Avatar>
+                              <AvatarImage src={data.image} />
+                              <AvatarFallback>Coin Image</AvatarFallback>
+                            </Avatar>
                           </Card>
-                          <Card>
-                            <CardFooter>
-                              <p>Price change 24h</p>
-                            </CardFooter>
-                            <CardContent style={{ display: "flex" }}>
-                              <div>
-                                <div>
-                                  {data.previousPrice >= 0 ? (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="#00FC2A"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={0}
-                                      stroke="currentColor"
-                                      className="size-6"
-                                    >
-                                      {" "}
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                                      />{" "}
-                                    </svg>
-                                  ) : (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="#FE1040"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={0}
-                                      stroke="currentColor"
-                                      className="size-6"
-                                    >
-                                      {" "}
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                      />{" "}
-                                    </svg>
-                                  )}
-                                </div>
-                              </div>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                <ShowCoinPricesInUsDollars
-                                  cryptoPricesInUsDollars={data.previousPrice}
-                                />
-                              </p>
-                            </CardContent>
+                          <Card style={{ fontSize: "28px" }}>
+                            {" "}
+                            {data.id ? data.id.toLocaleUpperCase() : data.id} (
+                            {data.symbol
+                              ? data.symbol.toLocaleUpperCase()
+                              : data.symbol}
+                            ){" "}
                           </Card>
-                          <Card>
-                            <CardFooter>Market Cop vs Volume</CardFooter>
-                            <CardContent style={{ display: "flex" }}>
-                              <p style={{ paddingRight: "25px" }}>
-                                {Math.abs(
-                                  data.total_volume / data.market_cap
-                                ).toFixed(2)}
-                                %
-                              </p>
-                              <Container style={{ width: "90px" }}>
-                                <Progress
+                        </Card>
+                      </CardContent>
+                      <Card>
+                        <Card
+                          style={{
+                            paddingTop: "20px",
+                            paddingLeft: "25px",
+                            width: "100%",
+                          }}
+                        >
+                          <CardTitle
+                            style={{
+                              fontSize: "20px",
+                              fontWeight: "normal",
+                              paddingBottom: "15px",
+                            }}
+                          >
+                            Market price:
+                          </CardTitle>
+                          <Card
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Card>
+                              <CardFooter>
+                                <p>Current price </p>
+                              </CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  <ShowCoinPricesInUsDollars
+                                    cryptoPricesInUsDollars={data.currentPrice}
+                                  />
+                                </p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardFooter>
+                                <p>Price change 24h</p>
+                              </CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-evenly",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Card>
+                                  <Card>
+                                    {data.previousPrice >= 0 ? (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#00FC2A"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={0}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                      >
+                                        {" "}
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                                        />{" "}
+                                      </svg>
+                                    ) : (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#FE1040"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={0}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                      >
+                                        {" "}
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                        />{" "}
+                                      </svg>
+                                    )}
+                                  </Card>
+                                </Card>
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  <ShowCoinPricesInUsDollars
+                                    cryptoPricesInUsDollars={data.previousPrice}
+                                  />
+                                </p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardFooter>Market Cop vs Volume</CardFooter>
+                              <CardContent style={{ display: "flex" }}>
+                                <p style={{ paddingRight: "25px" }}>
+                                  {Math.abs(
+                                    data.total_volume / data.market_cap
+                                  ).toFixed(2)}
+                                  %
+                                </p>
+                                <Card
                                   style={{
-                                    width:
-                                      (data.total_volume / data.market_cap) *
-                                      100,
+                                    height: "10px",
+                                    position: "relative",
+                                    width: "120px",
+                                    borderRadius: "10px",
+                                    margin: "auto 0",
+                                    overflow: "hidden",
+                                    border: "none",
+                                    marginRight: "auto",
                                   }}
-                                />
-                              </Container>
-                            </CardContent>
+                                >
+                                  <ProgressCustom
+                                    number={
+                                      (data.total_volume / data.market_cap) *
+                                      100
+                                    }
+                                  />
+                                </Card>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardFooter>Circ supply vs max supply</CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  {" "}
+                                  <ShowCoinPricesInUsDollars
+                                    cryptoPricesInUsDollars={data.currentPrice}
+                                  />
+                                </p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <button onClick={() => removeCoin(data.id)}>
+                                X
+                              </button>
+                            </Card>
                           </Card>
-                          <Card>
-                            <CardFooter>Circ supply vs max supply</CardFooter>
-                            <CardContent>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                {" "}
-                                <ShowCoinPricesInUsDollars
-                                  cryptoPricesInUsDollars={data.currentPrice}
-                                />
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </Card>
-                      <div
-                        style={{
-                          border: "1px solid rgba(255, 255, 255, 0.8)",
-                          width: "810px",
-                          marginTop: "5px",
-                          marginLeft: "25px",
-                          marginBottom: "5px",
-                        }}
-                      ></div>
-                      <Card
-                        style={{
-                          paddingTop: "10px",
-                          paddingLeft: "25px",
-                          width: "100%",
-                        }}
-                      >
-                        <CardTitle
+                        </Card>
+                        <Card
                           style={{
-                            fontSize: "20px",
-                            fontWeight: "normal",
-                            paddingBottom: "15px",
+                            border: "1px solid rgba(255, 255, 255, 0.8)",
+                            width: "810px",
+                            marginTop: "5px",
+                            marginLeft: "25px",
+                            marginBottom: "5px",
+                          }}
+                        ></Card>
+                        <Card
+                          style={{
+                            paddingTop: "10px",
+                            paddingLeft: "25px",
+                            width: "100%",
                           }}
                         >
-                          Your coin:
-                        </CardTitle>
-                        <div style={{ display: "flex" }}>
-                          <Card>
-                            <CardFooter>Coin amount:</CardFooter>
-                            <CardContent>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                <ShowCoinPricesInUsDollars
-                                  cryptoPricesInUsDollars={data.currentPrice}
-                                />
-                              </p>
-                            </CardContent>
+                          <CardTitle
+                            style={{
+                              fontSize: "20px",
+                              fontWeight: "normal",
+                              paddingBottom: "15px",
+                            }}
+                          >
+                            Your coin:
+                          </CardTitle>
+                          <Card style={{ display: "flex" }}>
+                            <Card>
+                              <CardFooter>Coin amount:</CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  <ShowCoinPricesInUsDollars
+                                    cryptoPricesInUsDollars={data.currentPrice}
+                                  />
+                                </p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardFooter>Amount value</CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-evenly",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <Card>
+                                  <Card>
+                                    {data.previousPrice >= 0 ? (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#00FC2A"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={0}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                      >
+                                        {" "}
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                                        />{" "}
+                                      </svg>
+                                    ) : (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#FE1040"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={0}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                      >
+                                        {" "}
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                        />{" "}
+                                      </svg>
+                                    )}
+                                  </Card>
+                                </Card>
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  <ShowCoinPricesInUsDollars
+                                    cryptoPricesInUsDollars={data.previousPrice}
+                                  />
+                                </p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardFooter>
+                                Amount price change since purchase
+                              </CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  gap: "10px",
+                                }}
+                              >
+                                <Card>
+                                  <Card>
+                                    {data.total >= 0 ? (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#00FC2A"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={0}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                      >
+                                        {" "}
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                                        />{" "}
+                                      </svg>
+                                    ) : (
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="#FE1040"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={0}
+                                        stroke="currentColor"
+                                        className="size-6"
+                                      >
+                                        {" "}
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                        />{" "}
+                                      </svg>
+                                    )}
+                                  </Card>
+                                </Card>
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  {Math.abs(data.total).toFixed(2)}%
+                                </p>
+                              </CardContent>
+                            </Card>
+                            <Card>
+                              <CardFooter>Circ supply vs max supply</CardFooter>
+                              <CardContent
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                                  <ShowCoinPricesInUsDollars
+                                    cryptoPricesInUsDollars={data.previousPrice}
+                                  />
+                                </p>
+                              </CardContent>
+                            </Card>
                           </Card>
-                          <Card>
-                            <CardFooter>Amount value</CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                              }}
-                            >
-                              <div>
-                                <div>
-                                  {data.previousPrice >= 0 ? (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="#00FC2A"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={0}
-                                      stroke="currentColor"
-                                      className="size-6"
-                                    >
-                                      {" "}
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                                      />{" "}
-                                    </svg>
-                                  ) : (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="#FE1040"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={0}
-                                      stroke="currentColor"
-                                      className="size-6"
-                                    >
-                                      {" "}
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                      />{" "}
-                                    </svg>
-                                  )}
-                                </div>
-                              </div>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                <ShowCoinPricesInUsDollars
-                                  cryptoPricesInUsDollars={data.previousPrice}
-                                />
-                              </p>
-                            </CardContent>
-                          </Card>
-                          <Card>
-                            <CardFooter>
-                              Amount price change since purchase
-                            </CardFooter>
-                            <CardContent style={{ display: "flex" }}>
-                              <div>
-                                <div>
-                                  {data.total >= 0 ? (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="#00FC2A"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={0}
-                                      stroke="currentColor"
-                                      className="size-6"
-                                    >
-                                      {" "}
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                                      />{" "}
-                                    </svg>
-                                  ) : (
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      fill="#FE1040"
-                                      viewBox="0 0 24 24"
-                                      strokeWidth={0}
-                                      stroke="currentColor"
-                                      className="size-6"
-                                    >
-                                      {" "}
-                                      <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                                      />{" "}
-                                    </svg>
-                                  )}
-                                </div>
-                              </div>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                {Math.abs(data.total).toFixed(2)}%
-                              </p>
-                            </CardContent>
-                          </Card>
-                          <Card>
-                            <CardFooter>Circ supply vs max supply</CardFooter>
-                            <CardContent>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
-                                {" "}
-                                {data.currentPrice}{" "}
-                              </p>
-                            </CardContent>
-                          </Card>
-                        </div>
+                        </Card>
                       </Card>
-                    </div>
-                  </Card>
-                ))}
-              </>
-            </>
+                    </Card>
+                  ))}
+                </Card>
+              ) : (
+                <>Please add a coin</>
+              )}
+            </Card>
           </CardContent>
         </CardContent>
       </Card>
-    </div>
+    </Card>
   );
 }
 

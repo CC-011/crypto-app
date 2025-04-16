@@ -21,8 +21,23 @@ export default {
 				DEFAULT: 'hsl(var(--copybutton))',
 				foreground: 'hsl(var(--copy-button-foreground))'
 			},
+			borderTop: {
+				DEFAULT: 'hsl(var(--borderTop))'
+			},
 			carouselBackground: {
 				DEFAULT: 'hsl(var(--carouselBackground))'
+			},
+			leftChart: {
+				DEFAULT: 'hsl(var(--leftChart))'
+			},
+			barchart: {
+				DEFAULT: 'hsl(var(--bar-chart))'
+			},
+			titleCardPortfolio: {
+				DEFAULT: 'hsl(var(--titleCardPortfolio))'
+			},
+			infoCardPortfolio: {
+				DEFAULT: 'hsl(var(--infoCardPortfolio))'
 			},
 			popup: {
 				DEFAULT: 'hsl(var(--popup))',
@@ -30,7 +45,7 @@ export default {
 			},
 			navbar: {
 				DEFAULT: 'hsl(var(--navbar))',
-				foreground: 'hsl(var(--foreground))',
+				foreground: 'hsl(var(--navbarColor))'
 			},
 			progressbar: {
 				DEFAULT: 'hsl(var(--progressbar))',

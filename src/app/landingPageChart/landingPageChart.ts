@@ -15,6 +15,7 @@ return jsonData;
 interface BitcoinData {
   prices: [];
   total_volumes: [];
+  market_caps: [];
 }
 
 interface BitcoinPricesAndTotal_Volumes {

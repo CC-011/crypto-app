@@ -1,7 +1,7 @@
 "use client";
 import { useAppDispatch } from "@/app/lib/hooks";
 import { useEffect } from "react";
-import { fetchIndividuallCoinInfo } from "@/app/coins/coin";
+import { fetchIndividualCoinInfo } from "@/app/coins/coin";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/lib/store";
 import { useParams } from "next/navigation";
@@ -19,7 +19,7 @@ export default function City() {
   const { coinDescription } = useSelector((state: RootState) => state.coin);
 
   useEffect(() => {
-    dispatch(fetchIndividuallCoinInfo(coinName));
+    dispatch(fetchIndividualCoinInfo(coinName));
   }, [dispatch, coinName]);
   const router = useRouter();
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function City() {
           display: "flex",
           justifyContent: "space-between",
           gap: "30px",
-          padding: "20px",
+          padding: "30px",
         }}
       >
         <Card>
@@ -51,8 +51,8 @@ export default function City() {
               display: "flex",
               justifyContent: "center",
               borderRadius: "12px",
-              height: "200px",
-              width: "250px",
+              height: "305px",
+              width: "333px",
               marginBottom: "20px",
               alignItems: "center",
             }}
@@ -79,11 +79,17 @@ export default function City() {
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>
-              <div>
+              <Card
+                style={{
+                  display: "flex",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                }}
+              >
                 {" "}
-                {coinDescription?.name} (
-                {coinDescription?.symbol.toLocaleUpperCase()})
-              </div>
+                <Card>{coinDescription?.name}</Card>
+                <Card>({coinDescription?.symbol.toLocaleUpperCase()})</Card>
+              </Card>
             </CardContent>
           </Card>
           <CardContent
@@ -106,7 +112,7 @@ export default function City() {
         </Card>
         <Card
           className="bg-primarycard"
-          style={{ borderRadius: "12px", padding: "12px" }}
+          style={{ borderRadius: "12px", paddingTop: "36px" }}
         >
           <CardContent
             style={{
@@ -248,7 +254,7 @@ export default function City() {
         </Card>
         <Card
           className="bg-primarycard"
-          style={{ borderRadius: "12px", padding: "24px" }}
+          style={{ borderRadius: "12px", padding: "20px" }}
         >
           <Card style={{ display: "flex" }}>
             <CardContent className="gapPlusButton">

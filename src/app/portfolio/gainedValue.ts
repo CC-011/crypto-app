@@ -48,9 +48,11 @@ export const coinValueDataAfterPurchase = createAsyncThunk("coinAfterPurchase/co
           };
         })
       );
+      const mapped = newPortfolio.map((data) => {
+        return {...data, price: pricedCoinsObject[0], idUnique: `${Math.random()}` };
+      });
        
-      return [...newPortfolio, ...pricedCoinsObject];
-       
+       return mapped;
 });
 
 interface PortfolioCoinInfo {
