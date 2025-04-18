@@ -1,16 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import todosReducer from "./features/todo"; 
-import userSlice from "./features/coins"; 
 import marketSlice from "../marketdata/marketdatacap";
 import chartSlice from "../landingPageChart/landingPageChart";
 import tableSlice from "../tableChart/table";
+import coinDescriptionSlice from "../coins/coin";
+import coinValueDataAfterPurchase from "../portfolio/gainedValue";
 const store = configureStore({
   reducer: {
-    todos: todosReducer, 
-    user: userSlice,   
+    todos: todosReducer,   
     market: marketSlice,
     chart: chartSlice,
-    table: tableSlice
+    table: tableSlice,
+    coin: coinDescriptionSlice,
+    coinAfterPurchase: coinValueDataAfterPurchase
   },
 });
 

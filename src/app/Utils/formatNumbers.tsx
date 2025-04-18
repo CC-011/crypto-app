@@ -20,4 +20,23 @@ const ShowCoinPricesInUsDollars = ({ cryptoPricesInUsDollars }: UsPrices) => {
   }).format(cryptoPricesInUsDollars);
 };
 
-export { ShowMarketNumbersInCompactForm, ShowCoinPricesInUsDollars };
+interface BtcPrices {
+  cryptoSymbol: string;
+  cryptoPricesInUsBitcoin: number;
+}
+
+const ShowCoinPricesInBTC = ({
+  cryptoPricesInUsBitcoin,
+  cryptoSymbol,
+}: BtcPrices) => {
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: cryptoSymbol,
+  }).format(cryptoPricesInUsBitcoin);
+};
+
+export {
+  ShowMarketNumbersInCompactForm,
+  ShowCoinPricesInUsDollars,
+  ShowCoinPricesInBTC,
+};

@@ -8,8 +8,10 @@ export const marketDataCap = createAsyncThunk("market/fetchMarketData", async() 
 
 interface MarketData {
   active_cryptocurrencies: number;
-  total_market_cap: Record<string, number>;
-  market_cap_percentage: Record<string, number>;
+  total_market_cap: { usd: number, eth: number, btc: number };
+  market_cap_percentage: { btc: number, eth: number };
+  total_volume: { usd: number, eth: number, btc: number };
+
 }
 
 interface MarketState {
