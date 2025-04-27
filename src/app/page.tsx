@@ -5,9 +5,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "./lib/store";
 import Link from "next/link";
 import { fetchChartData } from "./landingPageChart/landingPageChart";
+import { fetchSecondCoinData } from "./landingPageChart/secondLandingPageChart";
 import { fetchTableChart } from "./tableChart/table";
+import { setState } from "./landingPageChart/secondLandingPageChart";
 import { useState } from "react";
-import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, Bar, BarChart, YAxis } from "recharts";
 import { Progress } from "@/components/ui/progress";
 import {
   Card,
@@ -19,6 +21,8 @@ import {
 import {
   ChartConfig,
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
@@ -74,13 +78,29 @@ import {
 function List() {
   const dispatch = useAppDispatch();
   const { chartData } = useSelector((state: RootState) => state.chart);
+  const { chartDataSecondCoin } = useSelector((state: RootState) => state.secondCoin);
   const { tableChart } = useSelector((state: RootState) => state.table);
   const [chartNameEPage, setCharNameEPage] = useState("bitcoin");
+  const [secondChartName, setSecondChartName] = useState("");
+  const [compareCoinMode, setCompareCoinMode] = useState(false);
   const chartCurrencyEPage = "usd";
   useEffect(() => {
-    dispatch(fetchChartData({chartNameEPage, chartCurrencyEPage}));
-  }, [dispatch, chartNameEPage, chartCurrencyEPage]);
+    if(compareCoinMode === false) {
+      dispatch(fetchChartData({chartNameEPage, chartCurrencyEPage}));
+    }
+  });
 
+  useEffect(() => {
+    if(compareCoinMode === true) {
+      dispatch(fetchSecondCoinData({secondChartName, chartCurrencyEPage}));
+    }
+  });
+  useEffect(() => {
+    if (compareCoinMode === false && chartDataSecondCoin !== null) {
+      dispatch(setState(null));
+    }
+  });
+  
   interface barPercentage {
     number: number
   }
@@ -98,13 +118,13 @@ function List() {
 
   let totalDesktop = 0;
 
-  chartData?.total_volumes.forEach((data) => {
+  (chartData?.total_volumes ?? []).forEach((data) => {
     totalDesktop += data[0] ?? 0;
   });
 
   let marketCapTotal = 0;
 
-  chartData?.market_caps.forEach((data) => {
+  (chartData?.market_caps ?? []).forEach((data) => {
     marketCapTotal += data[1] ?? 0;
   });
   
@@ -149,45 +169,49 @@ function List() {
     return <Chart type="line" data={chartData} options={options} />;
   };
 
- const months = ["Jan", "Feb", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const chartDataRecharts = months.map((month, index) => ({
-    month,
-    mobile:  chartData?.prices[index]?.[1] ?? 0, // Ensure safe access
-    //desktop: chartData?.prices[index]?.[0] ?? 0,  // Ensure safe access
+ const mappedTime = chartData?.prices?.map((el) => new Date(el[0]).getHours()).map((_, index) => index + 1).filter((el) => el < 12).map((el) => el.toString()) ?? [""];
+  const chartDataRecharts = mappedTime.map((month, index) => ({
+  month,
+  mobile: chartData?.prices?.[index]?.[1] ?? 0,
+  desktop: chartDataSecondCoin?.prices?.[index]?.[1] ?? null,
   }));
   
-const barChartData =  months.map((month, index) => ({
+const barChartData = mappedTime.map((month, index) => ({
   month,
-  mobile:  chartData?.total_volumes[index]?.[1] ?? 0, 
-  desktop: chartData?.total_volumes[index]?.[0] ?? 0,  
+  mobile:  chartData?.total_volumes?.[index]?.[1] ?? 0, 
+  desktop: chartDataSecondCoin?.total_volumes?.[index]?.[1] ?? null,  
 }));
   
   const chartConfig = {
+    visitors: {
+      label: "Visitors"
+    },
     desktop: {
-      label: "Desktop",
+      label: `${secondChartName}`,
       color: "hsl(var(--chart-1))",
     },
     mobile: {
-      label: "Mobile",
+      label: `${chartNameEPage}`,
       color: "#7474F2",
-    },
+    }    
   } satisfies ChartConfig;
 
   const barChartConfig = {
     desktop: {
-      label: "Desktop",
+      label: ` ${chartNameEPage}`,
       color: "rgba(157, 98, 217, 1)"
 
     },
     mobile: {
-      label: "Mobil",
-      color: "rgba(179, 116, 242, 0.01)"
+      label: `${secondChartName}`,
+      color: "rgba(157, 98, 217, 1)"
     }
   };
   
   const [defaultMarket, setDefaultMarket] = useState("market_cap_desc");
   const [ChartNameBasedOnInput, setChartNameBasedOnInput] = useState("Bitcoin");
   const [SymbolName, setSymbolName] = useState("BTC");
+
   useEffect(() => {
     dispatch(fetchTableChart({defaultMarket, chartCurrencyEPage}));
   }, [dispatch, defaultMarket, chartCurrencyEPage]);
@@ -206,6 +230,7 @@ const barChartData =  months.map((month, index) => ({
     <div className="coinLandingPageContainer">
       <div style={{ display: "flex", justifyContent: "center"}}>
       <Carousel style={{ width: "1100px", margin: "100px 0px"}}>
+        <button onClick={() => setCompareCoinMode(!compareCoinMode)} style={{fontSize: "20px"}}>Compare</button>
       <CarouselContent >
         {tableChart?.map((data) => (
           <CarouselItem key={data.id}>
@@ -216,7 +241,14 @@ const barChartData =  months.map((month, index) => ({
                 </div>
                 <div> 
                   <div>
-                  <span onClick={(e) => {setCharNameEPage(e.currentTarget.innerText), setChartNameBasedOnInput(e.currentTarget.innerText), setSymbolName(data.symbol);}}>{data.name}</span>
+                  <span onClick={(e) => {
+                    if(compareCoinMode === false) {
+                      setSecondChartName(" "),  setCharNameEPage(e.currentTarget.innerText.toLocaleLowerCase()), setChartNameBasedOnInput(e.currentTarget.innerText), setSymbolName(data.symbol);
+                    } else if (compareCoinMode === true) {
+                      setSecondChartName(e.currentTarget.innerText.toLocaleLowerCase());
+                    }
+                    }
+                    }>{data.name}</span>
                   <span>({data.symbol.toLocaleUpperCase()})</span>
                   </div>
                   <span style={{ display: "flex"}}> 
@@ -300,13 +332,9 @@ const barChartData =  months.map((month, index) => ({
           <AreaChart
             accessibilityLayer
             data={chartDataRecharts}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
           >
             <CartesianGrid vertical={false} />
-            <XAxis
+               <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={false}
@@ -340,22 +368,33 @@ const barChartData =  months.map((month, index) => ({
                 />
               </linearGradient>
             </defs>
+            <YAxis 
+            yAxisId="bitcoin" 
+            orientation="left"
+            hide={true}
+             />
+            <YAxis 
+             yAxisId="ethereum"
+            orientation="left"
+            hide={true}
+             />
             <Area
               dataKey="mobile"
-              type="natural"
+              type="monotone"
               fill="url(#fillMobile)"
               fillOpacity={0.4}
               stroke="var(--color-mobile)"
-              stackId="a"
+              yAxisId="bitcoin"
             />
             <Area
               dataKey="desktop"
-              type="natural"
+              type="monotone"
               fill="url(#fillDesktop)"
               fillOpacity={0.4}
               stroke="var(--color-desktop)"
-              stackId="a"
+              yAxisId="ethereum"
             />
+            <ChartLegend content={compareCoinMode ? <ChartLegendContent /> : <></> } />
           </AreaChart>
         </ChartContainer>
       </CardContent>
@@ -387,6 +426,7 @@ const barChartData =  months.map((month, index) => ({
             />
             <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
             <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+            <ChartLegend content={compareCoinMode ? <ChartLegendContent /> : <></> } />
           </BarChart>
         </ChartContainer>
       </CardContent>

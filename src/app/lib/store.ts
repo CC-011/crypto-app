@@ -4,18 +4,21 @@ import marketSlice from "../marketdata/marketdatacap";
 import chartSlice from "../landingPageChart/landingPageChart";
 import tableSlice from "../tableChart/table";
 import coinDescriptionSlice from "../coins/coin";
-import coinValueDataAfterPurchase from "../portfolio/gainedValue";
+import secondCoinChartSlice from "../landingPageChart/secondLandingPageChart";
+//import coinValueDataAfterPurchase from "../portfolio/gainedValue";
+import portfolioCoinItems from "../portfolio/payload";
 const store = configureStore({
   reducer: {
     todos: todosReducer,   
     market: marketSlice,
     chart: chartSlice,
+    secondCoin: secondCoinChartSlice,
     table: tableSlice,
     coin: coinDescriptionSlice,
-    coinAfterPurchase: coinValueDataAfterPurchase
+    coinItems: portfolioCoinItems
   },
 });
-
+//coinAfterPurchase: coinValueDataAfterPurchase,
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 

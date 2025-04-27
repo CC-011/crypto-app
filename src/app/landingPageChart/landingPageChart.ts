@@ -7,7 +7,7 @@ interface inputValues {
 
 export const fetchChartData = createAsyncThunk("chart/fetchChartData",
 async({chartNameEPage, chartCurrencyEPage}: inputValues) => {
-const response = await fetch(`https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=180&interval=daily`);
+const response = await fetch(`https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=300`);
 const jsonData = await response.json();
 return jsonData;
 });
