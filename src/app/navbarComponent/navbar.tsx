@@ -40,21 +40,8 @@ function List() {
   }, [dispatch]);
   return (
     <Card>
-      <Card
-        style={{
-          color: "hsl(var(--navbarColor))",
-          display: "flex",
-          justifyContent: "center",
-          gap: "70px",
-        }}
-        className="bg-navbar topDisplayBar"
-      >
-        <Card
-          style={{
-            display: "flex",
-          }}
-          className="navbarCoinGap"
-        >
+      <Card className="bg-navbar topDisplayBar navbar-container">
+        <Card className="navbarCoinGap flex">
           <Card className="lightningBoltContainer">
             <Card>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -64,7 +51,7 @@ function List() {
           </Card>
           Coins: <LoadData coin={data?.active_cryptocurrencies ?? 0} />
         </Card>
-        <Card style={{ display: "flex", gap: "7px" }}>
+        <Card className="flex navbar-gap">
           <>
             {data ? (
               <>
@@ -110,7 +97,7 @@ function List() {
             marketNumbers={data ? data?.total_market_cap?.usd : 0}
           />
         </Card>
-        <Card style={{ display: "flex", gap: "7px" }}>
+        <Card className="flex navbar-gap">
           {" "}
           <p>
             <ShowMarketNumbersInCompactForm
@@ -134,7 +121,7 @@ function List() {
             />
           </div>
         </Card>
-        <Card style={{ display: "flex", gap: "7px" }}>
+        <Card className="flex navbar-gap">
           <img
             src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1547033579"
             alt="bitcoin"
@@ -160,7 +147,7 @@ function List() {
             />{" "}
           </div>
         </Card>
-        <Card style={{ display: "flex", gap: "7px" }}>
+        <Card className="flex navbar-gap">
           <img
             src="https://assets.coingecko.com/coins/images/279/thumb/ethereum.png?1595348880"
             alt="ethereum"

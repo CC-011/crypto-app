@@ -36,56 +36,17 @@ export default function City() {
 
   return (
     <Card>
-      <Card
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "30px",
-          padding: "30px",
-        }}
-      >
+      <Card className="coin-page">
         <Card>
-          <Card
-            className="bg-primarycard"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              borderRadius: "12px",
-              height: "305px",
-              width: "333px",
-              marginBottom: "20px",
-              alignItems: "center",
-            }}
-          >
-            <CardContent
-              style={{
-                marginBottom: "38px",
-              }}
-            >
-              <div
-                style={{
-                  borderRadius: "10px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  background: "rgba(44, 44, 74, 1)",
-                  marginBottom: "10px",
-                  padding: "25px",
-                  gap: "10px",
-                }}
-              >
+          <Card className="bg-primarycard coin-image-name-container">
+            <CardContent className="coin-image-margin">
+              <div className="coin-image-container">
                 <Avatar>
                   <AvatarImage src={coinDescription?.image?.large} />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </div>
-              <Card
-                style={{
-                  display: "flex",
-                  fontWeight: "bold",
-                  fontSize: "20px",
-                }}
-              >
+              <Card className="coin-name">
                 {" "}
                 <Card>{coinDescription?.name}</Card>
                 <Card>({coinDescription?.symbol.toLocaleUpperCase()})</Card>
@@ -93,15 +54,7 @@ export default function City() {
             </CardContent>
           </Card>
           <CardContent
-            className="bg-primarycard"
-            style={{
-              cursor: "pointer",
-              borderRadius: "12px",
-              paddingTop: "12px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            className="bg-primarycard first-coin-link-container"
             onClick={(event) => {
               event.preventDefault(),
                 window.open(coinDescription?.links?.homepage);
@@ -110,18 +63,8 @@ export default function City() {
             {coinDescription?.links?.homepage}
           </CardContent>
         </Card>
-        <Card
-          className="bg-primarycard"
-          style={{ borderRadius: "12px", paddingTop: "36px" }}
-        >
-          <CardContent
-            style={{
-              fontWeight: "700",
-              fontSize: "30px",
-              lineHeight: "28px",
-              letterSpacing: "0px",
-            }}
-          >
+        <Card className="bg-primarycard coin-profit">
+          <CardContent className="coin-price">
             <ShowCoinPricesInUsDollars
               cryptoPricesInUsDollars={
                 coinDescription?.market_data?.current_price?.usd ?? 0
@@ -129,11 +72,11 @@ export default function City() {
             />
           </CardContent>
           <CardContent>Profit: </CardContent>
-          <Card style={{ display: "flex", flexDirection: "column" }}>
-            <Card style={{ display: "flex" }}>
+          <Card className="coin-price-info">
+            <Card className="flex">
               <CardContent className="gapPlusButton">
-                <div style={{ display: "flex" }}>
-                  {coinDescription?.market_data?.high_24h?.usd ?? 0 >= 0 ? (
+                <div className="flex">
+                  {(coinDescription?.market_data?.high_24h?.usd ?? 0 >= 0) ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#00FC2A"
@@ -168,7 +111,7 @@ export default function City() {
                   )}
                   <p>All time high:</p>
                 </div>
-                <div style={{ fontWeight: "700" }}>
+                <div className="coin-font-weight">
                   <ShowCoinPricesInUsDollars
                     cryptoPricesInUsDollars={
                       coinDescription?.market_data?.high_24h?.usd ?? 0
@@ -178,12 +121,7 @@ export default function City() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent
-                style={{
-                  color: "rgba(185, 185, 186, 1)",
-                  fontSize: "14px",
-                }}
-              >
+              <CardContent className="coin-price-date">
                 {new Date(
                   coinDescription?.last_updated ?? "No date found"
                 ).toString()}
@@ -191,10 +129,10 @@ export default function City() {
             </Card>
           </Card>
           <Card>
-            <Card style={{ display: "flex" }}>
+            <Card className="flex">
               <CardContent className="gapPlusButton">
-                <div style={{ display: "flex" }}>
-                  {coinDescription?.market_data?.low_24h?.usd ?? 0 >= 0 ? (
+                <div className="flex">
+                  {(coinDescription?.market_data?.low_24h?.usd ?? 0 >= 0) ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#00FC2A"
@@ -229,7 +167,7 @@ export default function City() {
                   )}
                   <p>All time low:</p>
                 </div>
-                <div style={{ fontWeight: "700" }}>
+                <div className="coin-font-weight">
                   <ShowCoinPricesInUsDollars
                     cryptoPricesInUsDollars={
                       coinDescription?.market_data?.low_24h?.usd ?? 0
@@ -239,12 +177,7 @@ export default function City() {
               </CardContent>
             </Card>
             <Card>
-              <CardContent
-                style={{
-                  color: "rgba(185, 185, 186, 1)",
-                  fontSize: "14px",
-                }}
-              >
+              <CardContent className="coin-price-date">
                 {new Date(
                   coinDescription?.last_updated ?? "No date found"
                 ).toString()}
@@ -252,11 +185,8 @@ export default function City() {
             </Card>
           </Card>
         </Card>
-        <Card
-          className="bg-primarycard"
-          style={{ borderRadius: "12px", padding: "20px" }}
-        >
-          <Card style={{ display: "flex" }}>
+        <Card className="bg-primarycard coin-market-info-container">
+          <Card className="flex">
             <CardContent className="gapPlusButton">
               <div className="plusButton">
                 <svg
@@ -271,15 +201,7 @@ export default function City() {
               </div>
               Market Cap
             </CardContent>
-            <CardContent
-              style={{
-                fontWeight: "500px",
-                fontSize: "20px",
-                lineHeight: "100%",
-                letterSpacing: "0px",
-              }}
-              className="gapPlusButton"
-            >
+            <CardContent className="gapPlusButton coin-market-data">
               <ShowCoinPricesInUsDollars
                 cryptoPricesInUsDollars={
                   coinDescription?.market_data?.market_cap?.usd ?? 0
@@ -288,7 +210,7 @@ export default function City() {
             </CardContent>
           </Card>
           <Card>
-            <Card style={{ display: "flex" }}>
+            <Card className="flex">
               <CardContent className="gapPlusButton">
                 <div className="plusButton">
                   <svg
@@ -303,14 +225,7 @@ export default function City() {
                 </div>
                 Fully Diluted Valuation
               </CardContent>
-              <CardContent
-                style={{
-                  fontWeight: "500px",
-                  fontSize: "20px",
-                  lineHeight: "100%",
-                  letterSpacing: "0px",
-                }}
-              >
+              <CardContent className="coin-market-data">
                 <ShowCoinPricesInUsDollars
                   cryptoPricesInUsDollars={
                     coinDescription?.market_data?.fully_diluted_valuation
@@ -319,11 +234,7 @@ export default function City() {
                 />
               </CardContent>
             </Card>
-            <Card
-              style={{
-                display: "flex",
-              }}
-            >
+            <Card className="flex">
               <CardContent className="gapPlusButton">
                 <div className="plusButton">
                   <svg
@@ -338,14 +249,7 @@ export default function City() {
                 </div>
                 Volume 24h
               </CardContent>
-              <CardContent
-                style={{
-                  fontWeight: "500px",
-                  fontSize: "20px",
-                  lineHeight: "100%",
-                  letterSpacing: "0px",
-                }}
-              >
+              <CardContent className="coin-market-data">
                 <ShowCoinPricesInUsDollars
                   cryptoPricesInUsDollars={
                     coinDescription?.market_data?.market_cap_change_24h ?? 0
@@ -354,7 +258,7 @@ export default function City() {
               </CardContent>
             </Card>
           </Card>
-          <Card style={{ display: "flex" }}>
+          <Card className="flex">
             <CardContent className="gapPlusButton">
               <div className="plusButton">
                 <svg
@@ -369,18 +273,11 @@ export default function City() {
               </div>
               Volume/Market
             </CardContent>
-            <CardContent
-              style={{
-                fontWeight: "500px",
-                fontSize: "20px",
-                lineHeight: "100%",
-                letterSpacing: "0px",
-              }}
-            >
+            <CardContent className="coin-market-data">
               {coinDescription?.market_data?.market_cap?.usd ?? 0 / volume ?? 1}
             </CardContent>
           </Card>
-          <Card style={{ display: "flex" }}>
+          <Card className="flex">
             <CardContent className="gapPlusButton">
               <div className="plusButton">
                 <svg
@@ -395,14 +292,7 @@ export default function City() {
               </div>
               Total Volume
             </CardContent>
-            <CardContent
-              style={{
-                fontWeight: "500px",
-                fontSize: "20px",
-                lineHeight: "100%",
-                letterSpacing: "0px",
-              }}
-            >
+            <CardContent className="coin-market-data">
               <ShowCoinPricesInBTC
                 cryptoSymbol={
                   coinDescription?.symbol
@@ -417,11 +307,7 @@ export default function City() {
               />
             </CardContent>
           </Card>
-          <Card
-            style={{
-              display: "flex",
-            }}
-          >
+          <Card className="flex">
             <CardContent className="gapPlusButton">
               <div className="plusButton">
                 <svg
@@ -436,14 +322,7 @@ export default function City() {
               </div>
               Circulating Supply
             </CardContent>
-            <CardContent
-              style={{
-                fontWeight: "500px",
-                fontSize: "20px",
-                lineHeight: "100%",
-                letterSpacing: "0px",
-              }}
-            >
+            <CardContent className="coin-market-data">
               <ShowCoinPricesInBTC
                 cryptoSymbol={
                   coinDescription?.symbol
@@ -458,11 +337,7 @@ export default function City() {
               />
             </CardContent>
           </Card>
-          <Card
-            style={{
-              display: "flex",
-            }}
-          >
+          <Card className="flex">
             <CardContent className="gapPlusButton">
               <div className="plusButton">
                 <svg
@@ -477,14 +352,7 @@ export default function City() {
               </div>
               Max Supply
             </CardContent>
-            <CardContent
-              style={{
-                fontWeight: "500px",
-                fontSize: "20px",
-                lineHeight: "100%",
-                letterSpacing: "0px",
-              }}
-            >
+            <CardContent className="coin-market-data">
               <ShowCoinPricesInBTC
                 cryptoSymbol={
                   coinDescription?.symbol
@@ -501,7 +369,7 @@ export default function City() {
           </Card>
         </Card>
       </Card>
-      <Card style={{ display: "flex", padding: "12px" }}>
+      <Card className="coin-description">
         <Card>
           <CardHeader>
             <h1 className="text-3xl font-semibold">Description</h1>
@@ -510,19 +378,10 @@ export default function City() {
             {coinDescription?.description?.en ?? "No description found"}
           </CardContent>
         </Card>
-        <Card style={{ paddingTop: "85px" }}>
-          <Card
-            style={{
-              display: "flex",
-              borderRadius: "12px",
-              marginBottom: "40px",
-              paddingTop: "25px",
-              gap: "22px",
-            }}
-            className="bg-primarycard"
-          >
+        <Card className="padding-top">
+          <Card className="bg-primarycard coin-links-container gap-for-coin-links-container">
             <CardContent
-              style={{ cursor: "pointer" }}
+              className="pointer"
               onClick={(event) => {
                 event.preventDefault(),
                   window.open(coinDescription?.links?.homepage);
@@ -557,17 +416,9 @@ export default function City() {
               </svg>
             </CardContent>
           </Card>
-          <Card
-            style={{
-              display: "flex",
-              borderRadius: "12px",
-              marginBottom: "40px",
-              paddingTop: "25px",
-            }}
-            className="bg-primarycard"
-          >
+          <Card className="bg-primarycard coin-links-container">
             <CardContent
-              style={{ cursor: "pointer" }}
+              className="pointer"
               onClick={(event) => {
                 event.preventDefault(),
                   window.open(coinDescription?.links?.whitepaper ?? "");
@@ -603,16 +454,9 @@ export default function City() {
               </svg>
             </CardContent>
           </Card>
-          <Card
-            style={{
-              display: "flex",
-              borderRadius: "12px",
-              paddingTop: "25px",
-            }}
-            className="bg-primarycard"
-          >
+          <Card className="bg-primarycard coin-links-container-last">
             <CardContent
-              style={{ cursor: "pointer" }}
+              className="pointer"
               onClick={(event) => {
                 event.preventDefault(),
                   window.open(coinDescription?.links.whitepaper ?? "");

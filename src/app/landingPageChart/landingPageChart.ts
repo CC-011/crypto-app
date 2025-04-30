@@ -6,11 +6,11 @@ interface inputValues {
 }
 
 export const fetchChartData = createAsyncThunk("chart/fetchChartData",
-async({chartNameEPage, chartCurrencyEPage}: inputValues) => {
-const response = await fetch(`https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=300`);
-const jsonData = await response.json();
-return jsonData;
-});
+  async ({ chartNameEPage, chartCurrencyEPage }: inputValues) => {
+    const response = await fetch(`https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=300`);
+    const jsonData = await response.json();
+    return jsonData;
+  });
 
 interface BitcoinData {
   prices: [];
@@ -31,20 +31,20 @@ const initialState: BitcoinPricesAndTotal_Volumes = {
 };
 
 export const chartSlice = createSlice({
-    name: "chart",
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-        .addCase(fetchChartData.pending, (state) => {
-            state.loading = true; 
-            state.error = null; 
-          })
-          .addCase(fetchChartData.fulfilled, (state, action) => {
-            state.loading = false; 
-            state.chartData = action.payload; 
-          });
-    }
+  name: "chart",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchChartData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchChartData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chartData = action.payload;
+      });
+  }
 });
 
 export default chartSlice.reducer;

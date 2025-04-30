@@ -16,7 +16,6 @@ function PortfolioPage() {
   const dispatch = useAppDispatch();
   const { tableChart } = useSelector((state: RootState) => state.table);
   const CoinDataState = useSelector((state: RootState) => state.coinItems);
-
   const { data } = useQuery({
     queryKey: ["user-portfolio", CoinDataState],
     queryFn: () => fetchCoinData(CoinDataState),
@@ -53,27 +52,12 @@ function PortfolioPage() {
 
   return (
     <Card>
-      <Card style={{ display: "flex", padding: "50px 0px" }}>
-        <Card
-          style={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "space-around",
-          }}
-        >
-          <h3 style={{ fontSize: "20px" }}>Your statics</h3>
+      <Card className="popup-container">
+        <Card className="popup-space-around">
+          <h3 className="popup-h3">Your statics</h3>
           <Card></Card>
           <h3
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "244px",
-              height: "45px",
-              background: "rgba(120, 120, 250, 1)",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
+            className="popup-add-asset"
             onClick={() => setShowPopUp(!showPopup)}
           >
             Add Asset
@@ -83,90 +67,43 @@ function PortfolioPage() {
       <Card></Card>
       <>
         {showPopup ? (
-          <Card
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: "2",
-              position: "absolute",
-              width: "886px",
-              height: "393px",
-              background: "rgba(19, 18, 26, 1)",
-              padding: "48px",
-              left: "270px",
-              borderRadius: "20px",
-              top: "300px",
-            }}
-          >
-            <Card style={{ height: "100%", width: "100%" }}>
-              <CardContent
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                }}
-              >
-                <CardTitle style={{ fontSize: "20px" }}>Select coins</CardTitle>
+          <Card className="popup">
+            <Card className="popup-items-height-width">
+              <CardContent className="popup-content">
+                <CardTitle className="popup-select-coin">
+                  Select coins
+                </CardTitle>
                 <CardTitle
-                  style={{ cursor: "pointer" }}
+                  className="pointer"
                   onClick={() => setShowPopUp(!showPopup)}
                 >
                   X
                 </CardTitle>
               </CardContent>
-              <Card style={{ display: "flex", width: "805px" }}>
-                <CardContent
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    flexDirection: "column",
-                    gap: "30px",
-                    height: "241px",
-                    width: "297px",
-                    background: "rgba(25, 25, 50, 1)",
-                  }}
-                >
+              <Card className="instructions-container">
+                <CardContent className="instructions-styling">
                   <p>1. Type coin name, then select from dropdown</p>
                   <p>2. Type amount owned (default: 0)</p>
                   <p>3 Type date Purchased (default today)</p>
                 </CardContent>
-                <CardContent
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexDirection: "column",
-                    height: "265px",
-                  }}
-                >
+                <CardContent className="user-input-spacing">
                   <Card>
                     <input
+                      className="input-coin-name"
                       type="text"
                       value={filterByName}
                       onChange={(e) => {
                         setFilterByName(e.currentTarget.value);
                       }}
                       placeholder="Select coins"
-                      style={{
-                        width: "461px",
-                        height: "44px",
-                        background: "rgba(25, 25, 37, 1)",
-                        padding: "8px",
-                      }}
                     />
-                    <Card
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        position: "absolute",
-                        background: "rgba(25, 25, 37, 1)",
-                      }}
-                    >
+                    <Card className="filterList">
                       {filterByName ? (
                         <Card>
                           {filtered?.map((data) => (
                             <p
                               key={data.id}
-                              style={{ cursor: "pointer" }}
+                              className="pointer"
                               onClick={() => {
                                 setName(data.name.toLocaleLowerCase()),
                                   setFilterByName(data.name);
@@ -192,12 +129,7 @@ function PortfolioPage() {
                       }
                       type="number"
                       placeholder="Purchased amount"
-                      style={{
-                        width: "461px",
-                        height: "44px",
-                        background: "rgba(25, 25, 37, 1)",
-                        padding: "8px",
-                      }}
+                      className="input-coin-amount"
                     />
                   </Card>
                   <Card>
@@ -207,31 +139,12 @@ function PortfolioPage() {
                       onChange={(e) => setPurchasedDate(e.currentTarget.value)}
                       placeholder="Purchased date"
                       type="date"
-                      style={{
-                        width: "461px",
-                        height: "44px",
-                        background: "rgba(25, 25, 37, 1)",
-                        padding: "8px",
-                      }}
+                      className="input-coin-date"
                     />
                   </Card>
-                  <Card
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
+                  <Card className="save-cancel-spacing">
                     <p
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "222.5px",
-                        height: "45px",
-                        background: "rgba(35, 35, 54, 1)",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                      }}
+                      className="save-button-styling"
                       onClick={() => {
                         setShowPopUp(!showPopup),
                           dispatch(
@@ -247,16 +160,7 @@ function PortfolioPage() {
                       Save and Continue
                     </p>
                     <p
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "222.5px",
-                        height: "45px",
-                        background: "rgba(120, 120, 250, 1)",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                      }}
+                      className="cancel-button-styling"
                       onClick={() => setShowPopUp(!showPopup)}
                     >
                       Cancel
@@ -270,7 +174,7 @@ function PortfolioPage() {
           <Card></Card>
         )}
       </>
-      <Card style={{ display: "flex", justifyContent: "center" }}>
+      <Card className="portfolio-coin-containers">
         <CardContent>
           <CardContent>
             <Card></Card>
@@ -279,50 +183,17 @@ function PortfolioPage() {
                 {data?.map((data: any) => (
                   <Card
                     key={data.idUnique}
-                    style={{
-                      display: "flex",
-                      width: "1260px",
-                      height: "300px",
-                      marginBottom: "40px",
-                    }}
-                    className="bg-titleCardPortfolio"
+                    className="bg-titleCardPortfolio portfolio-coin-list"
                   >
-                    <CardContent
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "300px",
-                        height: "300px",
-                      }}
-                      className="bg-infoCardPortfolio"
-                    >
-                      <Card
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Card
-                          style={{
-                            width: "64px",
-                            height: "64px",
-                            padding: "16px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            background: "rgba(44, 44, 74, 1)",
-                            borderRadius: "8px",
-                            marginBottom: "25px",
-                          }}
-                        >
+                    <CardContent className="bg-infoCardPortfolio portfolio-coin-info">
+                      <Card className="coin-image-spacing">
+                        <Card className="coin-image-styling">
                           <Avatar>
                             <AvatarImage src={data.image} />
                             <AvatarFallback>Coin Image</AvatarFallback>
                           </Avatar>
                         </Card>
-                        <Card style={{ fontSize: "28px" }}>
+                        <Card className="coin-font-size">
                           {" "}
                           {data.id ? data.id.toLocaleUpperCase() : data.id} (
                           {data.symbol
@@ -333,40 +204,17 @@ function PortfolioPage() {
                       </Card>
                     </CardContent>
                     <Card>
-                      <Card
-                        style={{
-                          paddingTop: "20px",
-                          paddingLeft: "25px",
-                          width: "100%",
-                        }}
-                      >
-                        <CardTitle
-                          style={{
-                            fontSize: "20px",
-                            fontWeight: "normal",
-                            paddingBottom: "15px",
-                          }}
-                        >
+                      <Card className="coin-market-headers">
+                        <CardTitle className="coin-market">
                           Market price:
                         </CardTitle>
-                        <Card
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
+                        <Card className="space-between">
                           <Card>
                             <CardFooter>
                               <p>Current price </p>
                             </CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                            <CardContent className="current-price">
+                              <p className="portfolio-coin-data-color">
                                 <ShowCoinPricesInUsDollars
                                   cryptoPricesInUsDollars={data.currentPrice}
                                 />
@@ -377,13 +225,7 @@ function PortfolioPage() {
                             <CardFooter>
                               <p>Price change 24h</p>
                             </CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-evenly",
-                                alignItems: "center",
-                              }}
-                            >
+                            <CardContent className="price-change-spacing">
                               <Card>
                                 <Card>
                                   {data.previousPrice >= 0 ? (
@@ -421,7 +263,7 @@ function PortfolioPage() {
                                   )}
                                 </Card>
                               </Card>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                              <p className="portfolio-coin-data-color">
                                 <ShowCoinPricesInUsDollars
                                   cryptoPricesInUsDollars={data.previousPrice}
                                 />
@@ -430,25 +272,14 @@ function PortfolioPage() {
                           </Card>
                           <Card>
                             <CardFooter>Market Cop vs Volume</CardFooter>
-                            <CardContent style={{ display: "flex" }}>
-                              <p style={{ paddingRight: "25px" }}>
+                            <CardContent className="flex">
+                              <p className="padding-right-market-cap">
                                 {Math.abs(
                                   data.total_volume / data.market_cap
                                 ).toFixed(2)}
                                 %
                               </p>
-                              <Card
-                                style={{
-                                  height: "10px",
-                                  position: "relative",
-                                  width: "120px",
-                                  borderRadius: "10px",
-                                  margin: "auto 0",
-                                  overflow: "hidden",
-                                  border: "none",
-                                  marginRight: "auto",
-                                }}
-                              >
+                              <Card className="progress-bar">
                                 <ProgressCustom
                                   number={
                                     (data.total_volume / data.market_cap) * 100
@@ -459,13 +290,8 @@ function PortfolioPage() {
                           </Card>
                           <Card>
                             <CardFooter>Circ supply vs max supply</CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                            <CardContent className="center">
+                              <p className="portfolio-coin-data-color">
                                 {" "}
                                 <ShowCoinPricesInUsDollars
                                   cryptoPricesInUsDollars={data.currentPrice}
@@ -484,41 +310,16 @@ function PortfolioPage() {
                           </Card>
                         </Card>
                       </Card>
-                      <Card
-                        style={{
-                          border: "1px solid rgba(255, 255, 255, 0.8)",
-                          width: "810px",
-                          marginTop: "5px",
-                          marginLeft: "25px",
-                          marginBottom: "5px",
-                        }}
-                      ></Card>
-                      <Card
-                        style={{
-                          paddingTop: "10px",
-                          paddingLeft: "25px",
-                          width: "100%",
-                        }}
-                      >
-                        <CardTitle
-                          style={{
-                            fontSize: "20px",
-                            fontWeight: "normal",
-                            paddingBottom: "15px",
-                          }}
-                        >
+                      <Card className="white-line"></Card>
+                      <Card className="your-coin-container">
+                        <CardTitle className="your-coin-title">
                           Your coin:
                         </CardTitle>
-                        <Card style={{ display: "flex" }}>
+                        <Card className="flex">
                           <Card>
                             <CardFooter>Coin amount:</CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                            <CardContent className="center">
+                              <p className="portfolio-coin-data-color">
                                 <ShowCoinPricesInUsDollars
                                   cryptoPricesInUsDollars={data.currentPrice}
                                 />
@@ -527,13 +328,7 @@ function PortfolioPage() {
                           </Card>
                           <Card>
                             <CardFooter>Amount value</CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-evenly",
-                                alignItems: "center",
-                              }}
-                            >
+                            <CardContent className="space-evenly">
                               <Card>
                                 <Card>
                                   {data.previousPrice >= 0 ? (
@@ -571,7 +366,7 @@ function PortfolioPage() {
                                   )}
                                 </Card>
                               </Card>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                              <p className="portfolio-coin-data-color">
                                 <ShowCoinPricesInUsDollars
                                   cryptoPricesInUsDollars={data.previousPrice}
                                 />
@@ -582,14 +377,7 @@ function PortfolioPage() {
                             <CardFooter>
                               Amount price change since purchase
                             </CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                gap: "10px",
-                              }}
-                            >
+                            <CardContent className="price-change-since-purchase">
                               <Card>
                                 <Card>
                                   {data.total >= 0 ? (
@@ -627,20 +415,15 @@ function PortfolioPage() {
                                   )}
                                 </Card>
                               </Card>
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                              <p className="portfolio-coin-data-color">
                                 {Math.abs(data.total).toFixed(2)}%
                               </p>
                             </CardContent>
                           </Card>
                           <Card>
                             <CardFooter>Circ supply vs max supply</CardFooter>
-                            <CardContent
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <p style={{ color: "rgba(1, 241, 227, 1)" }}>
+                            <CardContent className="center">
+                              <p className="portfolio-coin-data-color">
                                 <ShowCoinPricesInUsDollars
                                   cryptoPricesInUsDollars={data.previousPrice}
                                 />

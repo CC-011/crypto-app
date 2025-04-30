@@ -85,13 +85,7 @@ export function Theme() {
               <DropdownMenuTrigger></DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "300px",
-                  }}
-                >
+                <DropdownMenuItem className="dropdown-menu">
                   {filterByName ? (
                     filtered?.map((data) => (
                       <Link
@@ -116,21 +110,8 @@ export function Theme() {
   };
 
   return (
-    <Card
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingTop: "20px",
-        height: "100px",
-      }}
-    >
-      <Card
-        style={{
-          display: "flex",
-          gap: "10px",
-        }}
-      >
+    <Card className="user-navbar-container">
+      <Card className="user-navbar-gap">
         <Avatar>
           <AvatarImage src="https://i.ibb.co/f4HZnZF/Logoipsm.png" />
           <AvatarFallback>Crypto App Image</AvatarFallback>
@@ -139,13 +120,7 @@ export function Theme() {
       </Card>
       <Link href="/">Home</Link>
       <Link href="/portfolio">Portfolio</Link>
-      <Card
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
+      <Card className="user-input-gap">
         <Card>
           <Card>
             <Input
@@ -155,16 +130,7 @@ export function Theme() {
               onChange={(e) => setFilterByName(e.currentTarget.value)}
             />
           </Card>
-          <Card
-            style={{
-              position: "absolute",
-              top: "90px",
-              left: "750px",
-              visibility: "hidden",
-              opacity: 0,
-              transition: "opacity 0.3s ease",
-            }}
-          >
+          <Card className="user-filtered-list">
             {" "}
             <MyDropdown filterByName={filterByName} />{" "}
           </Card>
@@ -195,16 +161,7 @@ export function Theme() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Card
-          style={{
-            display: "flex",
-            alignItems: "center",
-            width: "40px",
-            height: "40px",
-            gap: "0px",
-            opacity: "0px",
-          }}
-        >
+        <Card className="theme-icon-container">
           {theme === "dark" ? (
             <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           ) : (

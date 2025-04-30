@@ -6,10 +6,70 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/*navbar*/
+
+.navbar-container {
+  color: hsl(var(--navbarColor));
+  display: flex;
+  justify-content: center;
+  gap: 70px;
+}
+
+.navbar-gap {
+  gap: 7px;
+}
+
+/*user navbar*/
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+.user-navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  height: 100px;
+}
+
+.user-navbar-gap {
+  display: flex;
+  gap: 10px;
+}
+
+.user-input-gap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-filtered-list {
+  position: absolute;
+  top: 90px;
+  left: 750px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.theme-icon-container {
+  display: flex;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  gap: 0px;
+  opacity: 0px;
+}
+
+/**/
+
 .topDisplayBar {
   padding: 16px 72px 16px 72px;
   height: 56px;
-} 
+}
 
 .firstProgressBar {
   display: flex;
@@ -30,7 +90,7 @@ body {
   align-items: center;
   width: 90px;
 }
-  
+
 .navbarCoinGap {
   display: flex;
   align-items: center;
@@ -40,10 +100,10 @@ body {
 
 .lightningBoltContainer {
   width: 16px;
-    height: 16px;
-    border: solid;
-    border-radius: 20px;
-    background: white;
+  height: 16px;
+  border: solid;
+  border-radius: 20px;
+  background: white;
 }
 
 .searchButtonLandingPage {
@@ -54,9 +114,79 @@ body {
 .coinLandingPageContainer {
   padding: 0px 80px
 }
+
 .coinsButton {
   padding: 60px 80px
 }
+
+/**/
+
+/*Landing Page */
+
+.mainChartsAndCarousel {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel {
+  width: 1100px;
+  margin: 100px 0px;
+}
+
+.compare-button {
+  font-size: 20px;
+}
+
+.carousel-item {
+  border-radius: 6px;
+  padding-right: 20px;
+}
+
+.flex {
+  display: flex;
+}
+
+.carousel-image {
+  display: flex;
+  align-items: center;
+  padding-right: 15px;
+}
+
+.carousel-button {
+  background: rgba(120, 120, 250, 1);
+}
+
+.carousel-button {
+  background: rgba(120, 120, 250, 1);
+}
+
+.chart-container {
+  display: flex;
+  gap: 24px;
+  padding: 50px;
+}
+
+.chart-size {
+  width: 700px;
+  height: 460px;
+}
+
+.chart-header {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+
+.coin-title {
+  font-size: 20px;
+}
+
+.coin-price {
+  font-size: 30px;
+}
+
+
 .coinLandingPage {
   display: flex;
   background-color: rgba(120, 120, 250, 1);
@@ -67,6 +197,426 @@ body {
   border-radius: 6px;
   margin: 30px 0px 80px 0px;
 }
+
+/*Table*/
+
+.text-align {
+  text-align: center;
+}
+
+
+.table-image-container {
+  display: flex;
+  height: 100px;
+  align-items: center;
+}
+
+.coin-1h-percentage-container {
+  font-size: 15px;
+  padding-left: 10px;
+  display: flex;
+}
+
+.coin-link {
+  padding-left: 10px;
+}
+
+.table-row {
+  border-top: solid 10px;
+  border-top-color: hsl(var(--borderTop));
+  border-radius: 25px;
+}
+
+.progressbar-table {
+  height: 10px;
+  width: 120px;
+  position: relative;
+  border-radius: 10px;
+  margin: auto 0;
+  overflow: hidden;
+  border: none;
+  margin-right: auto;
+}
+
+
+.sparkLine-chart {
+  width: 120px;
+  height: 90px;
+}
+
+/*Portfolio Page*/
+
+.popup-container {
+  display: flex;
+  padding: 50px 0px;
+}
+
+.popup-space-around {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.popup-h3 {
+  font-size: 20px;
+}
+
+.popup-add-asset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 244px;
+  height: 45px;
+  background: rgba(120, 120, 250, 1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  position: absolute;
+  width: 886px;
+  height: 393px;
+  background: rgba(19, 18, 26, 1);
+  padding: 48px;
+  left: 270px;
+  border-radius: 20px;
+  top: 300px;
+}
+
+.popup-items-height-width {
+  height: 100%;
+  width: 100%;
+}
+
+.popup-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.popup-select-coin {
+  font-size: 20px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.instructions-container {
+  display: flex;
+  width: 805px;
+}
+
+.instructions-styling {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 30px;
+  height: 241px;
+  width: 297px;
+  background: rgba(25, 25, 50, 1);
+}
+
+.user-input-spacing {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 265px;
+}
+
+.input-coin-name {
+  width: 461px;
+  height: 44px;
+  background: rgba(25, 25, 37, 1);
+  padding: 8px;
+}
+
+.filterList {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background: rgba(25, 25, 37, 1);
+}
+
+.input-coin-amount {
+  width: 461px;
+  height: 44px;
+  background: rgba(25, 25, 37, 1);
+  padding: 8px;
+}
+
+.input-coin-date {
+  width: 461px;
+  height: 44px;
+  background: rgba(25, 25, 37, 1);
+  padding: 8px;
+}
+
+.save-cancel-spacing {
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-button-styling {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 222.5px;
+  height: 45px;
+  background: rgba(35, 35, 54, 1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-button-styling {
+  background: rgba(120, 120, 250, 1);
+}
+
+.portfolio-coin-containers {
+  display: flex;
+  justify-content: center;
+}
+
+.portfolio-coin-list {
+  display: flex;
+  width: 1260px;
+  height: 300px;
+  margin-bottom: 40px;
+}
+
+.portfolio-coin-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 300px;
+}
+
+.coin-image-spacing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coin-image-styling {
+  width: 64px;
+  height: 64px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(44, 44, 74, 1);
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.coin-font-size {
+  font-size: 28px;
+}
+
+.coin-market-headers {
+  padding-top: 20px;
+  padding-left: 25px;
+  width: 100%;
+}
+
+.coin-market {
+  font-size: 20px;
+  font-weight: normal;
+  padding-bottom: 15px;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.current-price {
+  display: flex;
+  justify-content: center;
+}
+
+.portfolio-coin-data-color {
+  color: rgba(1, 241, 227, 1);
+}
+
+.price-change-spacing {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.padding-right-market-cap {
+  padding-right: 25px;
+}
+
+.progress-bar {
+  height: 10px;
+  position: relative;
+  width: 120px;
+  border-radius: 10px;
+  margin: auto 0;
+  overflow: hidden;
+  border: none;
+  margin-right: auto;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.white-line {
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  width: 810px;
+  margin-top: 5px;
+  margin-left: 25px;
+  margin-bottom: 5px;
+}
+
+.your-coin-container {
+  padding-top: 10px;
+  padding-left: 25px;
+  width: 100%;
+}
+
+.your-coin-title {
+  font-size: 20px;
+  font-weight: normal;
+  padding-bottom: 15px;
+}
+
+.space-evenly {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.price-change-since-purchase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/*Coin page styles*/
+
+.coin-page {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 30px;
+}
+
+.coin-image-name-container {
+  display: flex;
+  justify-content: center;
+  border-radius: 12px;
+  height: 305px;
+  width: 333px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.coin-image-margin {
+  margin-bottom: 38px;
+}
+
+.coin-image-container {
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(44, 44, 74, 1);
+  margin-bottom: 10px;
+  padding: 25px;
+  gap: 10px;
+}
+
+.coin-name {
+  display: flex;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.first-coin-link-container {
+  cursor: pointer;
+  border-radius: 12px;
+  padding-top: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.coin-profit {
+  border-radius: 12px;
+  padding-top: 36px;
+}
+
+.coin-price {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 28px;
+  letter-spacing: 0px;
+}
+
+.coin-price-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.coin-font-weight {
+  font-weight: 700;
+}
+
+.coin-price-date {
+  color: rgba(185, 185, 186, 1);
+  font-size: 14px;
+}
+
+.coin-market-info-container {
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.coin-market-data {
+  font-weight: 500px;
+  font-size: 20px;
+  line-height: 100%;
+  letter-spacing: 0px;
+}
+
+.coin-description {
+  display: flex;
+  padding: 12px;
+}
+
+.padding-top {
+  padding-top: 85px;
+}
+
+.gap-for-coin-links-container {
+  gap: 22px;
+}
+
+.coin-links-container {
+  display: flex;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  padding-top: 25px;
+}
+
+.coin-links-container-last {
+  display: flex;
+  border-radius: 12px;
+  padding-top: 25px;
+}
+
 
 
 
@@ -84,8 +634,8 @@ body {
     --primarycardforeground: 0% 0 0;
     --copybutton: 0, 0%, 0%;
     --borderTop: 0, 0%, 96%;
-    --navbar:  240, 36%, 32%;
-    --navbarColor: 0 0% 98%; 
+    --navbar: 240, 36%, 32%;
+    --navbarColor: 0 0% 98%;
     --progressbar: 0, 0%, 100%;
     --progressbar-foreground: 0, 0%, 50%;
     --copy-button-foreground: 0 0% 100%;
@@ -114,8 +664,9 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
-    --background:  248, 18%, 9%;
+    --background: 248, 18%, 9%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -123,11 +674,11 @@ body {
     --popover-foreground: 0 0% 98%;
     --primary: 252 33% 15%;
     --primary-foreground: 0 0% 9%;
-    --primarycard: 252 33% 15%; 
-    --primarycardforeground: 0.00	0.00	1.00;
+    --primarycard: 252 33% 15%;
+    --primarycardforeground: 0.00 0.00 1.00;
     --copybutton: 0 0% 100%;
     --borderTop: 248, 18%, 9%;
-    --navbar:  252, 33%, 15%;
+    --navbar: 252, 33%, 15%;
     --navbarColor: 0 0% 98%;
     --progressbar: 0, 0%, 100%;
     --progressbar-foreground: 0, 0%, 50%;
@@ -175,15 +726,15 @@ body {
   justify-content: center;
   align-items: center;
   gap: 10px;
-           
+
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
-

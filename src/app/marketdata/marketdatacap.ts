@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-export const marketDataCap = createAsyncThunk("market/fetchMarketData", async() => {
-    const response = await fetch("https://api.coingecko.com/api/v3/global");
-    const jsonData = await response.json();
-    return jsonData.data; 
+export const marketDataCap = createAsyncThunk("market/fetchMarketData", async () => {
+  const response = await fetch("https://api.coingecko.com/api/v3/global");
+  const jsonData = await response.json();
+  return jsonData.data;
 
 });
 
@@ -27,18 +27,18 @@ const initialState: MarketState = {
 };
 
 export const marketSlice = createSlice({
-  name: "market", 
-  initialState ,
+  name: "market",
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(marketDataCap.pending, (state) => {
-      state.loading = true;
-    })
-    .addCase(marketDataCap.fulfilled, (state, action) => {
-      state.loading = false;
-      state.data = action.payload;
-    });
+      .addCase(marketDataCap.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(marketDataCap.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      });
   }
 });
 
