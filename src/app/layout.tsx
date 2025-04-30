@@ -5,6 +5,8 @@ import List from "./navbarComponent/navbar";
 import { ThemeProvider } from "../components/ui/theme-provider";
 import { Theme } from "./navbarComponent/theme-settings";
 import "./globals.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
 export default function RootLayout({
   children,
@@ -14,17 +16,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <StoreProvider>
-          <ThemeProvider attribute="class" disableTransitionOnChange>
-            <div>
-              <List />
-              <div className="coinLandingPageContainer">
-                <Theme />
+        <QueryClientProvider client={queryClient}>
+          <StoreProvider>
+            <ThemeProvider attribute="class" disableTransitionOnChange>
+              <div>
+                <List />
+                <div className="coinLandingPageContainer">
+                  <Theme />
+                </div>
               </div>
-            </div>
-            {children}
-          </ThemeProvider>
-        </StoreProvider>
+              {children}
+            </ThemeProvider>
+          </StoreProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

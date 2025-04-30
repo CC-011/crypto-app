@@ -5,7 +5,7 @@ interface inputValues {
     chartCurrencyEPage: string
 }
 
-export const fetchTableChart = createAsyncThunk("table/fetchTableData", async({defaultMarket, chartCurrencyEPage}: inputValues) => {
+export const fetchTableChart = createAsyncThunk("table/fetchTableData", async ({ defaultMarket, chartCurrencyEPage }: inputValues) => {
     const response = await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${chartCurrencyEPage}&order=${defaultMarket}&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d`);
     const jsonData = await response.json();
     return jsonData;
@@ -28,14 +28,14 @@ interface tableChartData {
     current_price: number,
     price_change_percentage_24h: number
     sparkline_in_7d: {
-     price: number[]
+        price: number[]
     }
 }
 
 interface fetchtableChartData {
     tableChart: tableChartData[] | null,
     loading: boolean,
-    error: string | null 
+    error: string | null
 }
 
 const initialState: fetchtableChartData = {
@@ -45,19 +45,19 @@ const initialState: fetchtableChartData = {
 };
 
 export const tableSlice = createSlice({
- name: "table",
- initialState,
- reducers: {},
- extraReducers: (builder) => {
-    builder
-    .addCase(fetchTableChart.pending, (state) => {
-        state.loading = true;
-    })
-    .addCase(fetchTableChart.fulfilled, (state, action) => {
-        state.loading = false;
-        state.tableChart = action.payload;
-    });
- }
+    name: "table",
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchTableChart.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(fetchTableChart.fulfilled, (state, action) => {
+                state.loading = false;
+                state.tableChart = action.payload;
+            });
+    }
 });
 
 export default tableSlice.reducer;
