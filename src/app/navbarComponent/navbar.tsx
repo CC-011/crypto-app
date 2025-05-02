@@ -54,15 +54,15 @@ function List() {
         <Card className="flex navbar-gap">
           <>
             {data ? (
-              <>
+              <div className="caret-navbar">
                 {data?.total_market_cap?.usd >= 0 ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    fill="#00FC2A"
+                    fill="#01F1E3"
                     viewBox="0 0 24 24"
                     strokeWidth={0}
                     stroke="currentColor"
-                    className="size-6"
+                    className="size-6 carousel-svg"
                   >
                     {" "}
                     <path
@@ -88,7 +88,7 @@ function List() {
                     />{" "}
                   </svg>
                 )}
-              </>
+              </div>
             ) : (
               0
             )}
