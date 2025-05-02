@@ -262,7 +262,7 @@ function List() {
                       />
                     </div>
                     <div>
-                      <div>
+                      <div className="carousel-title-coin">
                         <span
                           onClick={(e) => {
                             if (compareCoinMode === false) {
@@ -285,16 +285,16 @@ function List() {
                         </span>
                         <span>({data.symbol.toLocaleUpperCase()})</span>
                       </div>
-                      <span className="flex">
+                      <span className="carousel-price-color flex">
                         <ShowCoinPricesInUsDollars
                           cryptoPricesInUsDollars={data?.current_price}
                         />
                         <div
-                          className="coin-1h-percentage-container"
+                          className="coin-1h-percentage-container carousel-text"
                           style={{
                             color:
                               data.price_change_percentage_1h_in_currency >= 0
-                                ? "#00FC2A"
+                                ? "#01F1E3"
                                 : "#FE1040",
                           }}
                         >
@@ -303,11 +303,11 @@ function List() {
                               width={5}
                               height={5}
                               xmlns="http://www.w3.org/2000/svg"
-                              fill="#00FC2A"
+                              fill="#01F1E3"
                               viewBox="0 0 24 24"
                               strokeWidth={0}
                               stroke="currentColor"
-                              className="size-6"
+                              className="size-6 carousel-svg"
                             >
                               {" "}
                               <path
@@ -325,7 +325,7 @@ function List() {
                               viewBox="0 0 24 24"
                               strokeWidth={0}
                               stroke="currentColor"
-                              className="size-6"
+                              className="size-6 carousel-svg"
                             >
                               {" "}
                               <path
@@ -512,21 +512,22 @@ function List() {
                   />
                 </TableCell>
                 <TableCell
+                  className="carousel-text"
                   style={{
                     color:
                       data.price_change_percentage_1h_in_currency >= 0
-                        ? "#00FC2A"
+                        ? "#01F1E3"
                         : "#FE1040",
                   }}
                 >
                   {data.price_change_percentage_1h_in_currency >= 0 ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="#00FC2A"
+                      fill="#01F1E3"
                       viewBox="0 0 24 24"
                       strokeWidth={0}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-6 carousel-svg"
                     >
                       {" "}
                       <path
@@ -542,7 +543,7 @@ function List() {
                       viewBox="0 0 24 24"
                       strokeWidth={0}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-6 carousel-svg"
                     >
                       {" "}
                       <path
@@ -558,21 +559,22 @@ function List() {
                   %
                 </TableCell>
                 <TableCell
+                  className="carousel-text"
                   style={{
                     color:
                       data.price_change_percentage_24h >= 0
-                        ? "#00FC2A"
+                        ? "#01F1E3"
                         : "#FE1040",
                   }}
                 >
                   {data.price_change_percentage_24h >= 0 ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="#00FC2A"
+                      fill="#01F1E3"
                       viewBox="0 0 24 24"
                       strokeWidth={0}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-6 carousel-svg"
                     >
                       {" "}
                       <path
@@ -588,7 +590,7 @@ function List() {
                       viewBox="0 0 24 24"
                       strokeWidth={0}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-6 carousel-svg"
                     >
                       {" "}
                       <path
@@ -601,21 +603,22 @@ function List() {
                   {Math.abs(data.price_change_percentage_24h).toFixed(2)}%
                 </TableCell>
                 <TableCell
+                  className="carousel-text"
                   style={{
                     color:
                       data.price_change_percentage_7d_in_currency >= 0
-                        ? "#00FC2A"
+                        ? "#01F1E3"
                         : "#FE1040",
                   }}
                 >
                   {data.price_change_percentage_7d_in_currency >= 0 ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="#00FC2A"
+                      fill="#01F1E3"
                       viewBox="0 0 24 24"
                       strokeWidth={0}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-6 carousel-svg"
                     >
                       {" "}
                       <path
@@ -631,7 +634,7 @@ function List() {
                       viewBox="0 0 24 24"
                       strokeWidth={0}
                       stroke="currentColor"
-                      className="size-6"
+                      className="size-6 carousel-svg"
                     >
                       {" "}
                       <path
