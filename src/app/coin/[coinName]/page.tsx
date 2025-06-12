@@ -40,28 +40,63 @@ export default function City() {
         <Card>
           <Card className="bg-primarycard coin-image-name-container">
             <CardContent className="coin-image-margin">
-              <div className="coin-image-container">
+              <div className="coin-image-container bg-coinPageImageBackground">
                 <Avatar>
-                  <AvatarImage src={coinDescription?.image?.large} />
-                  <AvatarFallback>CN</AvatarFallback>
+                  <AvatarImage
+                    src={coinDescription?.image?.large ?? "No Image Found"}
+                  />
+                  <AvatarFallback>Coin Image</AvatarFallback>
                 </Avatar>
               </div>
               <Card className="coin-name">
                 {" "}
-                <Card>{coinDescription?.name}</Card>
-                <Card>({coinDescription?.symbol.toLocaleUpperCase()})</Card>
+                <Card>{coinDescription?.name ?? "No Name Found"}</Card>
+                <Card>
+                  (
+                  {coinDescription?.symbol.toLocaleUpperCase() ??
+                    "No Symbol Found"}
+                  )
+                </Card>
               </Card>
             </CardContent>
           </Card>
-          <CardContent
-            className="bg-primarycard first-coin-link-container"
-            onClick={(event) => {
-              event.preventDefault(),
-                window.open(coinDescription?.links?.homepage);
-            }}
-          >
-            {coinDescription?.links?.homepage}
-          </CardContent>
+          <Card className="bg-primarycard coin-links-container">
+            <CardContent
+              className="pointer"
+              onClick={(event) => {
+                event.preventDefault(),
+                  window.open(coinDescription?.links?.homepage ?? "");
+              }}
+            >
+              <svg
+                className="fill-copybutton"
+                width={20}
+                height={20}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 640 512"
+              >
+                <path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z" />
+              </svg>
+            </CardContent>
+            <CardContent>
+              {coinDescription?.links?.homepage ?? "No data found"}
+            </CardContent>
+            <CardContent
+              onClick={() =>
+                copyToClipBoard(coinDescription?.links?.homepage ?? "")
+              }
+            >
+              <svg
+                className="fill-copybutton"
+                width={20}
+                height={20}
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
+                <path d="M384 336l-192 0c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l140.1 0L400 115.9 400 320c0 8.8-7.2 16-16 16zM192 384l192 0c35.3 0 64-28.7 64-64l0-204.1c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1L192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-32-48 0 0 32c0 8.8-7.2 16-16 16L64 464c-8.8 0-16-7.2-16-16l0-256c0-8.8 7.2-16 16-16l32 0 0-48-32 0z" />
+              </svg>
+            </CardContent>
+          </Card>
         </Card>
         <Card className="bg-primarycard coin-profit">
           <CardContent className="coin-price">
@@ -384,7 +419,7 @@ export default function City() {
               className="pointer"
               onClick={(event) => {
                 event.preventDefault(),
-                  window.open(coinDescription?.links?.homepage);
+                  window.open(coinDescription?.links?.homepage ?? "");
               }}
             >
               <svg

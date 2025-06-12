@@ -13,6 +13,48 @@ export default {
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
+			homeIcon: {
+				DEFAULT: 'hsl(var(--homeIcon))'
+			},
+			coinList: {
+				DEFAULT: 'hsl(var(--coin-list))'
+			},
+			searchBar: {
+				DEFAULT: 'hsl(var(--search-bar))'
+			},
+			magnifierIcon: {
+				DEFAULT: 'hsl(var(--magnifier-icon))'
+			},
+			inputPlaceholder: {
+				DEFAULT: 'hsl(var(--input-placeholder))'
+			},
+			coinTitleColor: {
+				DEFAULT: 'hsl(var(--coin-title-color))'
+			},
+			currencyColor: {
+			 DEFAULT: 'hsl(var(--currency-color))'
+			},
+			currencyContainer: {
+			DEFAULT: 'hsl(var(--currency-container))'
+			},
+			currencyIconContainer: {
+			DEFAULT: 'hsl(var(--currencyIcon-container))'
+			},
+			currencyIcon: {
+			DEFAULT: 'hsl(var(--currency-icon))'
+			},
+			themeContainer: {
+			DEFAULT: 'hsl(var(--theme-container))'
+			},
+			themeButton: {
+			DEFAULT: 'hsl(var(--theme-button))'
+			},
+			compareMode: {
+			DEFAULT: 'hsl(var(--compare-mode))'
+			},
+			compareIcon: {
+			DEFAULT: 'hsl(var(--compare-icon))'
+			},
 			primarycard: {
 				DEFAULT: 'hsl(var(--primarycard))',
 				foreground: 'hsl(var(--primarycardforeground))'
@@ -33,6 +75,9 @@ export default {
 			barchart: {
 				DEFAULT: 'hsl(var(--bar-chart))'
 			},
+			coinPageImageBackground: {
+				DEFAULT: 'hsl(var(--coinPageImageBackground))'
+			},
 			titleCardPortfolio: {
 				DEFAULT: 'hsl(var(--titleCardPortfolio))'
 			},
@@ -42,6 +87,15 @@ export default {
 			popup: {
 				DEFAULT: 'hsl(var(--popup))',
 				foreground: 'hsl(var(--popup-foreground))'
+			},
+			popupContainer: {
+				DEFAULT: 'hsl(var(--popup-container))'
+			},
+			saveCoin: {
+				DEFAULT: 'hsl(var(--save-coin))'
+			},
+			cancelCoin: {
+				DEFAULT: 'hsl(var(--cancel-coin))'
 			},
 			navbar: {
 				DEFAULT: 'hsl(var(--navbar))',
