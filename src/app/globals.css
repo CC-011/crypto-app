@@ -35,9 +35,22 @@ body {
   height: 100px;
 }
 
+.user-navbar-padding {
+ padding: 0px 40px;
+}
+
 .user-navbar-gap {
   display: flex;
+  gap: 40px;
+}
+
+.home-portfolio-gap {
   gap: 10px;
+}
+
+.home-portfolio-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .caret-navbar {
@@ -53,19 +66,27 @@ body {
 }
 
 .user-filtered-list {
+  display: flex;
+  flex-direction: column;
   position: absolute;
-  top: 90px;
-  left: 750px;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  min-width: 360px;
+  margin-top: 3px;
+  z-index: 1;
+}
+
+.currency-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 12px;
 }
 
 .theme-icon-container {
   display: flex;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   gap: 0px;
   opacity: 0px;
 }
@@ -113,8 +134,18 @@ body {
 }
 
 .searchButtonLandingPage {
-  height: 38px;
+  height: 48px;
   width: 356px;
+  border: none;
+  border-radius: 12px;
+}
+
+.selectCurrencyLandingPage {
+  width: 108px;
+  height: 48px;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
 }
 
 .coinLandingPageContainer {
@@ -135,12 +166,39 @@ body {
 }
 
 .carousel {
-  width: 1100px;
-  margin: 100px 0px;
+  width: 100%;
+  padding: 40px 40px 0px 40px;
+}
+
+.carousel-padding-left {
+  padding-left: 0.3rem;
+}
+
+.compare-button-container {
+  padding-bottom: 10px;
+}
+
+.select-currency-padding {
+  padding-left: 8px;
 }
 
 .compare-button {
-  font-size: 20px;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  gap: 10px;
+  height: 48px;
+  width: 143px;
+}
+
+.exit-compare {
+  width: 192px;
+}
+
+.carousel-title-container {
+  padding-left: 20px;
 }
 
 .carousel-title-coin {
@@ -155,20 +213,29 @@ body {
   border: 1px;
   padding-right: 20px;
   height: 78px;
-  width: 254px;
+  width: 240px;
   display: flex;
-  justify-content: center;
   align-items: center;
+}
+
+.flexAlStart {
+  margin-right: 35px;
 }
 
 .flex {
   display: flex;
 }
 
+.align-center {
+  align-items: center;
+  gap: 5px;
+}
+
 .carousel-image {
   display: flex;
+  justify-content: center;
   align-items: center;
-  padding-right: 15px;
+  margin-left: 15px;
 }
 
 .carousel-price-color {
@@ -195,13 +262,16 @@ body {
 
 .chart-container {
   display: flex;
-  gap: 24px;
-  padding: 50px;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 20px 40px;
 }
 
 .chart-size {
-  width: 700px;
-  height: 460px;
+  width: 632px;
+  height: 430px;
+  border-radius: 12px;
+  padding-bottom: 20px;
 }
 
 .chart-header {
@@ -210,15 +280,15 @@ body {
   gap: 7px;
 }
 
-
 .coin-title {
   font-size: 20px;
 }
 
 .coin-price {
-  font-size: 30px;
+  font-size: 28px;
+  font-family: 'Space Grotesk', sans-serif;
+  padding: 10px 0px;
 }
-
 
 .coinLandingPage {
   display: flex;
@@ -233,15 +303,27 @@ body {
 
 /*Table*/
 
+.table-padding {
+  padding: 0px 40px;
+}
+
 .text-align {
   text-align: center;
 }
 
+.percentage-title-padding {
+  margin-left: 5px; 
+}
+
+.bold {
+  font-weight: bold;
+} 
 
 .table-image-container {
   display: flex;
-  height: 100px;
+  height: 77px;
   align-items: center;
+  padding-left: 20px;
 }
 
 .coin-1h-percentage-container {
@@ -253,8 +335,19 @@ body {
   gap: 5px;
 }
 
+.space-marketCap {
+  display: flex;
+  justify-content: space-between;
+  width: 228px;
+}
+
 .coin-link {
-  padding-left: 10px;
+  padding-left: 20px;
+}
+
+.percentages-padding {
+  padding: 0 20px;
+  font-size: 14px;
 }
 
 .table-row {
@@ -265,7 +358,7 @@ body {
 
 .progressbar-table {
   height: 10px;
-  width: 120px;
+  width: 228px;
   position: relative;
   border-radius: 10px;
   margin: auto 0;
@@ -274,10 +367,14 @@ body {
   margin-right: auto;
 }
 
+.sparkline-padding {
+  padding-right: 15px;
+}
+
 
 .sparkLine-chart {
   width: 120px;
-  height: 90px;
+  height: 37px;
 }
 
 /*Portfolio Page*/
@@ -316,7 +413,6 @@ body {
   position: absolute;
   width: 886px;
   height: 393px;
-  background: rgba(19, 18, 26, 1);
   padding: 48px;
   left: 270px;
   border-radius: 20px;
@@ -354,7 +450,6 @@ body {
   gap: 30px;
   height: 241px;
   width: 297px;
-  background: rgba(25, 25, 50, 1);
 }
 
 .user-input-spacing {
@@ -367,7 +462,6 @@ body {
 .input-coin-name {
   width: 461px;
   height: 44px;
-  background: rgba(25, 25, 37, 1);
   padding: 8px;
 }
 
@@ -381,14 +475,12 @@ body {
 .input-coin-amount {
   width: 461px;
   height: 44px;
-  background: rgba(25, 25, 37, 1);
   padding: 8px;
 }
 
 .input-coin-date {
   width: 461px;
   height: 44px;
-  background: rgba(25, 25, 37, 1);
   padding: 8px;
 }
 
@@ -403,13 +495,16 @@ body {
   align-items: center;
   width: 222.5px;
   height: 45px;
-  background: rgba(35, 35, 54, 1);
   border-radius: 6px;
   cursor: pointer;
 }
 
 .cancel-button-styling {
-  background: rgba(120, 120, 250, 1);
+  display: flex;
+  align-items: center;
+  width: 200px;
+  justify-content: center;
+  border-radius: 6px;
 }
 
 .portfolio-coin-containers {
@@ -568,7 +663,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(44, 44, 74, 1);
   margin-bottom: 10px;
   padding: 25px;
   gap: 10px;
@@ -653,19 +747,31 @@ body {
   padding-top: 25px;
 }
 
-
-
-
 @layer base {
   :root {
     --background: 220, 33%, 96%;
     --foreground: 0 0% 3.9%;
+    --coin-title-color: 0 0% 3.9%;
+    --homeIcon: 240 36% 32%;
+    --coin-list: 220 33% 96%;
+    --compare-button: 0 0% 100%;
+    --compare-mode: 240 100% 100%;
+    --compare-icon: 240 36% 32%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
+    --magnifier-icon: 240, 34%, 39%, 0.8;
+    --input-placeholder: 240, 34%, 39%, 0.8;
     --popover-foreground: 0 0% 3.9%;
     --primary: 0 0% 100%;
     --primary-foreground: 0 0% 98%;
+    --search-bar: 240, 82%, 89%, 0.4;
+    --currency-container: 240, 82%, 89%, 0.4;
+    --currencyIcon-container: 240 34% 39%;
+    --currency-color: 240, 34%, 39%, 0.8;
+    --theme-container: 240, 82%, 89%, 0.4;
+    --currency-icon: 240 82% 89%;
+    --theme-button: 240 34% 39%;
     --primarycard: 0 0% 100%;
     --primarycardforeground: 0% 0 0;
     --copybutton: 0, 0%, 0%;
@@ -678,9 +784,13 @@ body {
     --carouselBackground: 223.81 -173% 100%;
     --leftChart: 223.81 -173% 100%;
     --bar-chart: 223.81 -173% 100%;
+    --coinPageImageBackground: 230, 70%, 74%;
     --titleCardPortfolio: 223.81 -173% 100%;
     --infoCardPortfolio: 223.81 -173% 100%;
     --popup: 0, 0%, 100%;
+    --popup-container: 0, 0%, 100%;
+    --cancel-coin: 235, 65%, 67%;
+    --save-coin: 235, 65%, 67%;
     --popup-foreground: 0 0% 3.9%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -704,12 +814,27 @@ body {
   .dark {
     --background: 248, 18%, 9%;
     --foreground: 0 0% 98%;
+    --coin-title-color: 0 0% 82%;
+    --homeIcon: 0 0% 100%;
+    --coin-list: 240 19% 12%;
+    --compare-button: 240 36% 32%;
+    --compare-mode: 240 21% 17%;
+    --compare-icon: 0 0% 100%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
+    --magnifier-icon: 240 6% 83%;
+    --input-placeholder: 0 0% 82%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
     --primary: 252 33% 15%;
     --primary-foreground: 0 0% 9%;
+    --search-bar: 240, 21%, 12%, 1;
+    --currency-container: 240, 21%, 12%, 1;
+    --currency-color: 220, 33%, 96%;
+    --theme-container: 240, 21%, 12%, 1;
+    --currencyIcon-container: 220 33% 96%;
+    --currency-icon: 240, 21%, 12%, 1;
+    --theme-button: 240 34% 39%;
     --primarycard: 252 33% 15%;
     --primarycardforeground: 0.00 0.00 1.00;
     --copybutton: 0 0% 100%;
@@ -724,7 +849,11 @@ body {
     --bar-chart: 252, 33%, 15%;
     --titleCardPortfolio: 252, 33%, 15%;
     --infoCardPortfolio: 240, 33%, 15%;
+    --coinPageImageBackground: 240, 25%, 23%;
     --popup: 248, 18%, 9%;
+    --popup-container: 240, 33%, 15%;
+    --save-coin: 240, 59%, 61%, 0.5;
+    --cancel-coin: 240, 21%, 17%, 1;
     --popup-foreground: 0 0% 98%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -773,4 +902,44 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+@media only screen and (max-width: 500px) {
+.chart-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 32px;
+    padding: 20px 40px;
+  }
+.table-padding {
+    padding: 0px 40px;
+    overflow: hidden;
+    width: 343px;
+    height: 42px;
+    }
+.chart-size {
+    width: 343px;
+    height: 199px;
+    border-radius: 12px;
+    padding-bottom: 20px;
+        }
+ .hide {
+  display: none;
+ }
+ .chart-header {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+ }
+ .coin-title {
+  font-size: 16px;
+ }
+ .coin-price {
+  font-size: 20px;
+ }
+ .coin-date {
+  font-size: 12px;
+ }
 }

@@ -18,9 +18,11 @@ const LoadData = ({ coin }: Coins) => {
 
 interface barPercentage {
   number: number;
+  color: string;
+  background: string;
 }
 
-function ProgressCustom({ number }: barPercentage) {
+function ProgressCustom({ number, color, background }: barPercentage) {
   const [progress, setProgress] = React.useState(10);
 
   React.useEffect(() => {
@@ -28,7 +30,14 @@ function ProgressCustom({ number }: barPercentage) {
     return () => clearTimeout(timer);
   }, [number]);
 
-  return <Progress value={progress} className="w-[60%]" />;
+  return (
+    <Progress
+      color={color}
+      background={background}
+      value={progress}
+      className="w-[60%]"
+    />
+  );
 }
 
 function List() {
@@ -118,6 +127,8 @@ function List() {
                     )
                   : 0
               }
+              color="#FFFFFF"
+              background="rgba(255, 255, 255, 0.4)"
             />
           </div>
         </Card>
@@ -144,6 +155,8 @@ function List() {
                     )
                   : 0
               }
+              color="#F7931A"
+              background="rgba(255, 255, 255, 0.4)"
             />{" "}
           </div>
         </Card>
@@ -169,6 +182,8 @@ function List() {
                     )
                   : 0
               }
+              color="#849DFF"
+              background="rgba(255, 255, 255, 0.4)"
             />
           </div>
         </Card>

@@ -67,7 +67,7 @@ function PortfolioPage() {
       <Card></Card>
       <>
         {showPopup ? (
-          <Card className="popup">
+          <Card className="popup bg-popupContainer">
             <Card className="popup-items-height-width">
               <CardContent className="popup-content">
                 <CardTitle className="popup-select-coin">
@@ -80,7 +80,7 @@ function PortfolioPage() {
                   X
                 </CardTitle>
               </CardContent>
-              <Card className="instructions-container">
+              <Card className="instructions-container bg-popupContainer">
                 <CardContent className="instructions-styling">
                   <p>1. Type coin name, then select from dropdown</p>
                   <p>2. Type amount owned (default: 0)</p>
@@ -89,7 +89,7 @@ function PortfolioPage() {
                 <CardContent className="user-input-spacing">
                   <Card>
                     <input
-                      className="input-coin-name"
+                      className="input-coin-name bg-searchBar"
                       type="text"
                       value={filterByName}
                       onChange={(e) => {
@@ -99,7 +99,7 @@ function PortfolioPage() {
                     />
                     <Card className="filterList">
                       {filterByName ? (
-                        <Card>
+                        <Card className="bg-coinList">
                           {filtered?.map((data) => (
                             <p
                               key={data.id}
@@ -129,7 +129,7 @@ function PortfolioPage() {
                       }
                       type="number"
                       placeholder="Purchased amount"
-                      className="input-coin-amount"
+                      className="input-coin-amount bg-searchBar"
                     />
                   </Card>
                   <Card>
@@ -139,12 +139,18 @@ function PortfolioPage() {
                       onChange={(e) => setPurchasedDate(e.currentTarget.value)}
                       placeholder="Purchased date"
                       type="date"
-                      className="input-coin-date"
+                      className="input-coin-date bg-searchBar"
                     />
                   </Card>
                   <Card className="save-cancel-spacing">
                     <p
-                      className="save-button-styling"
+                      className="cancel-button-styling bg-cancelCoin"
+                      onClick={() => setShowPopUp(!showPopup)}
+                    >
+                      Cancel
+                    </p>
+                    <p
+                      className="save-button-styling bg-saveCoin"
                       onClick={() => {
                         setShowPopUp(!showPopup),
                           dispatch(
@@ -158,12 +164,6 @@ function PortfolioPage() {
                       }}
                     >
                       Save and Continue
-                    </p>
-                    <p
-                      className="cancel-button-styling"
-                      onClick={() => setShowPopUp(!showPopup)}
-                    >
-                      Cancel
                     </p>
                   </Card>
                 </CardContent>
