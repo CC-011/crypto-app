@@ -50,7 +50,7 @@ function List() {
   return (
     <Card>
       <Card className="bg-navbar topDisplayBar navbar-container">
-        <Card className="navbarCoinGap flex">
+        <Card className="hide navbarCoinGap flex">
           <Card className="lightningBoltContainer">
             <Card>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -58,9 +58,9 @@ function List() {
               </svg>
             </Card>
           </Card>
-          Coins: <LoadData coin={data?.active_cryptocurrencies ?? 0} />
+          Coins: <LoadData coin={data?.active_cryptocurrencies ?? 0} />{" "}
         </Card>
-        <Card className="flex navbar-gap">
+        <Card className="flex navbar-gap hide">
           <>
             {data ? (
               <div className="caret-navbar">

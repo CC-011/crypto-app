@@ -9,15 +9,7 @@ import { fetchSecondCoinData } from "./landingPageChart/secondLandingPageChart";
 import { fetchTableChart } from "./tableChart/table";
 import { setState } from "./landingPageChart/secondLandingPageChart";
 import { useState } from "react";
-import {
-  Area,
-  AreaChart,
-  XAxis,
-  Bar,
-  BarChart,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { Area, AreaChart, XAxis, Bar, BarChart, YAxis } from "recharts";
 import { Progress } from "@/components/ui/progress";
 import {
   Card,
@@ -79,6 +71,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
 
 function List() {
@@ -88,10 +82,28 @@ function List() {
     (state: RootState) => state.secondCoin
   );
   const { tableChart } = useSelector((state: RootState) => state.table);
+  const boolean = useSelector((state: RootState) => state.boolean);
   const [chartNameEPage, setCharNameEPage] = useState("bitcoin");
   const [secondChartName, setSecondChartName] = useState("");
   const [compareCoinMode, setCompareCoinMode] = useState(false);
   const chartCurrencyEPage = "usd";
+
+  function useMediaQuery(query: string) {
+    const [matches, setMatches] = useState<boolean | null>(null);
+
+    useEffect(() => {
+      if (typeof window === "undefined") return;
+      const mediaQueryList = window.matchMedia(query);
+      setMatches(mediaQueryList.matches);
+      const listener = (event: MediaQueryListEvent) => {
+        setMatches(event.matches);
+      };
+      mediaQueryList.addEventListener("change", listener);
+      return () => mediaQueryList.removeEventListener("change", listener);
+    }, [query]);
+
+    return matches;
+  }
 
   useEffect(() => {
     if (compareCoinMode === false) {
@@ -217,7 +229,6 @@ function List() {
     return <Chart type="line" data={chartData} options={options} />;
   };
 
-  // Helper to format timestamp to 'YYYY-MM-DD'
   const formatDate = (timestamp: number) => {
     const d = new Date(timestamp);
     const yyyy = d.getFullYear();
@@ -226,7 +237,6 @@ function List() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  // Build date range array from start to end date (inclusive)
   function getDateRange(startDate: string, endDate: string) {
     const dates = [];
     const current = new Date(startDate);
@@ -239,7 +249,6 @@ function List() {
     return dates;
   }
 
-  // Build map from date string to value (first occurrence)
   function buildDateMap(dataArray: [number, number][]) {
     const map = new Map<string, number>();
     dataArray.forEach(([timestamp, value]) => {
@@ -250,8 +259,6 @@ function List() {
     });
     return map;
   }
-
-  // Main data processing
 
   const prices1 = (chartData?.prices ?? []) as [number, number][];
   const prices2 = (chartDataSecondCoin?.prices ?? []) as [number, number][];
@@ -344,18 +351,18 @@ function List() {
   };
 
   const pretty = date.toLocaleDateString("en-US", options);
-
+  const isMobile = useMediaQuery("(max-width: 600px)");
   return (
-    <div className="coinLandingPageContainer">
+    <div className="coinLandingPageContainer overflow-hidden">
       <div className="mainChartsAndCarousel">
         <Carousel className="carousel">
-          <div className="space-between compare-button-container">
+          <div className="space-between compare-button-container gap">
             <p className="text-coinTitleColor select-currency-padding">
               Select the currency to view statics
             </p>
             <button onClick={() => setCompareCoinMode(!compareCoinMode)}>
               <div
-                className={`flex compare-button bg-compareMode ${compareCoinMode ? "exit-compare" : ""}`}
+                className={`flex compare-button bg-compareMode pointer ${compareCoinMode ? "exit-compare" : ""}`}
               >
                 <div>
                   {compareCoinMode ? (
@@ -387,7 +394,7 @@ function List() {
           <CarouselContent>
             {tableChart?.map((data) => (
               <CarouselItem key={data.id}>
-                <div className="bg-carouselBackground carousel-item">
+                <div className="bg-carouselBackground carousel-item mobile-width-height">
                   <Card className="flex">
                     <div className="carousel-image">
                       <img
@@ -400,6 +407,7 @@ function List() {
                     <div className="carousel-title-container">
                       <div className="carousel-title-coin">
                         <span
+                          className="hide"
                           onClick={(e) => {
                             if (compareCoinMode === false) {
                               setSecondChartName(" "),
@@ -419,14 +427,37 @@ function List() {
                         >
                           {data.name}
                         </span>
-                        <span>({data.symbol.toLocaleUpperCase()})</span>
+                        <span className="hide">
+                          ({data.symbol.toLocaleUpperCase()})
+                        </span>
+                        <span
+                          onClick={(e) => {
+                            if (compareCoinMode === false) {
+                              setSecondChartName(" "),
+                                setCharNameEPage(
+                                  e.currentTarget.innerText.toLocaleLowerCase()
+                                ),
+                                setChartNameBasedOnInput(
+                                  e.currentTarget.innerText
+                                ),
+                                setSymbolName(data.symbol);
+                            } else if (compareCoinMode === true) {
+                              setSecondChartName(
+                                e.currentTarget.innerText.toLocaleLowerCase()
+                              );
+                            }
+                          }}
+                          className="hide-input-field-mobile"
+                        >
+                          {data.symbol.toLocaleUpperCase()}
+                        </span>
                       </div>
-                      <span className="carousel-price-color flex">
+                      <span className="carousel-price-color flex hide">
                         <ShowCoinPricesInUsDollars
                           cryptoPricesInUsDollars={data?.current_price}
                         />
                         <div
-                          className="coin-1h-percentage-container carousel-text"
+                          className="coin-1h-percentage-container carousel-text hide"
                           style={{
                             color:
                               data.price_change_percentage_1h_in_currency >= 0
@@ -485,7 +516,7 @@ function List() {
           </CarouselContent>
         </Carousel>
       </div>
-      <Card className="chart-container">
+      <Card className="chart-container hide">
         <Card className="bg-leftChart chart-size">
           <CardHeader>
             <div className="chart-header">
@@ -502,93 +533,84 @@ function List() {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="o">
+          <CardContent>
             <ChartContainer
-              style={{
-                paddingBottom: "40px",
-              }}
-              className="u"
+              className="chart-padding-bottom"
               config={chartConfig}
             >
-              <ResponsiveContainer width="100%">
-                <AreaChart
-                  className="g2"
-                  accessibilityLayer
-                  data={chartDataRecharts}
-                >
-                  <XAxis
-                    className="g4"
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent />}
-                  />
-                  <defs>
-                    <linearGradient
-                      id="fillDesktop"
-                      x1="0"
-                      y1="0"
-                      x2="0"
-                      y2="1"
-                    >
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-desktop)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-desktop)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                    <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="5%"
-                        stopColor="var(--color-mobile)"
-                        stopOpacity={0.8}
-                      />
-                      <stop
-                        offset="95%"
-                        stopColor="var(--color-mobile)"
-                        stopOpacity={0.1}
-                      />
-                    </linearGradient>
-                  </defs>
-                  <YAxis yAxisId="bitcoin" orientation="left" hide={true} />
-                  <YAxis yAxisId="ethereum" orientation="left" hide={true} />
-                  <Area
-                    dataKey="mobile"
-                    type="monotone"
-                    fill="url(#fillMobile)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-mobile)"
-                    yAxisId="bitcoin"
-                  />
-                  <Area
-                    dataKey="desktop"
-                    type="monotone"
-                    fill="url(#fillDesktop)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-desktop)"
-                    yAxisId="ethereum"
-                  />
-                  <ChartLegend
-                    content={
-                      compareCoinMode ? (
-                        <ChartLegendContent />
-                      ) : (
-                        <ChartLegendContent className="hidden" />
-                      )
-                    }
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <AreaChart
+                className="g2"
+                accessibilityLayer
+                data={chartDataRecharts}
+                width={600}
+                height={300}
+              >
+                <XAxis
+                  className="g4"
+                  dataKey="month"
+                  tickLine={false}
+                  axisLine={false}
+                  tickMargin={8}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent />}
+                />
+                <defs>
+                  <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-desktop)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-desktop)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                  <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
+                    <stop
+                      offset="5%"
+                      stopColor="var(--color-mobile)"
+                      stopOpacity={0.8}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="var(--color-mobile)"
+                      stopOpacity={0.1}
+                    />
+                  </linearGradient>
+                </defs>
+                <YAxis yAxisId="bitcoin" orientation="left" hide={true} />
+                <YAxis yAxisId="ethereum" orientation="left" hide={true} />
+                <Area
+                  dataKey="mobile"
+                  type="monotone"
+                  fill="url(#fillMobile)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-mobile)"
+                  yAxisId="bitcoin"
+                />
+                <Area
+                  dataKey="desktop"
+                  type="monotone"
+                  fill="url(#fillDesktop)"
+                  fillOpacity={0.4}
+                  stroke="var(--color-desktop)"
+                  yAxisId="ethereum"
+                />
+                <ChartLegend
+                  content={
+                    compareCoinMode ? (
+                      <ChartLegendContent />
+                    ) : (
+                      <ChartLegendContent className="hidden" />
+                    )
+                  }
+                />
+              </AreaChart>
             </ChartContainer>
           </CardContent>
           <CardFooter></CardFooter>
@@ -609,367 +631,588 @@ function List() {
           </CardHeader>
           <CardContent>
             <ChartContainer
-              style={{
-                paddingBottom: "40px",
-              }}
+              className="chart-padding-bottom"
               config={barChartConfig}
             >
-              <ResponsiveContainer width="100%">
-                <BarChart accessibilityLayer data={barChartData}>
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    tickMargin={10}
-                    axisLine={false}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dashed" />}
-                  />
-                  <Bar
-                    dataKey="desktop"
-                    fill="var(--color-desktop)"
-                    radius={4}
-                  />
-                  <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
-                  <ChartLegend
-                    content={
-                      compareCoinMode ? (
-                        <ChartLegendContent />
-                      ) : (
-                        <ChartLegendContent className="hidden" />
-                      )
-                    }
-                  />
-                </BarChart>
-              </ResponsiveContainer>
+              <BarChart
+                accessibilityLayer
+                data={barChartData}
+                width={600}
+                height={300}
+              >
+                <XAxis
+                  dataKey="month"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 3)}
+                />
+                <ChartTooltip
+                  cursor={false}
+                  content={<ChartTooltipContent indicator="dashed" />}
+                />
+                <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />
+                <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} />
+                <ChartLegend
+                  content={
+                    compareCoinMode ? (
+                      <ChartLegendContent />
+                    ) : (
+                      <ChartLegendContent className="hidden" />
+                    )
+                  }
+                />
+              </BarChart>
             </ChartContainer>
           </CardContent>
         </Card>
       </Card>
-      <Card className="table-padding">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead
-                onClick={() => setDefaultMarket("id_asc")}
-                className="bold flexAlStart"
-              >
-                Name
-              </TableHead>
-              <TableHead
-                onClick={() => setDefaultMarket("market_cap_asc")}
-                className="bold"
-              >
-                Price
-              </TableHead>
-              <TableHead
-                onClick={() => setDefaultMarket("1h")}
-                className="percentage-title-padding"
-              >
-                1h%
-              </TableHead>
-              <TableHead
-                onClick={() => setDefaultMarket("24h")}
-                className="percentage-title-padding"
-              >
-                24h%
-              </TableHead>
-              <TableHead className="percentage-title-padding">7d%</TableHead>
-              <TableHead className="bold">24h Vol / Market Cap</TableHead>
-              <TableHead className="bold">Circulating / Total Sup</TableHead>
-              <TableHead className="bold">Last 7d</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {tableChart?.map((data) => (
-              <TableRow
-                className="bg-carouselBackground table-row"
-                key={data.id}
-              >
-                <TableCell className="font-medium table-image-container">
-                  <Image
-                    src={data.image}
-                    alt="Image not found"
-                    height={20}
-                    width={20}
-                  />
-                  <Link
-                    className="coin-link"
-                    href={`/coin/${data.name.toLocaleLowerCase()}`}
-                  >
-                    {data.name}({data.symbol.toLocaleUpperCase()})
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <ShowCoinPricesInUsDollars
-                    cryptoPricesInUsDollars={data?.current_price}
-                  />
-                </TableCell>
-                <TableCell className="percentages-padding">
-                  <div
-                    className="flex align-center"
-                    style={{
-                      color:
-                        data.price_change_percentage_1h_in_currency >= 0
-                          ? "#01F1E3"
-                          : "#FE1040",
-                    }}
-                  >
-                    {data.price_change_percentage_1h_in_currency >= 0 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#01F1E3"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="size-6 carousel-svg"
+      <div className="hide-input-field-mobile chart-mobile-margin">
+        {boolean ? (
+          <></>
+        ) : (
+          <>
+            <Carousel className="flex center carousel-chart-size">
+              <CarouselContent>
+                <CarouselItem className="min-w-full">
+                  <Card className="bg-leftChart">
+                    <CardHeader>
+                      <div className="chart-header">
+                        <p className="coin-title text-coinTitleColor">
+                          {ChartNameBasedOnInput}(
+                          {SymbolName.toLocaleUpperCase()})
+                        </p>
+                        <div>
+                          <CardTitle>
+                            <ShowMarketNumbersInCompactForm
+                              marketNumbers={marketCapTotal}
+                            />
+                          </CardTitle>
+                          <p className="text-coinTitleColor">{pretty}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer
+                        className="chart-padding-bottom"
+                        config={chartConfig}
                       >
-                        {" "}
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                        />{" "}
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#FE1040"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="size-6 carousel-svg"
-                      >
-                        {" "}
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                        />{" "}
-                      </svg>
-                    )}
-                    {Math.abs(
-                      data.price_change_percentage_1h_in_currency
-                    ).toFixed(2)}
-                    %
-                  </div>
-                </TableCell>
-                <TableCell className="percentages-padding">
-                  <div
-                    className="flex align-center"
-                    style={{
-                      color:
-                        data.price_change_percentage_24h >= 0
-                          ? "#01F1E3"
-                          : "#FE1040",
-                    }}
-                  >
-                    {data.price_change_percentage_24h >= 0 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#01F1E3"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="size-6 carousel-svg"
-                      >
-                        {" "}
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                        />{" "}
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#FE1040"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="size-6 carousel-svg"
-                      >
-                        {" "}
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                        />{" "}
-                      </svg>
-                    )}
-                    {Math.abs(data.price_change_percentage_24h).toFixed(2)}%
-                  </div>
-                </TableCell>
-                <TableCell className="percentages-padding">
-                  <div
-                    className="flex align-center"
-                    style={{
-                      color:
-                        data.price_change_percentage_7d_in_currency >= 0
-                          ? "#01F1E3"
-                          : "#FE1040",
-                    }}
-                  >
-                    {data.price_change_percentage_7d_in_currency >= 0 ? (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#01F1E3"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="size-6 carousel-svg"
-                      >
-                        {" "}
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                        />{" "}
-                      </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="#FE1040"
-                        viewBox="0 0 24 24"
-                        strokeWidth={0}
-                        stroke="currentColor"
-                        className="size-6 carousel-svg"
-                      >
-                        {" "}
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                        />{" "}
-                      </svg>
-                    )}
-                    {Math.abs(
-                      data.price_change_percentage_7d_in_currency
-                    ).toFixed(2)}
-                    %
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="space-marketCap hide">
-                    <div
-                      style={{
-                        color:
-                          data.price_change_percentage_1h_in_currency >= 0 &&
-                          data.price_change_percentage_24h >= 0 &&
-                          data.price_change_percentage_7d_in_currency >= 0
-                            ? "#01F1E3"
-                            : "#FE1040",
-                      }}
-                    >
-                      <ShowMarketNumbersInCompactForm
-                        marketNumbers={data?.total_volume}
-                      />
-                    </div>
-                    <div
-                      style={{
-                        color:
-                          data.price_change_percentage_1h_in_currency >= 0 &&
-                          data.price_change_percentage_24h >= 0 &&
-                          data.price_change_percentage_7d_in_currency >= 0
-                            ? "#01F1E3"
-                            : "#FE1040",
-                      }}
-                    >
-                      <ShowMarketNumbersInCompactForm
-                        marketNumbers={data?.market_cap}
-                      />
-                    </div>
-                  </div>
-                  <Card className="progressbar-table hide">
-                    <ProgressCustom
-                      number={(data.total_volume / data.market_cap) * 100}
-                      color={
-                        data.price_change_percentage_1h_in_currency >= 0 &&
-                        data.price_change_percentage_24h >= 0 &&
-                        data.price_change_percentage_7d_in_currency >= 0
-                          ? "#00B1A7"
-                          : "#FE2264"
-                      }
-                      background={
-                        data.price_change_percentage_1h_in_currency >= 0 &&
-                        data.price_change_percentage_24h >= 0 &&
-                        data.price_change_percentage_7d_in_currency >= 0
-                          ? "rgba(0, 177, 167, 0.1)"
-                          : "rgba(254, 34, 100, 0.1)"
-                      }
-                    />
+                        <AreaChart
+                          width={600}
+                          height={300}
+                          className="g2"
+                          accessibilityLayer
+                          data={chartDataRecharts}
+                        >
+                          <XAxis
+                            className="g4"
+                            dataKey="month"
+                            tickLine={false}
+                            axisLine={false}
+                            tickMargin={8}
+                            tickFormatter={(value) => value.slice(0, 3)}
+                          />
+                          <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent />}
+                          />
+                          <defs>
+                            <linearGradient
+                              id="fillDesktop"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="5%"
+                                stopColor="var(--color-desktop)"
+                                stopOpacity={0.8}
+                              />
+                              <stop
+                                offset="95%"
+                                stopColor="var(--color-desktop)"
+                                stopOpacity={0.1}
+                              />
+                            </linearGradient>
+                            <linearGradient
+                              id="fillMobile"
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="5%"
+                                stopColor="var(--color-mobile)"
+                                stopOpacity={0.8}
+                              />
+                              <stop
+                                offset="95%"
+                                stopColor="var(--color-mobile)"
+                                stopOpacity={0.1}
+                              />
+                            </linearGradient>
+                          </defs>
+                          <YAxis
+                            yAxisId="bitcoin"
+                            orientation="left"
+                            hide={true}
+                          />
+                          <YAxis
+                            yAxisId="ethereum"
+                            orientation="left"
+                            hide={true}
+                          />
+                          <Area
+                            dataKey="mobile"
+                            type="monotone"
+                            fill="url(#fillMobile)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-mobile)"
+                            yAxisId="bitcoin"
+                          />
+                          <Area
+                            dataKey="desktop"
+                            type="monotone"
+                            fill="url(#fillDesktop)"
+                            fillOpacity={0.4}
+                            stroke="var(--color-desktop)"
+                            yAxisId="ethereum"
+                          />
+                          <ChartLegend
+                            content={
+                              compareCoinMode ? (
+                                <ChartLegendContent />
+                              ) : (
+                                <ChartLegendContent className="hidden" />
+                              )
+                            }
+                          />
+                        </AreaChart>
+                      </ChartContainer>
+                    </CardContent>
+                    <CardFooter></CardFooter>
                   </Card>
-                </TableCell>
-                <TableCell>
-                  <div className="space-marketCap hide">
-                    <div
-                      style={{
-                        color:
-                          data.price_change_percentage_1h_in_currency >= 0 &&
-                          data.price_change_percentage_24h >= 0 &&
-                          data.price_change_percentage_7d_in_currency >= 0
-                            ? "#01F1E3"
-                            : "#FE1040",
-                      }}
-                    >
-                      <ShowMarketNumbersInCompactForm
-                        marketNumbers={data?.circulating_supply}
-                      />
-                    </div>
-                    <div
-                      style={{
-                        color:
-                          data.price_change_percentage_1h_in_currency >= 0 &&
-                          data.price_change_percentage_24h >= 0 &&
-                          data.price_change_percentage_7d_in_currency >= 0
-                            ? "#01F1E3"
-                            : "#FE1040",
-                      }}
-                    >
-                      <ShowMarketNumbersInCompactForm
-                        marketNumbers={data?.total_supply}
-                      />
-                    </div>
-                  </div>
-                  <Card className="progressbar-table hide">
-                    <ProgressCustom
-                      number={
-                        (data.circulating_supply / data.total_volume) * 100
-                      }
-                      color={
-                        data.price_change_percentage_1h_in_currency >= 0 &&
-                        data.price_change_percentage_24h >= 0 &&
-                        data.price_change_percentage_7d_in_currency >= 0
-                          ? "#00B1A7"
-                          : "#FE2264"
-                      }
-                      background={
-                        data.price_change_percentage_1h_in_currency >= 0 &&
-                        data.price_change_percentage_24h >= 0 &&
-                        data.price_change_percentage_7d_in_currency >= 0
-                          ? "rgba(0, 177, 167, 0.1)"
-                          : "rgba(254, 34, 100, 0.1)"
-                      }
-                    />
+                </CarouselItem>
+                <CarouselItem className="min-w-full">
+                  <Card className="bg-barchart">
+                    <CardHeader>
+                      <div className="chart-header">
+                        <p className="coin-title text-coinTitleColor">
+                          Volume 24h
+                        </p>
+                        <div>
+                          <CardTitle>
+                            <ShowMarketNumbersInCompactForm
+                              marketNumbers={totalDesktop}
+                            />
+                          </CardTitle>
+                          <p className="text-coinTitleColor">{pretty}</p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ChartContainer
+                        className="padding-bottom"
+                        config={barChartConfig}
+                      >
+                        <BarChart
+                          width={600}
+                          height={300}
+                          accessibilityLayer
+                          data={barChartData}
+                        >
+                          <XAxis
+                            dataKey="month"
+                            tickLine={false}
+                            tickMargin={10}
+                            axisLine={false}
+                            tickFormatter={(value) => value.slice(0, 3)}
+                          />
+                          <ChartTooltip
+                            cursor={false}
+                            content={<ChartTooltipContent indicator="dashed" />}
+                          />
+                          <Bar
+                            dataKey="desktop"
+                            fill="var(--color-desktop)"
+                            radius={4}
+                          />
+                          <Bar
+                            dataKey="mobile"
+                            fill="var(--color-mobile)"
+                            radius={4}
+                          />
+                          <ChartLegend
+                            content={
+                              compareCoinMode ? (
+                                <ChartLegendContent />
+                              ) : (
+                                <ChartLegendContent className="hidden" />
+                              )
+                            }
+                          />
+                        </BarChart>
+                      </ChartContainer>
+                    </CardContent>
                   </Card>
-                </TableCell>
-                <TableCell>
-                  <div className="sparkLine-chart sparkline-padding">
-                    <TableChartForCoins
-                      dataProp={data?.sparkline_in_7d?.price}
-                      data1h={data.price_change_percentage_1h_in_currency}
-                      data24h={data.price_change_percentage_24h}
-                      data7d={data.price_change_percentage_7d_in_currency}
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter></TableFooter>
-        </Table>
+                </CarouselItem>
+              </CarouselContent>
+              <div className="carousel-button-container">
+                <div className="carousel-prev-button-container">
+                  <CarouselPrevious />
+                </div>
+                <div className="carousel-next-button-container">
+                  <CarouselNext />
+                </div>
+              </div>
+            </Carousel>
+          </>
+        )}
+      </div>
+      <Card className="table-padding padding-top-table table-wrapper">
+        {boolean && isMobile ? (
+          <></>
+        ) : (
+          <>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead
+                    onClick={() => setDefaultMarket("id_asc")}
+                    className="bold flexAlStart"
+                  >
+                    Name
+                  </TableHead>
+                  <TableHead
+                    onClick={() => setDefaultMarket("market_cap_asc")}
+                    className="bold"
+                  >
+                    Price
+                  </TableHead>
+                  <TableHead
+                    onClick={() => setDefaultMarket("1h")}
+                    className="percentage-title-padding"
+                  >
+                    1h%
+                  </TableHead>
+                  <TableHead
+                    onClick={() => setDefaultMarket("24h")}
+                    className="percentage-title-padding"
+                  >
+                    24h%
+                  </TableHead>
+                  <TableHead className="percentage-title-padding hide">
+                    7d%
+                  </TableHead>
+                  <TableHead className="bold hide">
+                    24h Vol / Market Cap
+                  </TableHead>
+                  <TableHead className="bold hide">
+                    Circulating / Total Sup
+                  </TableHead>
+                  <TableHead className="bold hide">Last 7d</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tableChart?.map((data) => (
+                  <TableRow
+                    className="bg-carouselBackground table-row"
+                    key={data.id}
+                  >
+                    <TableCell className="font-medium table-image-container">
+                      <Image
+                        src={data.image}
+                        alt="Image not found"
+                        height={20}
+                        width={20}
+                      />
+                      <Link
+                        className="coin-link"
+                        href={`/coin/${data.name.toLocaleLowerCase()}`}
+                      >
+                        <div className="flex flex-column">
+                          <div>{data.name}</div>
+                          <div>({data.symbol.toLocaleUpperCase()})</div>
+                        </div>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <ShowCoinPricesInUsDollars
+                        cryptoPricesInUsDollars={data?.current_price}
+                      />
+                    </TableCell>
+                    <TableCell className="percentages-padding">
+                      <div
+                        className="flex align-center"
+                        style={{
+                          color:
+                            data.price_change_percentage_1h_in_currency >= 0
+                              ? "#01F1E3"
+                              : "#FE1040",
+                        }}
+                      >
+                        {data.price_change_percentage_1h_in_currency >= 0 ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#01F1E3"
+                            viewBox="0 0 24 24"
+                            strokeWidth={0}
+                            stroke="currentColor"
+                            className="size-6 carousel-svg"
+                          >
+                            {" "}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                            />{" "}
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#FE1040"
+                            viewBox="0 0 24 24"
+                            strokeWidth={0}
+                            stroke="currentColor"
+                            className="size-6 carousel-svg"
+                          >
+                            {" "}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                            />{" "}
+                          </svg>
+                        )}
+                        {Math.abs(
+                          data.price_change_percentage_1h_in_currency
+                        ).toFixed(2)}
+                        %
+                      </div>
+                    </TableCell>
+                    <TableCell className="percentages-padding">
+                      <div
+                        className="flex align-center"
+                        style={{
+                          color:
+                            data.price_change_percentage_24h >= 0
+                              ? "#01F1E3"
+                              : "#FE1040",
+                        }}
+                      >
+                        {data.price_change_percentage_24h >= 0 ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#01F1E3"
+                            viewBox="0 0 24 24"
+                            strokeWidth={0}
+                            stroke="currentColor"
+                            className="size-6 carousel-svg"
+                          >
+                            {" "}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                            />{" "}
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#FE1040"
+                            viewBox="0 0 24 24"
+                            strokeWidth={0}
+                            stroke="currentColor"
+                            className="size-6 carousel-svg"
+                          >
+                            {" "}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                            />{" "}
+                          </svg>
+                        )}
+                        {Math.abs(data.price_change_percentage_24h).toFixed(2)}%
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="percentages-padding hide">
+                      <div
+                        className="flex align-center"
+                        style={{
+                          color:
+                            data.price_change_percentage_7d_in_currency >= 0
+                              ? "#01F1E3"
+                              : "#FE1040",
+                        }}
+                      >
+                        {data.price_change_percentage_7d_in_currency >= 0 ? (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#01F1E3"
+                            viewBox="0 0 24 24"
+                            strokeWidth={0}
+                            stroke="currentColor"
+                            className="size-6 carousel-svg"
+                          >
+                            {" "}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                            />{" "}
+                          </svg>
+                        ) : (
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="#FE1040"
+                            viewBox="0 0 24 24"
+                            strokeWidth={0}
+                            stroke="currentColor"
+                            className="size-6 carousel-svg"
+                          >
+                            {" "}
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                            />{" "}
+                          </svg>
+                        )}
+                        {Math.abs(
+                          data.price_change_percentage_7d_in_currency
+                        ).toFixed(2)}
+                        %
+                      </div>
+                    </TableCell>
+                    <TableCell className="hide">
+                      <div className="space-marketCap">
+                        <div
+                          style={{
+                            color:
+                              data.price_change_percentage_1h_in_currency >=
+                                0 &&
+                              data.price_change_percentage_24h >= 0 &&
+                              data.price_change_percentage_7d_in_currency >= 0
+                                ? "#01F1E3"
+                                : "#FE1040",
+                          }}
+                        >
+                          <ShowMarketNumbersInCompactForm
+                            marketNumbers={data?.total_volume}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            color:
+                              data.price_change_percentage_1h_in_currency >=
+                                0 &&
+                              data.price_change_percentage_24h >= 0 &&
+                              data.price_change_percentage_7d_in_currency >= 0
+                                ? "#01F1E3"
+                                : "#FE1040",
+                          }}
+                        >
+                          <ShowMarketNumbersInCompactForm
+                            marketNumbers={data?.market_cap}
+                          />
+                        </div>
+                      </div>
+                      <Card className="progressbar-table hide">
+                        <ProgressCustom
+                          number={(data.total_volume / data.market_cap) * 100}
+                          color={
+                            data.price_change_percentage_1h_in_currency >= 0 &&
+                            data.price_change_percentage_24h >= 0 &&
+                            data.price_change_percentage_7d_in_currency >= 0
+                              ? "#00B1A7"
+                              : "#FE2264"
+                          }
+                          background={
+                            data.price_change_percentage_1h_in_currency >= 0 &&
+                            data.price_change_percentage_24h >= 0 &&
+                            data.price_change_percentage_7d_in_currency >= 0
+                              ? "rgba(0, 177, 167, 0.1)"
+                              : "rgba(254, 34, 100, 0.1)"
+                          }
+                        />
+                      </Card>
+                    </TableCell>
+                    <TableCell className="hide">
+                      <div className="space-marketCap">
+                        <div
+                          style={{
+                            color:
+                              data.price_change_percentage_1h_in_currency >=
+                                0 &&
+                              data.price_change_percentage_24h >= 0 &&
+                              data.price_change_percentage_7d_in_currency >= 0
+                                ? "#01F1E3"
+                                : "#FE1040",
+                          }}
+                        >
+                          <ShowMarketNumbersInCompactForm
+                            marketNumbers={data?.circulating_supply}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            color:
+                              data.price_change_percentage_1h_in_currency >=
+                                0 &&
+                              data.price_change_percentage_24h >= 0 &&
+                              data.price_change_percentage_7d_in_currency >= 0
+                                ? "#01F1E3"
+                                : "#FE1040",
+                          }}
+                        >
+                          <ShowMarketNumbersInCompactForm
+                            marketNumbers={data?.total_supply}
+                          />
+                        </div>
+                      </div>
+                      <Card className="progressbar-table hide">
+                        <ProgressCustom
+                          number={
+                            (data.circulating_supply / data.total_volume) * 100
+                          }
+                          color={
+                            data.price_change_percentage_1h_in_currency >= 0 &&
+                            data.price_change_percentage_24h >= 0 &&
+                            data.price_change_percentage_7d_in_currency >= 0
+                              ? "#00B1A7"
+                              : "#FE2264"
+                          }
+                          background={
+                            data.price_change_percentage_1h_in_currency >= 0 &&
+                            data.price_change_percentage_24h >= 0 &&
+                            data.price_change_percentage_7d_in_currency >= 0
+                              ? "rgba(0, 177, 167, 0.1)"
+                              : "rgba(254, 34, 100, 0.1)"
+                          }
+                        />
+                      </Card>
+                    </TableCell>
+                    <TableCell className="hide">
+                      <div className="sparkLine-chart sparkline-padding">
+                        <TableChartForCoins
+                          dataProp={data?.sparkline_in_7d?.price}
+                          data1h={data.price_change_percentage_1h_in_currency}
+                          data24h={data.price_change_percentage_24h}
+                          data7d={data.price_change_percentage_7d_in_currency}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter></TableFooter>
+            </Table>
+          </>
+        )}
       </Card>
     </div>
   );

@@ -60,7 +60,7 @@ export default function City() {
               </Card>
             </CardContent>
           </Card>
-          <Card className="bg-primarycard coin-links-container">
+          <Card className="bg-primarycard coin-links-container hide">
             <CardContent
               className="pointer"
               onClick={(event) => {
@@ -405,7 +405,7 @@ export default function City() {
         </Card>
       </Card>
       <Card className="coin-description">
-        <Card>
+        <Card className="hide">
           <CardHeader>
             <h1 className="text-3xl font-semibold">Description</h1>
           </CardHeader>

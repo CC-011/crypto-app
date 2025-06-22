@@ -133,6 +133,12 @@ body {
   background: white;
 }
 
+/*svg magnifier*/ 
+.left-3 {
+  left: 0.75rem;
+}
+/**/
+
 .searchButtonLandingPage {
   height: 48px;
   width: 356px;
@@ -226,6 +232,14 @@ body {
   display: flex;
 }
 
+.align {
+  align-items: center;
+}
+
+.column {
+  flex-direction: column;
+}
+
 .align-center {
   align-items: center;
   gap: 5px;
@@ -265,6 +279,10 @@ body {
   justify-content: space-between;
   gap: 32px;
   padding: 20px 40px;
+}
+
+.chart-padding-bottom {
+  padding-bottom: 40px;
 }
 
 .chart-size {
@@ -443,9 +461,18 @@ body {
   width: 805px;
 }
 
+.instructions-gap {
+  gap: 10px;
+}
+
+.instructions-image {
+  width: 65px;
+}
+
 .instructions-styling {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
   gap: 30px;
   height: 241px;
@@ -470,6 +497,19 @@ body {
   flex-direction: column;
   position: absolute;
   background: rgba(25, 25, 37, 1);
+}
+
+.filter-list {
+  width: 300px;
+}
+
+.filter-list-image {
+  height: 50px;
+  width: 50px;
+}
+
+.filter-list-width {
+  width: 460px;
 }
 
 .input-coin-amount {
@@ -904,24 +944,212 @@ body {
   }
 }
 
+.hide-add-button-mobile {
+  display: none;
+}
 
-@media only screen and (max-width: 500px) {
+.hide-input-field-mobile {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+
+.coinLandingPageContainer {
+    padding: 0px 10px;
+  }
+
+    .user-navbar-padding {
+      padding: 0px 0px;
+    }
+
+        .topDisplayBar {
+          padding: 16px 0px 16px 35px;
+          height: 56px;
+        }
+
+        .navbar-container {
+          color: hsl(var(--navbarColor));
+          display: flex;
+          justify-content: center;
+          gap: 20px;
+        
+        }
+
+               
+
+/*Navbar with info display*/
+.firstProgressBar {
+    display: flex;
+    align-items: center;
+    /*width: 70px;*/
+  }
+
+/**/
+
+
+
+  /*carousel*/
+ .carousel {
+   width: 100%;
+   padding: 10px 0px 0px 0px;
+ }
+
+.carousel-title-container {
+    padding-left: 10px;
+    margin-top: 2px;
+  }
+
+.compare-button {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  gap: 10px;
+  height: 40px;
+  width: 130px;
+}
+
+
+
+    .compare-button-container {
+      padding-bottom: 10px;
+      padding-right: 22px;
+    }
+
+.mobile-width-height {
+    width: 100px;
+    height: 60px;
+  }
+
+.overflow-hidden {
+  overflow: hidden;
+    /*width: 318px; */
+  }
+  /**/
+
+/*navbar-with-user-interface*/
+
+
+
+.searchButtonLandingPage {
+    height: 48px;
+    width: 40px;
+    border: none;
+    border-radius: 12px;
+  }
+
+  /*Conditions for search input*/
+    .myElement {
+      position: absolute;
+      right: 5px;
+    }
+    .myElement.hide {
+      bottom: -1000px;
+      z-index: 99;
+    }  
+    .myElement.show {
+      bottom: -130px;
+      z-index: 104;
+    }
+  /**/
+  .left-3 {
+    left: 1rem;
+  }
+
+  .height {
+    height: 850px;
+  }
+
+  .svg-search-left {
+    left: 2.5rem;
+  }
+  
+.hide-input-field-mobile {
+    display: block;
+  }
+.user-filtered-list {
+  display: none;
+}
+
+
+.selectCurrencyLandingPage {
+    width: 20px;
+    height: 48px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+  }
+
+
+/**/
+
+.chart-mobile-margin {
+  margin: 35px 0;
+}
+
+.carousel-chart-size {
+  width: 475px;
+  height: 360px;
+}
+
+.carousel-button-container {
+  position: absolute;
+  bottom: 315px;
+  left: 415px;
+  width: 0;
+  z-index: 204;
+}
+
+.carousel-prev-button-container {
+  position: relative;
+  left: 27px;
+}
+.carousel-next-button-container {
+  margin-right: 40px;
+}
+
+
 .chart-container {
     display: flex;
-    justify-content: space-between;
-    flex-direction: column;
+    justify-content: center;
     gap: 32px;
-    padding: 20px 40px;
+   padding: 20px 40px;
   }
+
+
+
+  /*table*/
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+  /**/
 .table-padding {
-    padding: 0px 40px;
-    overflow: hidden;
-    width: 343px;
-    height: 42px;
+  padding: 0px 0px;
+}
+
+
+.table-image-container {
+  padding-left: 20px;
+  width: 100px;
+}
+
+.percentages-padding {
+  padding: 0px 0px;
+  font-size: 14px;
+}
+    .column {
+      flex-direction: column;
     }
+
+table {
+  width: 900px;
+}
+
 .chart-size {
-    width: 343px;
-    height: 199px;
+  width: 475px;
+    height: 360px;
     border-radius: 12px;
     padding-bottom: 20px;
         }
@@ -930,16 +1158,214 @@ body {
  }
  .chart-header {
   display: flex;
-  justify-content: space-between;
-  flex-direction: row;
+  flex-direction: column;
  }
  .coin-title {
   font-size: 16px;
  }
  .coin-price {
   font-size: 20px;
+  display: flex;
+  justify-content: center;
  }
  .coin-date {
   font-size: 12px;
  }
+
+ /*coin page*/
+ .coin-page {
+  flex-direction: column;
+  gap: 7px;
+ }
+ .coin-image-name-container {
+  width: 440px;
+  margin-bottom: 0px;
+ }
+ .coin-description {
+  justify-content: center;
+  margin-bottom: 62px;
+ }
+ .padding-top {
+  padding-top: 0px;
+ }
+ .coin-links-container {
+  width: 445px;
+  justify-content: center;
+  margin-bottom: 5px;
+ }
+
+ .coin-links-container-last {
+  justify-content: center;
+ }
+
+ /*Portfolio*/
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 500px;
 }
+.portfolio-coin-list {
+  display: block;
+  width: 560px;
+    height: 500px;
+    margin-bottom: 40px;
+}
+
+.portfolio-coin-info {
+  display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 557px;
+    height: 300px;
+}
+
+.button-Position-At-Bottom {
+  position: absolute;
+  top: 830px;
+  left: 0;
+}
+
+/*Mobile menu*/
+
+ .container-button {
+   display: flex;
+   width: 100%;
+   justify-content: flex-end;
+ }
+
+ .container-mobile-menu {
+   display: flex;
+   justify-content: center;
+   width: 100%;
+   height: 520px;
+   /*position: absolute;*/
+   /*z-index: 101;*/
+ }
+
+ .searchButtonMobile {
+   height: 48px;
+   width: 460px;
+   border: none;
+   border-radius: 12px;
+ }
+
+
+ .svg-left {
+  left: 2.2rem;
+ }
+
+ .coin-list-mobile {
+   height: 300px;
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+ }
+
+ .width-container-search {
+   width: 510px;
+   display: flex;
+   justify-content: center;
+ }
+
+ .text-align {
+   text-align: center;
+ }
+
+ .font-size-title {
+   font-size: 28px;
+   padding: 20px 0px;
+ }
+
+ .font-size-coin-search {
+   font-size: 20px;
+ }
+
+ .border-bottom {
+   margin: 10px 0px;
+   border-bottom: 1px solid white;
+   width: 500px;
+ }
+
+ .image-size-mobile {
+   height: 20px;
+   width: 20px;
+   margin-left: 20px;
+ }
+
+ .gap-image {
+   gap: 5px
+ }
+
+ /*Mobile menu portfolio condition*/
+.positionedBox {
+  position: absolute;
+  top: 130px;
+  left: 20px;
+}
+
+.positionedBox--hidden {
+  bottom: -130px;
+  z-index: 99;
+}
+
+.positionedBox--visible {
+  bottom: 0px;
+  z-index: 104;
+}
+ /**/
+
+
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  position: absolute;
+  padding: 48px;
+  left: 0px;
+  height: 100%;
+  width: 500px;
+  border-radius: 20px;
+  top: 300px;
+}
+
+.instructions-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 420px;
+}
+
+.save-cancel-spacing {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 10px;
+}
+
+.cancel-button-styling {
+  display: flex;
+  align-items: center;
+  width: 461px;
+  justify-content: center;
+  border-radius: 6px;
+  height: 45px;
+}
+
+.save-button-styling {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 461px;
+  height: 45px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+}
+
+
+ 

@@ -6,6 +6,8 @@ import tableSlice from "../tableChart/table";
 import coinDescriptionSlice from "../coins/coin";
 import secondCoinChartSlice from "../landingPageChart/secondLandingPageChart";
 import portfolioCoinItems from "../portfolio/payload";
+import booleanSlice from "../navbarComponent/hide-chart";
+import hideSearchBarMenu from "../portfolio/hide-menu";
 const store = configureStore({
   reducer: {
     todos: todosReducer,
@@ -14,7 +16,9 @@ const store = configureStore({
     secondCoin: secondCoinChartSlice,
     table: tableSlice,
     coin: coinDescriptionSlice,
-    coinItems: portfolioCoinItems
+    coinItems: portfolioCoinItems,
+    boolean: booleanSlice,
+    hide: hideSearchBarMenu
   },
 });
 export type RootState = ReturnType<typeof store.getState>;
