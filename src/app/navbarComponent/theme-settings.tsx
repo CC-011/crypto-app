@@ -207,7 +207,7 @@ export function Theme() {
         </Card>
       </Card>
       <Card
-        className={`myElement ${checkHide ? "hide" : "show"} container-mobile-menu hide-input-field-mobile`}
+        className={`SearchCon ${checkHide ? "hide" : "show"} container-mobile-menu hide-input-field-mobile`}
       >
         {showMobileSearchInput ? (
           <Command className="bg-coinList">
