@@ -11,13 +11,7 @@ import { setState } from "./landingPageChart/secondLandingPageChart";
 import { useState } from "react";
 import { Area, AreaChart, XAxis, Bar, BarChart, YAxis } from "recharts";
 import { Progress } from "@/components/ui/progress";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -533,17 +527,12 @@ function List() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <ChartContainer
-              className="chart-padding-bottom"
-              config={chartConfig}
-            >
+          <div className="inner-chart-padding">
+            <ChartContainer config={chartConfig}>
               <AreaChart
                 className="g2"
                 accessibilityLayer
                 data={chartDataRecharts}
-                width={600}
-                height={300}
               >
                 <XAxis
                   className="g4"
@@ -612,8 +601,7 @@ function List() {
                 />
               </AreaChart>
             </ChartContainer>
-          </CardContent>
-          <CardFooter></CardFooter>
+          </div>
         </Card>
         <Card className="bg-barchart chart-size">
           <CardHeader>
@@ -629,17 +617,9 @@ function List() {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <ChartContainer
-              className="chart-padding-bottom"
-              config={barChartConfig}
-            >
-              <BarChart
-                accessibilityLayer
-                data={barChartData}
-                width={600}
-                height={300}
-              >
+          <div className="inner-chart-padding">
+            <ChartContainer config={barChartConfig}>
+              <BarChart accessibilityLayer data={barChartData}>
                 <XAxis
                   dataKey="month"
                   tickLine={false}
@@ -664,7 +644,7 @@ function List() {
                 />
               </BarChart>
             </ChartContainer>
-          </CardContent>
+          </div>
         </Card>
       </Card>
       <div className="hide-input-field-mobile chart-mobile-margin">
@@ -792,7 +772,6 @@ function List() {
                         </AreaChart>
                       </ChartContainer>
                     </CardContent>
-                    <CardFooter></CardFooter>
                   </Card>
                 </CarouselItem>
                 <CarouselItem className="min-w-full">

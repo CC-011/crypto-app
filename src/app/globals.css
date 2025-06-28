@@ -286,8 +286,7 @@ body {
 }
 
 .chart-size {
-  width: 632px;
-  height: 430px;
+  width: 100%;
   border-radius: 12px;
   padding-bottom: 20px;
 }
@@ -300,6 +299,10 @@ body {
 
 .coin-title {
   font-size: 20px;
+}
+
+.inner-chart-padding {
+  padding: 0px 14px;
 }
 
 .coin-price {
