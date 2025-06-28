@@ -526,7 +526,7 @@ function PortfolioPage() {
           <div></div>
         )}
       </Card>
-      <Card className="button-Position-At-Bottom hide container-button pointer">
+      <Card className="hide-add-button-mobile button-Position-At-Bottom  container-button pointer">
         <Button
           variant="outline"
           onClick={() => {
