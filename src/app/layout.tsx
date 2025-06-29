@@ -2,6 +2,7 @@
 import React from "react";
 import StoreProvider from "./StoreProvided";
 import List from "./navbarComponent/navbar";
+import NavbarMobile from "./navbarComponent/bottom-mobile-navbar";
 import { ThemeProvider } from "../components/ui/theme-provider";
 import { Theme } from "./navbarComponent/theme-settings";
 import "./globals.css";
@@ -26,6 +27,7 @@ export default function RootLayout({
                 </div>
               </div>
               {children}
+              <NavbarMobile />
             </ThemeProvider>
           </StoreProvider>
         </QueryClientProvider>
