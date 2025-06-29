@@ -476,9 +476,9 @@ function PortfolioPage() {
           </CardContent>
         </CardContent>
       </Card>
-      <Card className="hide container-mobile-menu">
+      <Card className="hide portfolio-menu">
         {showMobileCoinMenu ? (
-          <div className="bg-popupContainer container-mobile-menu">
+          <div className="bg-popupContainer menu-width">
             <Command className="bg-coinList">
               <CommandInput
                 placeholder="Search..."
@@ -527,14 +527,21 @@ function PortfolioPage() {
         )}
       </Card>
       <Card className="hide-add-button-mobile button-Position-At-Bottom  container-button pointer">
-        <Button
-          variant="outline"
-          onClick={() => {
-            setShowMobileCoinMenu(!showMobileCoinMenu), dispatch(toggleCond());
-          }}
-        >
-          Add coin
-        </Button>
+        {boolean ? (
+          <></>
+        ) : (
+          <>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowMobileCoinMenu(!showMobileCoinMenu),
+                  dispatch(toggleCond());
+              }}
+            >
+              Add coin
+            </Button>
+          </>
+        )}
       </Card>
     </Card>
   );
