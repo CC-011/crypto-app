@@ -30,7 +30,7 @@ import {
 
 export function Theme() {
   const { tableChart } = useSelector((state: RootState) => state.table);
-  const checkHide = useSelector((state: RootState) => state.hide);
+  const boolean = useSelector((state: RootState) => state.boolean);
   const dispatch = useAppDispatch();
   const [filterByName, setFilterByName] = useState("");
   const [chartCurrencyEPage, setChartCurrencyEPage] = useState("usd");
@@ -160,6 +160,7 @@ export function Theme() {
               {filterByName ? (
                 filtered?.map((data) => (
                   <Link
+                    className="pointer"
                     key={data.id}
                     href={`/coin/${data.name.toLocaleLowerCase()}`}
                   >
@@ -206,6 +207,7 @@ export function Theme() {
           )}
         </Card>
       </Card>
+      {/*
       <Card
         className={`SearchCon ${checkHide ? "hide" : "show"} container-mobile-menu hide-input-field-mobile`}
       >
@@ -233,7 +235,9 @@ export function Theme() {
                         }
                         href={`/coin/${data.name.toLocaleLowerCase()}`}
                       >
-                        <CommandItem>{data.name}</CommandItem>
+                        <CommandItem className="pointer">
+                          {data.name}
+                        </CommandItem>
                       </Link>
                     </div>
                   ))
@@ -252,7 +256,54 @@ export function Theme() {
         ) : (
           <div></div>
         )}
-      </Card>
+      </Card>*/}
+      {showMobileSearchInput && (
+        <Card
+          className={`SearchCon ${boolean ? "show" : "hide"} container-mobile-menu hide-input-field-mobile`}
+        >
+          <Command className="bg-coinList">
+            <CommandInput
+              className="searchButtonMobile"
+              placeholder="Search..."
+              onValueChange={setFilterByName}
+            />
+            <CommandList>
+              <CommandSeparator />
+              <CommandGroup>
+                {filterByName ? (
+                  filtered?.map((data) => (
+                    <div key={data.id} className="flex align gap-image">
+                      <img
+                        className="image-size-mobile"
+                        src={data.image}
+                        alt="coin image"
+                      />
+                      <Link
+                        onClick={() => {
+                          setShowSearchInput(!showMobileSearchInput);
+                          dispatch(toggleBoolean());
+                          setFilterByName("");
+                        }}
+                        href={`/coin/${data.name.toLocaleLowerCase()}`}
+                      >
+                        <CommandItem className="pointer">
+                          {data.name}
+                        </CommandItem>
+                      </Link>
+                    </div>
+                  ))
+                ) : (
+                  <CommandItem disabled>
+                    <h3 className="text-align font-size-coin-search">
+                      No results found, type in search bar to find coins
+                    </h3>
+                  </CommandItem>
+                )}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </Card>
+      )}
     </Card>
   );
 }

@@ -441,7 +441,7 @@ function List() {
                               );
                             }
                           }}
-                          className="hide-input-field-mobile"
+                          className="hide-input-field-mobile pointer"
                         >
                           {data.symbol.toLocaleUpperCase()}
                         </span>
@@ -908,7 +908,7 @@ function List() {
                         width={20}
                       />
                       <Link
-                        className="coin-link"
+                        className="coin-link z-index"
                         href={`/coin/${data.name.toLocaleLowerCase()}`}
                       >
                         <div className="flex flex-column">
