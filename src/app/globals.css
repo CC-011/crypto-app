@@ -1063,14 +1063,13 @@ body {
   }
 
   .SearchCon.hide {
-    display: none;
-    bottom: -1000px;
-    z-index: 99;
+    display: none !important;
+    pointer-events: none;
   }
 
   .SearchCon.show {
     display: block;
-    top: 200px;
+    top: 285px;
     z-index: 104;
   }
 
@@ -1148,6 +1147,11 @@ body {
 
   .table-padding {
     padding: 0px 0px;
+  }
+
+  .z-index {
+    position: relative;
+    z-index: 105;
   }
 
   .table-image-container {
@@ -1257,8 +1261,9 @@ body {
   }
 
   .button-Position-At-Bottom {
-    position: absolute;
-    top: 150px;
+    position: fixed;
+    bottom: 150px;
+    z-index: 105;
     left: 0;
   }
 
@@ -1267,6 +1272,12 @@ body {
     justify-content: center;
     height: 520px;
   }
+
+  .portfolio-container-menu {
+    position: absolute;
+    width: 100%;
+    top: 285px;
+  } 
 
   .menu-width {
     width: 100%;
@@ -1293,7 +1304,6 @@ body {
     border: none;
     border-radius: 12px;
   }
-
 
   .svg-left {
     left: 2.2rem;
