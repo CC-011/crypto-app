@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Area, AreaChart, XAxis, Bar, BarChart, YAxis } from "recharts";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Buttons from "./navbarComponent/navigation-buttons";
 import {
   ChartConfig,
   ChartContainer,
@@ -348,6 +349,10 @@ function List() {
   const isMobile = useMediaQuery("(max-width: 600px)");
   return (
     <div className="coinLandingPageContainer overflow-hidden">
+      <div className="hide" style={{ paddingTop: "40px", paddingLeft: "40px" }}>
+        <Buttons />{" "}
+      </div>
+
       <div className="mainChartsAndCarousel">
         <Carousel className="carousel">
           <div className="space-between compare-button-container gap">
@@ -547,7 +552,14 @@ function List() {
                   content={<ChartTooltipContent />}
                 />
                 <defs>
-                  <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient
+                    id="fillDesktop"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                    spreadMethod="pad"
+                  >
                     <stop
                       offset="5%"
                       stopColor="var(--color-desktop)"

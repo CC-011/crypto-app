@@ -8,6 +8,8 @@ import secondCoinChartSlice from "../landingPageChart/secondLandingPageChart";
 import portfolioCoinItems from "../portfolio/payload";
 import booleanSlice from "../navbarComponent/hide-chart";
 import hideSearchBarMenu from "../portfolio/hide-menu";
+import converterSlice from "../coin-converter/fetchCoinPrice";
+import stringSlice from "../coin-converter/currency-selector";
 const store = configureStore({
   reducer: {
     todos: todosReducer,
@@ -18,7 +20,9 @@ const store = configureStore({
     coin: coinDescriptionSlice,
     coinItems: portfolioCoinItems,
     boolean: booleanSlice,
-    hide: hideSearchBarMenu
+    hide: hideSearchBarMenu,
+    converter: converterSlice,
+    converterCurrency: stringSlice
   },
 });
 export type RootState = ReturnType<typeof store.getState>;

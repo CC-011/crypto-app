@@ -11,6 +11,7 @@ import { useAppDispatch } from "../lib/hooks";
 import { setLocalStorage, getLocalStorage } from "../localStorage/localStorage";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { setString } from "../coin-converter/currency-selector";
 import {
   Select,
   SelectContent,
@@ -174,7 +175,10 @@ export function Theme() {
           </Card>
         </Card>
         <Select
-          onValueChange={(value) => setChartCurrencyEPage(value.toLowerCase())}
+          onValueChange={(value) => {
+            setChartCurrencyEPage(value.toLowerCase()),
+              dispatch(setString(value.toLocaleUpperCase()));
+          }}
         >
           <SelectTrigger
             style={{ color: "hsl(var(--currency-color))" }}
