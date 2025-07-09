@@ -1,4 +1,5 @@
 import { CardDescription } from "@/components/ui/card";
+import { interval } from "date-fns";
 import type { Config } from "tailwindcss";
 
 export default {
@@ -21,6 +22,24 @@ export default {
 			},
 			searchBar: {
 				DEFAULT: 'hsl(var(--search-bar))'
+			},
+			converterInput: {
+				DEFAULT: 'hsl(var(--converter-input))'
+			},
+			converterTitle: {
+				DEFAULT: 'hsl(var(--converter-title))'
+			},
+			converterTime: {
+				DEFAULT: 'hsl(var(--converter-time))'
+			},
+			intervalContainer: {
+				DEFAULT: 'hsl(var(--interval-container))'
+			},
+			intervalButton: {
+				DEFAULT: 'hsl(var(--interval-button))'
+			},
+			borderLine: {
+				DEFAULT: 'hsl(var(--border-line))'
 			},
 			magnifierIcon: {
 				DEFAULT: 'hsl(var(--magnifier-icon))'
