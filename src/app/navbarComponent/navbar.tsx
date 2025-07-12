@@ -1,9 +1,7 @@
 "use client";
-import { useAppDispatch } from "../lib/hooks";
-import React, { useEffect } from "react";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { marketDataCap } from "../marketdata/marketdatacap";
-import { RootState } from "../lib/store";
-import { useSelector } from "react-redux";
 import { Progress } from "@/components/ui/progress";
 import { ShowMarketNumbersInCompactForm } from "../Utils/formatNumbers";
 import { Card } from "@/components/ui/card";
@@ -41,12 +39,18 @@ function ProgressCustom({ number, color, background }: barPercentage) {
 }
 
 function List() {
-  const dispatch = useAppDispatch();
+  interface MarketData {
+    active_cryptocurrencies: number;
+    total_market_cap: { usd: number; eth: number; btc: number };
+    market_cap_percentage: { btc: number; eth: number };
+    total_volume: { usd: number; eth: number; btc: number };
+  }
 
-  const { data } = useSelector((state: RootState) => state.market);
-  useEffect(() => {
-    dispatch(marketDataCap());
-  }, [dispatch]);
+  const { data } = useQuery<MarketData>({
+    queryKey: ["navbarData"],
+    queryFn: () => marketDataCap(),
+  });
+
   return (
     <Card>
       <Card className="bg-navbar topDisplayBar navbar-container">
@@ -138,7 +142,7 @@ function List() {
             alt="bitcoin"
           />
           <p>
-            {Math.abs(data ? data.market_cap_percentage.btc : 0).toFixed(2)}%
+            {Math.abs(data ? data.market_cap_percentage?.btc : 0).toFixed(2)}%
           </p>
           <div className="firstProgressBar">
             {" "}
@@ -166,7 +170,7 @@ function List() {
             alt="ethereum"
           />
           <p>
-            {Math.abs(data ? data.market_cap_percentage.eth : 0).toFixed(2)}%
+            {Math.abs(data ? data.market_cap_percentage?.eth : 0).toFixed(2)}%
           </p>
           <div className="firstProgressBar">
             <ProgressCustom

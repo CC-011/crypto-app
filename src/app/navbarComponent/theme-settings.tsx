@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Moon, Sun } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../lib/store";
 import { toggleBoolean } from "./hide-chart";
 import { useState, useEffect } from "react";
-import { fetchChartData } from "../landingPageChart/landingPageChart";
 import { fetchTableChart } from "../tableChart/table";
 import { useAppDispatch } from "../lib/hooks";
 import { setLocalStorage, getLocalStorage } from "../localStorage/localStorage";
@@ -30,30 +30,29 @@ import {
 } from "@/components/ui/command";
 
 export function Theme() {
-  const { tableChart } = useSelector((state: RootState) => state.table);
   const boolean = useSelector((state: RootState) => state.boolean);
   const dispatch = useAppDispatch();
   const [filterByName, setFilterByName] = useState("");
-  const [chartCurrencyEPage, setChartCurrencyEPage] = useState("usd");
   const [showMobileSearchInput, setShowSearchInput] = useState(false);
   const { theme, setTheme } = useTheme();
-  const chartNameEPage = "bitcoin";
-  const defaultMarket = "market_cap_desc";
+  const defaultMarket = useSelector((state: RootState) => state.order);
+  const rows = 50;
+  const chartCurrencyEPage = useSelector(
+    (state: RootState) => state.converterCurrency
+  );
   const usd = "$";
   const euro = "€";
   const gbp = "£";
   const bitcoin = "₿";
   const ethereum = "Ξ";
-  const filtered = tableChart?.filter((data) =>
+  const { data: tableChart } = useQuery({
+    queryKey: ["tableData", defaultMarket, chartCurrencyEPage, rows],
+    queryFn: () => fetchTableChart({ defaultMarket, chartCurrencyEPage, rows }),
+  });
+
+  const filtered = (tableChart ?? []).filter((data) =>
     data.name.toLocaleLowerCase().startsWith(filterByName)
   );
-  useEffect(() => {
-    dispatch(fetchChartData({ chartNameEPage, chartCurrencyEPage }));
-  }, [dispatch, chartNameEPage, chartCurrencyEPage]);
-
-  useEffect(() => {
-    dispatch(fetchTableChart({ defaultMarket, chartCurrencyEPage }));
-  }, [dispatch, defaultMarket, chartCurrencyEPage]);
 
   useEffect(() => {
     const previousTheme = getLocalStorage("theme");
@@ -63,7 +62,8 @@ export function Theme() {
   useEffect(() => {
     setLocalStorage("theme", theme);
   }, [theme]);
-
+  {
+    /*
   useEffect(() => {
     setLocalStorage("currency", chartCurrencyEPage);
   }, [chartCurrencyEPage]);
@@ -71,7 +71,19 @@ export function Theme() {
   useEffect(() => {
     const previousCurrency = getLocalStorage("currency");
     setChartCurrencyEPage(previousCurrency ?? "usd");
-  }, []);
+  }, []);*/
+  }
+
+  const [chartCurrencyEPagePrev, setChartCurrencyEPagePrev] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("currency") ?? "";
+    }
+    return "";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("currency", chartCurrencyEPagePrev);
+  }, [chartCurrencyEPagePrev]);
 
   const handleTheme = (theme: string) => {
     theme === "dark" ? setTheme("light") : setTheme("dark");
@@ -151,7 +163,8 @@ export function Theme() {
                 <MagnifierSvg />
               </div>
               <Input
-                className="pl-9 searchButtonLandingPage placeholder:text-inputPlaceholder bg-searchBar pointer"
+                className="pl-9 searchButtonLandingPage placeholder:text-inputPlaceholder bg-searchBar pointer
+                !border-none !outline-none !ring-0 !focus:ring-0 !focus:outline-none !focus:border-none !shadow-none"
                 type="search"
                 placeholder="Search..."
                 onChange={(e) => setFilterByName(e.currentTarget.value)}
@@ -176,20 +189,18 @@ export function Theme() {
         </Card>
         <Select
           onValueChange={(value) => {
-            setChartCurrencyEPage(value.toLowerCase()),
-              dispatch(setString(value.toLocaleUpperCase()));
+            setChartCurrencyEPagePrev(value.toLocaleUpperCase());
+            dispatch(setString(value.toLocaleUpperCase()));
           }}
         >
           <SelectTrigger
             style={{ color: "hsl(var(--currency-color))" }}
-            className="w-[180px] max-[600px]:w-[70px] bg-currencyContainer selectCurrencyLandingPage flex space-between"
+            className="w-[180px] max-[600px]:w-[70px] bg-currencyContainer selectCurrencyLandingPage flex space-between
+            border-0 focus:outline-none focus:ring-0 focus:border-0 shadow-none"
           >
-            <div className="currency-icon bg-currencyIconContainer text-currencyIcon hide">
-              {usd}
-            </div>
             <SelectValue
               placeholder={`
-                 ${chartCurrencyEPage.toLocaleUpperCase()}`}
+                 ${chartCurrencyEPagePrev.toLocaleUpperCase()}`}
             />
           </SelectTrigger>
           <SelectContent>
@@ -211,56 +222,6 @@ export function Theme() {
           )}
         </Card>
       </Card>
-      {/*
-      <Card
-        className={`SearchCon ${checkHide ? "hide" : "show"} container-mobile-menu hide-input-field-mobile`}
-      >
-        {showMobileSearchInput ? (
-          <Command className="bg-coinList">
-            <CommandInput
-              className="searchButtonMobile"
-              placeholder="Search..."
-              onValueChange={setFilterByName}
-            />
-            <CommandList>
-              <CommandSeparator />
-              <CommandGroup>
-                {filterByName ? (
-                  filtered?.map((data) => (
-                    <div key={data.id} className="flex align gap-image">
-                      <img
-                        className="image-size-mobile"
-                        src={data.image}
-                        alt="coin image"
-                      />
-                      <Link
-                        onClick={() =>
-                          setShowSearchInput(!showMobileSearchInput)
-                        }
-                        href={`/coin/${data.name.toLocaleLowerCase()}`}
-                      >
-                        <CommandItem className="pointer">
-                          {data.name}
-                        </CommandItem>
-                      </Link>
-                    </div>
-                  ))
-                ) : (
-                  <>
-                    <CommandItem disabled>
-                      <h3 className="text-align font-size-coin-search">
-                        No results found, type in search bar to find coins
-                      </h3>
-                    </CommandItem>
-                  </>
-                )}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        ) : (
-          <div></div>
-        )}
-      </Card>*/}
       {showMobileSearchInput && (
         <Card
           className={`SearchCon ${boolean ? "show" : "hide"} container-mobile-menu hide-input-field-mobile`}

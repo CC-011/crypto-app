@@ -1,8 +1,9 @@
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Toggle } from "@/components/ui/toggle";
+import { useRouter } from "next/navigation";
 function NavbarMobile() {
   const pathName = usePathname();
+  const router = useRouter();
   const PortfolioSvg = () => {
     return (
       <svg
@@ -45,11 +46,16 @@ function NavbarMobile() {
     );
   };
 
+  const Navigator = (path: string) => {
+    return router.push(path);
+  };
+
   return (
     <div className="hide-input-field-mobile">
       <div>
         <div className="mobile-nav-container-bottom">
           <Toggle
+            onClick={() => Navigator("/")}
             className={`mobile-nav-bottom-h-w ${
               pathName === "/" ? "bg-[hsl(var(--mobile-menu))]" : ""
             }`}
@@ -58,10 +64,11 @@ function NavbarMobile() {
               <div className="flex align center">
                 <HomeSvg />
               </div>
-              <Link href="/">Overview</Link>
+              <p>Overview</p>
             </div>
           </Toggle>
           <Toggle
+            onClick={() => Navigator("/coin-converter")}
             className={`mobile-nav-bottom-h-w ${
               pathName === "/coin-converter"
                 ? "bg-[hsl(var(--mobile-menu))]"
@@ -72,10 +79,11 @@ function NavbarMobile() {
               <div className="flex align center">
                 <ConvertSvg />
               </div>
-              <Link href="/coin-converter">Convertor</Link>
+              <p>Convertor</p>
             </div>
           </Toggle>
           <Toggle
+            onClick={() => Navigator("/portfolio")}
             className={`mobile-nav-bottom-h-w ${
               pathName === "/portfolio" ? "bg-[hsl(var(--mobile-menu))]" : ""
             }`}
@@ -84,7 +92,7 @@ function NavbarMobile() {
               <div className="flex center">
                 <PortfolioSvg />
               </div>
-              <Link href="/portfolio">Portfolio</Link>
+              <p>Portfolio</p>
             </div>
           </Toggle>
         </div>
