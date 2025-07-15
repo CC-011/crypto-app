@@ -1,6 +1,7 @@
 interface inputValues {
   secondChartName: string,
   chartCurrencyEPage: string
+  interval: number
 }
 
 interface BitcoinData {
@@ -12,8 +13,9 @@ interface BitcoinData {
 export const fetchSecondCoinData = async ({
  secondChartName,
   chartCurrencyEPage,
+  interval
 }: inputValues): Promise<BitcoinData> => {
-  const url = `https://api.coingecko.com/api/v3/coins/${secondChartName}/market_chart?vs_currency=${chartCurrencyEPage}&days=300`;
+  const url = `https://api.coingecko.com/api/v3/coins/${secondChartName}/market_chart?vs_currency=${chartCurrencyEPage}&days=${interval}`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch table data");

@@ -1,9 +1,8 @@
-import {
-  ShowCoinPricesInUsDollars,
-  ShowCoinPricesInBTC,
-} from "../Utils/formatNumbers";
+import { ShowCoinPricesInBTC, ShowCoinData } from "../Utils/formatNumbers";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSelector } from "react-redux";
+import { RootState } from "../lib/store";
 
 interface coinType {
   name: string;
@@ -13,13 +12,13 @@ interface coinType {
   links: { homepage: string; whitepaper: string; blockchain_site: string };
   last_updated: string;
   market_data: {
-    current_price: { usd: number };
-    high_24h: { usd: number };
-    low_24h: { usd: number };
-    market_cap: { usd: number };
-    fully_diluted_valuation: { usd: number };
+    current_price: Record<string, number>;
+    high_24h: Record<string, number>;
+    low_24h: Record<string, number>;
+    market_cap: Record<string, number>;
+    fully_diluted_valuation: Record<string, number>;
     market_cap_change_24h: number;
-    total_volume: { usd: number };
+    total_volume: Record<string, number>;
     circulating_supply: number;
     max_supply: number;
   };
@@ -38,7 +37,14 @@ export default function CoinInfo({
     navigator.clipboard.writeText(str);
     alert("Copied the text: " + str);
   }
-  const volume: number = coinDescription?.market_data?.total_volume?.usd ?? 0;
+  const currency: string = useSelector(
+    (state: RootState) => state.converterCurrency
+  ).toLocaleLowerCase();
+  const currencyUpperCase: string = useSelector(
+    (state: RootState) => state.converterCurrency
+  );
+  const volume: number =
+    coinDescription?.market_data?.total_volume?.[currency] ?? 0;
 
   return (
     <Card>
@@ -105,10 +111,11 @@ export default function CoinInfo({
           </Card>
         </Card>
         <Card className="bg-primarycard coin-profit">
-          <CardContent className="coin-price">
-            <ShowCoinPricesInUsDollars
-              cryptoPricesInUsDollars={
-                coinDescription?.market_data?.current_price?.usd ?? 0
+          <CardContent className="coin-price text-center">
+            <ShowCoinData
+              currencySymbol={currencyUpperCase}
+              cryptoData={
+                coinDescription?.market_data?.current_price?.[currency] ?? 0
               }
             />
           </CardContent>
@@ -117,7 +124,8 @@ export default function CoinInfo({
             <Card className="flex">
               <CardContent className="gapPlusButton">
                 <div className="flex">
-                  {(coinDescription?.market_data?.high_24h?.usd ?? 0 >= 0) ? (
+                  {(coinDescription?.market_data?.high_24h?.[currency] ??
+                  0 >= 0) ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#00FC2A"
@@ -153,9 +161,10 @@ export default function CoinInfo({
                   <p>All time high:</p>
                 </div>
                 <div className="coin-font-weight">
-                  <ShowCoinPricesInUsDollars
-                    cryptoPricesInUsDollars={
-                      coinDescription?.market_data?.high_24h?.usd ?? 0
+                  <ShowCoinData
+                    currencySymbol={currencyUpperCase}
+                    cryptoData={
+                      coinDescription?.market_data?.high_24h?.[currency] ?? 0
                     }
                   />
                 </div>
@@ -173,7 +182,8 @@ export default function CoinInfo({
             <Card className="flex">
               <CardContent className="gapPlusButton">
                 <div className="flex">
-                  {(coinDescription?.market_data?.low_24h?.usd ?? 0 >= 0) ? (
+                  {(coinDescription?.market_data?.low_24h?.[currency] ??
+                  0 >= 0) ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="#00FC2A"
@@ -209,9 +219,10 @@ export default function CoinInfo({
                   <p>All time low:</p>
                 </div>
                 <div className="coin-font-weight">
-                  <ShowCoinPricesInUsDollars
-                    cryptoPricesInUsDollars={
-                      coinDescription?.market_data?.low_24h?.usd ?? 0
+                  <ShowCoinData
+                    currencySymbol={currencyUpperCase}
+                    cryptoData={
+                      coinDescription?.market_data?.low_24h?.[currency] ?? 0
                     }
                   />
                 </div>
@@ -243,9 +254,10 @@ export default function CoinInfo({
               Market Cap
             </CardContent>
             <CardContent className="gapPlusButton coin-market-data">
-              <ShowCoinPricesInUsDollars
-                cryptoPricesInUsDollars={
-                  coinDescription?.market_data?.market_cap?.usd ?? 0
+              <ShowCoinData
+                currencySymbol={currencyUpperCase}
+                cryptoData={
+                  coinDescription?.market_data?.market_cap?.[currency] ?? 0
                 }
               />
             </CardContent>
@@ -267,10 +279,12 @@ export default function CoinInfo({
                 Fully Diluted Valuation
               </CardContent>
               <CardContent className="coin-market-data">
-                <ShowCoinPricesInUsDollars
-                  cryptoPricesInUsDollars={
-                    coinDescription?.market_data?.fully_diluted_valuation
-                      ?.usd ?? 0
+                <ShowCoinData
+                  currencySymbol={currencyUpperCase}
+                  cryptoData={
+                    coinDescription?.market_data?.fully_diluted_valuation?.[
+                      currency
+                    ] ?? 0
                   }
                 />
               </CardContent>
@@ -291,8 +305,9 @@ export default function CoinInfo({
                 Volume 24h
               </CardContent>
               <CardContent className="coin-market-data">
-                <ShowCoinPricesInUsDollars
-                  cryptoPricesInUsDollars={
+                <ShowCoinData
+                  currencySymbol={currencyUpperCase}
+                  cryptoData={
                     coinDescription?.market_data?.market_cap_change_24h ?? 0
                   }
                 />
@@ -315,7 +330,9 @@ export default function CoinInfo({
               Volume/Market
             </CardContent>
             <CardContent className="coin-market-data">
-              {coinDescription?.market_data?.market_cap?.usd ?? 0 / volume ?? 1}
+              {coinDescription?.market_data?.market_cap?.[currency] ??
+                0 / volume ??
+                1}
             </CardContent>
           </Card>
           <Card className="flex">
@@ -343,7 +360,7 @@ export default function CoinInfo({
                     : "USD"
                 }
                 cryptoPricesInUsBitcoin={
-                  coinDescription?.market_data?.total_volume?.usd ?? 0
+                  coinDescription?.market_data?.total_volume?.[currency] ?? 0
                 }
               />
             </CardContent>

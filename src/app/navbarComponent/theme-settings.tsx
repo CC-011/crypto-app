@@ -28,7 +28,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-
+import Image from "next/image";
 export function Theme() {
   const boolean = useSelector((state: RootState) => state.boolean);
   const dispatch = useAppDispatch();
@@ -238,8 +238,10 @@ export function Theme() {
                 {filterByName ? (
                   filtered?.map((data) => (
                     <div key={data.id} className="flex align gap-image">
-                      <img
+                      <Image
                         className="image-size-mobile"
+                        width={20}
+                        height={20}
                         src={data.image}
                         alt="coin image"
                       />

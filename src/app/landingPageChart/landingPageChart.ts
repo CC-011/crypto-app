@@ -1,6 +1,7 @@
 interface inputValues {
   chartNameEPage: string,
-  chartCurrencyEPage: string
+  chartCurrencyEPage: string,
+  interval: number
 }
 
 interface BitcoinData {
@@ -12,8 +13,9 @@ interface BitcoinData {
 export const fetchChartData = async ({
  chartNameEPage,
   chartCurrencyEPage,
+  interval
 }: inputValues): Promise<BitcoinData> => {
-  const url = `https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=300`;
+  const url = `https://api.coingecko.com/api/v3/coins/${chartNameEPage}/market_chart?vs_currency=${chartCurrencyEPage}&days=${interval}`;
 
   const response = await fetch(url);
   if (!response.ok) {

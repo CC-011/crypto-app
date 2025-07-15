@@ -9,14 +9,14 @@ const CarouselLandingPage = dynamic(
 );
 const TableLandingPage = dynamic(() => import("./landing-components/table"), {
   ssr: false,
-  loading: () => <div>...loading</div>,
+  loading: () => <div>loading...</div>,
 });
 const MobileChart = dynamic(() => import("./landing-components/mobile-charts"));
 
 function List() {
   return (
     <div className="coinLandingPageContainer overflow-hidden">
-      <div className="hide" style={{ paddingTop: "40px", paddingLeft: "40px" }}>
+      <div className="hide pt-[40px] pl-[40px]">
         <Buttons />{" "}
       </div>
       <Suspense fallback={<div>loading...</div>}>
@@ -28,7 +28,7 @@ function List() {
       <Suspense fallback={<div>loading...</div>}>
         <MobileChart />
       </Suspense>
-      <Suspense fallback={<div>...loading</div>}>
+      <Suspense fallback={<div>loading...</div>}>
         <TableLandingPage />
       </Suspense>
     </div>

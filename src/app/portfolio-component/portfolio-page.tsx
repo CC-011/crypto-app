@@ -77,7 +77,7 @@ function PortfolioPage() {
     }
   }, []);
 
-  const [name, setName] = useState("bitcoin");
+  const [name, setName] = useState("");
   const [symbol, setSymbol] = useState("");
   const [purchasedDate, setPurchasedDate] = useState("");
   const [purchasedAmount, setPurchasedAmount] = useState(0);
@@ -177,7 +177,7 @@ function PortfolioPage() {
                           {filtered?.map((data) => (
                             <div key={data.id} className="flex align">
                               <img
-                                className="filter-list-image"
+                                className="filter-list-image m-2"
                                 src={data.image}
                                 alt="coin image"
                               />
@@ -235,22 +235,29 @@ function PortfolioPage() {
                     >
                       Cancel
                     </p>
-                    <p
-                      className="save-button-styling bg-saveCoin pointer"
-                      onClick={() => {
-                        setFilterByName("");
-                        setShowPopUp(!showPopup), dispatch(toggleBoolean());
-                        dispatch(
-                          addCoins({
-                            id: name,
-                            date: newFormat,
-                            amount: purchasedAmount,
-                            idUnique: Math.random(),
-                          })
-                        );
-                      }}
-                    >
-                      Save and Continue
+                    <p className="save-button-styling bg-saveCoin pointer">
+                      {name.length === 0 ||
+                      purchasedDate.length === 0 ||
+                      purchasedAmount === 0 ? (
+                        <p>Fill the required info</p>
+                      ) : (
+                        <p
+                          onClick={() => {
+                            setFilterByName("");
+                            setShowPopUp(!showPopup), dispatch(toggleBoolean());
+                            dispatch(
+                              addCoins({
+                                id: name,
+                                date: newFormat,
+                                amount: purchasedAmount,
+                                idUnique: Math.random(),
+                              })
+                            );
+                          }}
+                        >
+                          Save and Continue
+                        </p>
+                      )}
                     </p>
                   </Card>
                 </CardContent>
@@ -523,67 +530,6 @@ function PortfolioPage() {
           </CardContent>
         </CardContent>
       </Card>
-      {/*
-      <Card className="portfolio-container-menu">
-        <Card className="hide portfolio-menu">
-          {showMobileCoinMenu ? (
-            <div className="bg-popupContainer menu-width">
-              <div
-                onClick={() => {
-                  setShowMobileCoinMenu(!showMobileCoinMenu),
-                    dispatch(toggleBoolean());
-                }}
-              >
-                X
-              </div>
-              <Command className="bg-coinList">
-                <CommandInput
-                  placeholder="Search..."
-                  onValueChange={setFilterByName}
-                />
-                <CommandList>
-                  <CommandSeparator />
-                  <CommandGroup>
-                    {filterByName ? (
-                      filtered?.map((data) => (
-                        <div key={data.id} className="flex align gap-image">
-                          <img
-                            className="image-size-mobile"
-                            src={data.image}
-                            alt="coin image"
-                          />
-                          <CommandItem
-                            className="pointer"
-                            onSelect={() => {
-                              setName(data.name.toLocaleLowerCase());
-                              setFilterByName(data.name);
-                              setCoinImageUrl(data.image);
-                              setShowPopUp((prev) => !prev);
-                              setShowMobileCoinMenu((prev) => !prev);
-                            }}
-                          >
-                            {data.name}
-                          </CommandItem>
-                        </div>
-                      ))
-                    ) : (
-                      <>
-                        <CommandItem disabled>
-                          <h3 className="text-align font-size-coin-search">
-                            Search for a coin to add to your portfolio
-                          </h3>
-                        </CommandItem>
-                      </>
-                    )}
-                  </CommandGroup>
-                </CommandList>
-              </Command>
-            </div>
-          ) : (
-            <div></div>
-          )}
-        </Card>
-      </Card>*/}
       {showMobileCoinMenu && (
         <Card className="portfolio-container-menu">
           <Card className="portfolio-menu">
@@ -645,7 +591,6 @@ function PortfolioPage() {
           </Card>
         </Card>
       )}
-
       <Card className="hide-add-button-mobile button-Position-At-Bottom  container-button pointer">
         {path === "/portfolio" && boolean ? (
           <></>

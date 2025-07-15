@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { setOrder } from "../tablechart-query/tablechart-order";
 import {
-  ShowCoinPricesInUsDollars,
+  ShowCoinData,
   ShowMarketNumbersInCompactForm,
 } from "../Utils/formatNumbers";
 import { fetchTableChart } from "../tableChart/table";
@@ -48,7 +48,9 @@ export default function TableChart() {
   const boolean = useSelector((state: RootState) => state.boolean);
   const defaultMarket = useSelector((state: RootState) => state.order);
   const rows = 50;
-  const chartCurrencyEPage = "usd";
+  const chartCurrencyEPage = useSelector(
+    (state: RootState) => state.converterCurrency
+  );
   const { data } = useQuery({
     queryKey: ["tableData", defaultMarket, chartCurrencyEPage, rows],
     queryFn: () => fetchTableChart({ defaultMarket, chartCurrencyEPage, rows }),
@@ -156,7 +158,7 @@ export default function TableChart() {
 
     return (
       <div
-        className="w-full h-2 rounded overflow-hidden"
+        className="p-5 w-full h-2 rounded overflow-hidden"
         style={{ background }}
       >
         <div
@@ -236,14 +238,20 @@ export default function TableChart() {
                         href={`/coin/${data.name.toLocaleLowerCase()}`}
                       >
                         <div className="flex flex-column">
-                          <div>{data.name}</div>
-                          <div>({data.symbol.toLocaleUpperCase()})</div>
+                          <p className="hide">{data.name}</p>
+                          <p className="hide">
+                            ({data.symbol.toLocaleUpperCase()})
+                          </p>
+                          <p className="sm:hidden">
+                            {data.symbol.toLocaleUpperCase()}
+                          </p>
                         </div>
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <ShowCoinPricesInUsDollars
-                        cryptoPricesInUsDollars={data?.current_price}
+                      <ShowCoinData
+                        cryptoData={data?.current_price}
+                        currencySymbol={chartCurrencyEPage.toLocaleUpperCase()}
                       />
                     </TableCell>
                     <TableCell className="percentages-padding">
@@ -444,7 +452,7 @@ export default function TableChart() {
                         />
                       </Card>
                     </TableCell>
-                    <TableCell className="hide">
+                    <TableCell className="hide p-[10px]">
                       <div className="space-marketCap">
                         <div
                           style={{
@@ -499,7 +507,7 @@ export default function TableChart() {
                         />
                       </Card>
                     </TableCell>
-                    <TableCell className="hide">
+                    <TableCell className="hide p-[10px]">
                       <div className="sparkLine-chart sparkline-padding">
                         <TableChartForCoins
                           dataProp={data?.sparkline_in_7d?.price}

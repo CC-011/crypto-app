@@ -35,8 +35,21 @@ const ShowCoinPricesInBTC = ({
   }).format(cryptoPricesInUsBitcoin);
 };
 
+interface CustomPrices {
+  currencySymbol: string;
+  cryptoData: number;
+}
+
+const ShowCoinData = ({ currencySymbol, cryptoData }: CustomPrices) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currencySymbol,
+  }).format(cryptoData);
+};
+
 export {
   ShowMarketNumbersInCompactForm,
   ShowCoinPricesInUsDollars,
   ShowCoinPricesInBTC,
+  ShowCoinData,
 };

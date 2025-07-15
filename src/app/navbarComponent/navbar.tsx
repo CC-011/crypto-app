@@ -5,7 +5,6 @@ import { marketDataCap } from "../marketdata/marketdatacap";
 import { Progress } from "@/components/ui/progress";
 import { ShowMarketNumbersInCompactForm } from "../Utils/formatNumbers";
 import { Card } from "@/components/ui/card";
-
 interface Coins {
   coin: number;
 }
@@ -138,6 +137,8 @@ function List() {
         </Card>
         <Card className="flex navbar-gap">
           <img
+            width={24}
+            height={24}
             src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png?1547033579"
             alt="bitcoin"
           />
@@ -166,6 +167,8 @@ function List() {
         </Card>
         <Card className="flex navbar-gap">
           <img
+            width={24}
+            height={24}
             src="https://assets.coingecko.com/coins/images/279/thumb/ethereum.png?1595348880"
             alt="ethereum"
           />

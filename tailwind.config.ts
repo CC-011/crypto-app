@@ -1,4 +1,5 @@
 import { CardDescription } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { interval } from "date-fns";
 import type { Config } from "tailwindcss";
 
@@ -154,6 +155,9 @@ export default {
   			},
 			mobileMenu: {
 				DEFAULT: 'hsl(var(--mobile-menu))'
+			},
+			skeleton: {
+				DEFAULT: 'hsl(var(--skeleton))'
 			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',

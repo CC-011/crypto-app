@@ -5,7 +5,16 @@ interface IndividualCoinInfo {
     symbol: string,
     links: { homepage: string, whitepaper: string, blockchain_site: string },
     last_updated: string,
-    market_data: { current_price: { usd: number }, high_24h: { usd: number }, low_24h: { usd: number}, market_cap: { usd: number }, fully_diluted_valuation: { usd: number }, market_cap_change_24h: number, total_volume: { usd: number }, circulating_supply: number, max_supply: number },
+    market_data: { 
+       current_price: Record<string, number>;
+       high_24h: Record<string, number>;
+       low_24h: Record<string, number>;
+       market_cap: Record<string, number>;
+       fully_diluted_valuation: Record<string, number>;
+       market_cap_change_24h: number, 
+       total_volume: { usd: number }, 
+       circulating_supply: number, 
+       max_supply: number },
     market_cap_change_24h: number,
     circulating_supply: number,
     description: { en: string } 

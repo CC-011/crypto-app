@@ -9,6 +9,7 @@ import Buttons from "../navbarComponent/navigation-buttons";
 import { ShowCoinPricesInBTC } from "../Utils/formatNumbers";
 import { useQuery } from "@tanstack/react-query";
 import { fetchTableChart } from "../tableChart/table";
+import Image from "next/image";
 import {
   AreaChart,
   Area,
@@ -25,14 +26,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Converter() {
   const [interVal, setInterval] = useState(1);
   const [total, setTotal] = useState(0);
   const currency = useSelector((state: RootState) => state.converterCurrency);
   const defaultMarket = useSelector((state: RootState) => state.order);
   const rows = 50;
-  const chartCurrencyEPage =
+  const chartCurrencyEPage: string =
     useSelector((state: RootState) => state.converterCurrency) ?? "usd";
   const { data: tableChart } = useQuery({
     queryKey: ["tableData", defaultMarket, chartCurrencyEPage, rows],
@@ -61,16 +62,18 @@ export default function Converter() {
 
   const [coinNameOne, setCoinNameOne] = useState<TableChartData | null>(null);
   const [coinNameTwo, setCoinNameTwo] = useState<TableChartData | null>(null);
-  const { data: chartData } = useQuery({
+  const { data: chartData, isLoading } = useQuery({
     queryKey: [
       "ConverterData",
       coinNameOne?.name.toLocaleLowerCase() ?? "",
       interVal,
+      chartCurrencyEPage,
     ],
     queryFn: () =>
       fetchConverterData({
         coinNameOne: coinNameOne?.name.toLocaleLowerCase() ?? "",
         coinInterval: interVal,
+        chartCurrencyEPage,
       }),
   });
 
@@ -207,10 +210,11 @@ export default function Converter() {
                       {filtered?.map((coin) => (
                         <SelectItem key={coin.id} value={coin.name}>
                           <div className="flex items-center gap-2 text-converterTitle">
-                            <img
+                            <Image
                               src={coin.image}
                               alt={coin.name}
-                              className="w-10 h-10"
+                              width={30}
+                              height={30}
                             />
                             <p className="text-[20px]">
                               {coin.name} ({coin.symbol.toUpperCase()})
@@ -272,10 +276,11 @@ export default function Converter() {
                       {filtered?.map((coin) => (
                         <SelectItem key={coin.id} value={coin.name}>
                           <div className="flex items-center gap-2 text-converterTitle">
-                            <img
+                            <Image
                               src={coin.image}
                               alt={coin.name}
-                              className="w-10 h-10"
+                              width={30}
+                              height={30}
                             />
                             <p className="text-[20px]">
                               {coin.name} ({coin.symbol.toUpperCase()})
@@ -331,25 +336,25 @@ export default function Converter() {
         <img src="https://i.ibb.co/YF5ypkF7/Vertical-switch.png" />
       </button>
       <Card className="flex center align column chart-container">
-        <Card className="bg-converterInput widthChart chart-size-styling">
-          {coinNameOne && coinNameTwo ? (
-            <>{chartData && <CoinChart prices={chartData[0].prices} />}</>
-          ) : (
-            <></>
-          )}
-        </Card>
+        {coinNameOne && coinNameTwo && isLoading ? (
+          <>
+            <Card className="widthChart chart-size-styling">
+              <Skeleton className="h-[100%] w-[100%] bg-skeleton animate-pulse rounded-xl" />
+            </Card>
+          </>
+        ) : (
+          <>
+            <Card className="bg-converterInput widthChart chart-size-styling">
+              <>{chartData && <CoinChart prices={chartData?.prices} />}</>
+            </Card>
+          </>
+        )}
       </Card>
       <div>
         <Card className="padding-left-interval-button">
           {coinNameOne?.name && coinNameTwo?.name ? (
             <>
-              <div
-                style={{
-                  borderRadius: "6px",
-                  width: "260px",
-                }}
-                className="bg-intervalContainer"
-              >
+              <div className="bg-intervalContainer rounded-[6px] w-[260px]">
                 <Button
                   className={`text-white ${
                     interVal === 1
@@ -362,6 +367,7 @@ export default function Converter() {
                         coinNameOne:
                           coinNameOne?.name.toLocaleLowerCase() ?? "",
                         coinInterval: 1,
+                        chartCurrencyEPage,
                       });
                   }}
                 >
@@ -379,6 +385,7 @@ export default function Converter() {
                         coinNameOne:
                           coinNameOne?.name.toLocaleLowerCase() ?? "",
                         coinInterval: 7,
+                        chartCurrencyEPage,
                       });
                   }}
                 >
@@ -396,6 +403,7 @@ export default function Converter() {
                         coinNameOne:
                           coinNameOne?.name.toLocaleLowerCase() ?? "",
                         coinInterval: 14,
+                        chartCurrencyEPage,
                       });
                   }}
                 >
@@ -413,6 +421,7 @@ export default function Converter() {
                         coinNameOne:
                           coinNameOne?.name.toLocaleLowerCase() ?? "",
                         coinInterval: 30,
+                        chartCurrencyEPage,
                       });
                   }}
                 >
@@ -430,6 +439,7 @@ export default function Converter() {
                         coinNameOne:
                           coinNameOne?.name.toLocaleLowerCase() ?? "",
                         coinInterval: 365,
+                        chartCurrencyEPage,
                       });
                   }}
                 >

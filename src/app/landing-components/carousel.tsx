@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../lib/store";
-import { ShowCoinPricesInUsDollars } from "../Utils/formatNumbers";
+import { ShowCoinData } from "../Utils/formatNumbers";
 import { compareMode } from "./activate-secondchart";
 import {
   Carousel,
@@ -15,6 +15,8 @@ import { setString } from "./coin-name";
 import { setSymbol } from "./coin-symbol";
 import { fetchTableChart } from "../tableChart/table";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 export default function CarouselLandingPage() {
   const dispatch = useAppDispatch();
   const boolean = useSelector((state: RootState) => state.secondChart);
@@ -26,26 +28,11 @@ export default function CarouselLandingPage() {
     (state: RootState) => state.converterCurrency
   );
 
-  const { data } = useQuery({
+  const { data = [] } = useQuery({
     queryKey: ["tableData", defaultMarket, chartCurrencyEPage, rows],
     queryFn: () => fetchTableChart({ defaultMarket, chartCurrencyEPage, rows }),
+    placeholderData: [],
   });
-
-  {
-    /*
-
-  const [chartNameEPage, setCharNameEPage] = useState("bitcoin");
-  const [secondChartName, setSecondChartName] = useState("");
-
-  const { data: firstChart } = useQuery({
-    queryKey: ["chartData", chartNameEPage, chartCurrencyEPage],
-    queryFn: () => fetchChartData({ chartNameEPage, chartCurrencyEPage }),
-  });
-  const { data: secondChart } = useQuery({
-    queryKey: ["secondChartData", secondChartName, chartCurrencyEPage],
-    queryFn: () => fetchSecondCoinData({ secondChartName, chartCurrencyEPage }),
-  }); */
-  }
 
   const CarouselWithMemo = React.memo(() => {
     return (
@@ -92,121 +79,138 @@ export default function CarouselLandingPage() {
             </button>
           </div>
           <CarouselContent>
-            {data?.map((data) => (
-              <CarouselItem key={data.id}>
-                <div className="bg-carouselBackground carousel-item mobile-width-height">
-                  <Card className="flex">
-                    <div className="carousel-image">
-                      <img
-                        width={35}
-                        height={35}
-                        src={data.image}
-                        alt="coin image"
-                      />
-                    </div>
-                    <div className="carousel-title-container">
-                      <div className="carousel-title-coin">
-                        <span
-                          className="hide pointer"
-                          onClick={(e) => {
-                            if (boolean === false) {
-                              dispatch(setString(e.currentTarget.innerText));
-                              dispatch(setSymbol(data.symbol));
-                            } else if (boolean === true) {
-                              dispatch(
-                                setCoinNameSecond(
-                                  e.currentTarget.innerText.toLocaleLowerCase()
-                                )
-                              );
-                            }
-                          }}
-                        >
-                          {data.name}
-                        </span>
-                        <span className="hide">
-                          ({data.symbol.toLocaleUpperCase()})
-                        </span>
-                        <span
-                          onClick={(e) => {
-                            if (boolean === false) {
-                              dispatch(setString(data.name));
-                              dispatch(
-                                setSymbol(data.symbol.toLocaleUpperCase())
-                              );
-                            } else if (boolean === true) {
-                              dispatch(
-                                setCoinNameSecond(
-                                  e.currentTarget.innerText.toLocaleLowerCase()
-                                )
-                              );
-                            }
-                          }}
-                          className="hide-input-field-mobile pointer"
-                        >
-                          {data.symbol.toLocaleUpperCase()}
-                        </span>
-                      </div>
-                      <span className="carousel-price-color flex hide">
-                        <ShowCoinPricesInUsDollars
-                          cryptoPricesInUsDollars={data?.current_price}
-                        />
-                        <div
-                          className="coin-1h-percentage-container carousel-text hide"
-                          style={{
-                            color:
-                              data.price_change_percentage_1h_in_currency >= 0
-                                ? "#01F1E3"
-                                : "#FE1040",
-                          }}
-                        >
-                          {data.price_change_percentage_1h_in_currency >= 0 ? (
-                            <svg
-                              width={5}
-                              height={5}
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="#01F1E3"
-                              viewBox="0 0 24 24"
-                              strokeWidth={0}
-                              stroke="currentColor"
-                              className="size-6 carousel-svg"
-                            >
-                              {" "}
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m4.5 15.75 7.5-7.5 7.5 7.5"
-                              />{" "}
-                            </svg>
-                          ) : (
-                            <svg
-                              width={5}
-                              height={5}
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="#FE1040"
-                              viewBox="0 0 24 24"
-                              strokeWidth={0}
-                              stroke="currentColor"
-                              className="size-6 carousel-svg"
-                            >
-                              {" "}
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                              />{" "}
-                            </svg>
-                          )}
-                          {Math.abs(
-                            data.price_change_percentage_1h_in_currency
-                          ).toFixed(2)}
-                          %
+            {data.length > 0 ? (
+              <>
+                {" "}
+                {data?.map((data) => (
+                  <CarouselItem key={data.id}>
+                    <div className="bg-carouselBackground carousel-item mobile-width-height">
+                      <Card className="flex">
+                        <div className="carousel-image">
+                          <Image
+                            width={35}
+                            height={35}
+                            src={data.image}
+                            alt="coin image"
+                          />
                         </div>
-                      </span>
+                        <div className="carousel-title-container">
+                          <div className="carousel-title-coin">
+                            <span
+                              className="hide pointer"
+                              onClick={(e) => {
+                                if (boolean === false) {
+                                  dispatch(
+                                    setString(e.currentTarget.innerText)
+                                  );
+                                  dispatch(setSymbol(data.symbol));
+                                } else if (boolean === true) {
+                                  dispatch(
+                                    setCoinNameSecond(
+                                      e.currentTarget.innerText.toLocaleLowerCase()
+                                    )
+                                  );
+                                }
+                              }}
+                            >
+                              {data.name}
+                            </span>
+                            <span className="hide">
+                              ({data.symbol.toLocaleUpperCase()})
+                            </span>
+                            <span
+                              onClick={(e) => {
+                                if (boolean === false) {
+                                  dispatch(setString(data.name));
+                                  dispatch(
+                                    setSymbol(data.symbol.toLocaleUpperCase())
+                                  );
+                                } else if (boolean === true) {
+                                  dispatch(
+                                    setCoinNameSecond(
+                                      e.currentTarget.innerText.toLocaleLowerCase()
+                                    )
+                                  );
+                                }
+                              }}
+                              className="hide-input-field-mobile pointer"
+                            >
+                              {data.symbol.toLocaleUpperCase()}
+                            </span>
+                          </div>
+                          <span className="carousel-price-color flex hide">
+                            <ShowCoinData
+                              cryptoData={data?.current_price}
+                              currencySymbol={chartCurrencyEPage.toLocaleUpperCase()}
+                            />
+                            <div
+                              className="coin-1h-percentage-container carousel-text hide"
+                              style={{
+                                color:
+                                  data.price_change_percentage_1h_in_currency >=
+                                  0
+                                    ? "#01F1E3"
+                                    : "#FE1040",
+                              }}
+                            >
+                              {data.price_change_percentage_1h_in_currency >=
+                              0 ? (
+                                <svg
+                                  width={5}
+                                  height={5}
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="#01F1E3"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={0}
+                                  stroke="currentColor"
+                                  className="size-6 carousel-svg"
+                                >
+                                  {" "}
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                                  />{" "}
+                                </svg>
+                              ) : (
+                                <svg
+                                  width={5}
+                                  height={5}
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="#FE1040"
+                                  viewBox="0 0 24 24"
+                                  strokeWidth={0}
+                                  stroke="currentColor"
+                                  className="size-6 carousel-svg"
+                                >
+                                  {" "}
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                                  />{" "}
+                                </svg>
+                              )}
+                              {Math.abs(
+                                data.price_change_percentage_1h_in_currency
+                              ).toFixed(2)}
+                              %
+                            </div>
+                          </span>
+                        </div>
+                      </Card>
                     </div>
-                  </Card>
+                  </CarouselItem>
+                ))}{" "}
+              </>
+            ) : (
+              <>
+                {" "}
+                <div className="bg-carouselBackground rounded-xl  h-[40px]  w-[100%]">
+                  <Skeleton className="h-[100%] w-[100%] bg-skeleton animate-pulse rounded-xl" />
                 </div>
-              </CarouselItem>
-            ))}
+              </>
+            )}
           </CarouselContent>
         </Carousel>
       </div>
