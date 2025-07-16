@@ -62,17 +62,6 @@ export function Theme() {
   useEffect(() => {
     setLocalStorage("theme", theme);
   }, [theme]);
-  {
-    /*
-  useEffect(() => {
-    setLocalStorage("currency", chartCurrencyEPage);
-  }, [chartCurrencyEPage]);
-
-  useEffect(() => {
-    const previousCurrency = getLocalStorage("currency");
-    setChartCurrencyEPage(previousCurrency ?? "usd");
-  }, []);*/
-  }
 
   const [chartCurrencyEPagePrev, setChartCurrencyEPagePrev] = useState(() => {
     if (typeof window !== "undefined") {
