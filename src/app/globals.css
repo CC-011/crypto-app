@@ -526,8 +526,8 @@ body {
 }
 
 .filter-list-image {
-  height: 50px;
-  width: 50px;
+  height: 24px;
+  width: 24px;
 }
 
 .filter-list-width {
@@ -889,6 +889,7 @@ body {
     --border-line: 240 36% 32%;
     --converter-title: 240 34% 39%;
     --converter-time: 240, 34%, 39%, 0.8;
+    --skeleton: 240 82% 89%
   }
 
   .dark {
@@ -958,6 +959,7 @@ body {
     --border-line: 0 0% 100%;
     --converter-title: 0 0% 100%;
     --converter-time: 0 0% 62%;
+    --skeleton: 0, 0%, 100%, 0.1
   }
 }
 

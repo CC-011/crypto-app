@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Toggle } from "@/components/ui/toggle";
+import { Toggle } from "@radix-ui/react-toggle";
+import Link from "next/link";
 function NavbarMobile() {
   const pathName = usePathname();
   const PortfolioSvg = () => {
@@ -49,44 +49,50 @@ function NavbarMobile() {
     <div className="hide-input-field-mobile">
       <div>
         <div className="mobile-nav-container-bottom">
-          <Toggle
-            className={`mobile-nav-bottom-h-w ${
-              pathName === "/" ? "bg-[hsl(var(--mobile-menu))]" : ""
-            }`}
-          >
-            <div className="flex column">
-              <div className="flex align center">
-                <HomeSvg />
+          <Link href="/">
+            <Toggle
+              className={`rounded-[6px] mobile-nav-bottom-h-w ${
+                pathName === "/" ? "bg-[hsl(var(--mobile-menu))]" : ""
+              }`}
+            >
+              <div className="flex column">
+                <div className="flex align center">
+                  <HomeSvg />
+                </div>
+                <p>Overview</p>
               </div>
-              <Link href="/">Overview</Link>
-            </div>
-          </Toggle>
-          <Toggle
-            className={`mobile-nav-bottom-h-w ${
-              pathName === "/coin-converter"
-                ? "bg-[hsl(var(--mobile-menu))]"
-                : ""
-            }`}
-          >
-            <div className="flex column">
-              <div className="flex align center">
-                <ConvertSvg />
+            </Toggle>
+          </Link>
+          <Link href="/coin-converter">
+            <Toggle
+              className={`rounded-[6px] mobile-nav-bottom-h-w ${
+                pathName === "/coin-converter"
+                  ? "bg-[hsl(var(--mobile-menu))]"
+                  : ""
+              }`}
+            >
+              <div className="flex column">
+                <div className="flex align center">
+                  <ConvertSvg />
+                </div>
+                <p>Convertor</p>
               </div>
-              <Link href="/coin-converter">Convertor</Link>
-            </div>
-          </Toggle>
-          <Toggle
-            className={`mobile-nav-bottom-h-w ${
-              pathName === "/portfolio" ? "bg-[hsl(var(--mobile-menu))]" : ""
-            }`}
-          >
-            <div className="flex column">
-              <div className="flex center">
-                <PortfolioSvg />
+            </Toggle>
+          </Link>
+          <Link href="/portfolio">
+            <Toggle
+              className={`rounded-[6px] mobile-nav-bottom-h-w ${
+                pathName === "/portfolio" ? "bg-[hsl(var(--mobile-menu))]" : ""
+              }`}
+            >
+              <div className="flex column">
+                <div className="flex center">
+                  <PortfolioSvg />
+                </div>
+                <p className="text-homeIcon">Portfolio</p>
               </div>
-              <Link href="/portfolio">Portfolio</Link>
-            </div>
-          </Toggle>
+            </Toggle>
+          </Link>
         </div>
       </div>
     </div>
