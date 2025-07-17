@@ -20,7 +20,7 @@ interface barPercentage {
 }
 
 function ProgressCustom({ number, color, background }: barPercentage) {
-  const [progress, setProgress] = React.useState(10);
+  const [progress, setProgress] = React.useState(0);
 
   React.useEffect(() => {
     const timer = setTimeout(() => setProgress(number), 500);
@@ -50,6 +50,14 @@ function List() {
     queryFn: () => marketDataCap(),
   });
 
+  function toTwoDigitNumber(num: number): number {
+    if (num <= 0) return 0;
+    const divisor = 10_000_000_000;
+    const scaled = Math.round(num / divisor);
+    return Math.min(99, scaled);
+  }
+
+  const twoDigitVolume = toTwoDigitNumber(data?.total_volume?.usd ?? 0);
   return (
     <Card>
       <Card className="bg-navbar topDisplayBar navbar-container">
@@ -118,18 +126,7 @@ function List() {
           </p>
           <div className="firstProgressBar">
             <ProgressCustom
-              number={
-                data?.total_volume?.usd && data?.total_market_cap?.usd
-                  ? Math.min(
-                      100,
-                      Math.max(
-                        0,
-                        (data.total_volume.usd / data.total_market_cap.usd) *
-                          100
-                      )
-                    )
-                  : 0
-              }
+              number={twoDigitVolume ?? 0}
               color="#FFFFFF"
               background="rgba(255, 255, 255, 0.4)"
             />
@@ -146,23 +143,13 @@ function List() {
             {Math.abs(data ? data.market_cap_percentage?.btc : 0).toFixed(2)}%
           </p>
           <div className="firstProgressBar">
-            {" "}
             <ProgressCustom
-              number={
-                data?.total_volume?.btc && data?.total_market_cap?.btc
-                  ? Math.min(
-                      100,
-                      Math.max(
-                        0,
-                        (data.total_volume.btc / data.total_market_cap.btc) *
-                          100
-                      )
-                    )
-                  : 0
-              }
+              number={Number(
+                Math.abs(data?.market_cap_percentage?.btc ?? 0).toFixed(2)
+              )}
               color="#F7931A"
               background="rgba(255, 255, 255, 0.4)"
-            />{" "}
+            />
           </div>
         </Card>
         <Card className="flex navbar-gap">
@@ -177,18 +164,9 @@ function List() {
           </p>
           <div className="firstProgressBar">
             <ProgressCustom
-              number={
-                data?.total_volume?.usd && data?.total_market_cap?.usd
-                  ? Math.min(
-                      100,
-                      Math.max(
-                        0,
-                        (data.total_volume.eth / data.total_market_cap.eth) *
-                          100
-                      )
-                    )
-                  : 0
-              }
+              number={Number(
+                Math.abs(data?.market_cap_percentage?.eth ?? 0).toFixed(2)
+              )}
               color="#849DFF"
               background="rgba(255, 255, 255, 0.4)"
             />

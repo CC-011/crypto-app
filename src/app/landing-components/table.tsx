@@ -57,7 +57,6 @@ export default function TableChart() {
   });
   function useMediaQuery(query: string) {
     const [matches, setMatches] = useState<boolean | null>(null);
-
     useEffect(() => {
       if (typeof window === "undefined") return;
       const mediaQueryList = window.matchMedia(query);
@@ -238,9 +237,11 @@ export default function TableChart() {
                         href={`/coin/${data.name.toLocaleLowerCase()}`}
                       >
                         <div className="flex flex-column">
-                          <p className="hide">{data.name}</p>
+                          <p className="hide overflow-hidden">
+                            {data.name.split(" ")[0]}
+                          </p>
                           <p className="hide">
-                            ({data.symbol.toLocaleUpperCase()})
+                            <>({data.symbol.toLocaleUpperCase()})</>
                           </p>
                           <p className="sm:hidden">
                             {data.symbol.toLocaleUpperCase()}
