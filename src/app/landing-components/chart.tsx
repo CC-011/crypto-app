@@ -57,7 +57,7 @@ export default function Charts() {
     queryKey: ["chartData", chartNameEPage, chartCurrencyEPage, interval],
     queryFn: () =>
       fetchChartData({ chartNameEPage, chartCurrencyEPage, interval }),
-    enabled: boolean,
+    enabled: !boolean,
   });
 
   const { data: secondChartData } = useQuery({
@@ -69,7 +69,7 @@ export default function Charts() {
     ],
     queryFn: () =>
       fetchSecondCoinData({ secondChartName, chartCurrencyEPage, interval }),
-    enabled: !boolean,
+    enabled: boolean,
   });
   const secondChart = boolean ? secondChartData : null;
 
@@ -93,25 +93,33 @@ export default function Charts() {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  function getDateRange(startDate: string, endDate: string) {
-    const dates = [];
-    const current = new Date(startDate);
-    const last = new Date(endDate);
+  const formatTime = (timestamp: number) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+  };
 
-    for (let d = new Date(current); d <= last; d.setDate(d.getDate() + 1)) {
-      dates.push(formatDate(d.getTime()));
-    }
+  const isSixHourMark = (timestamp: number) => {
+    const date = new Date(timestamp);
+    const hour = date.getHours();
+    const minute = date.getMinutes();
 
-    return dates;
-  }
+    const validHours = [0, 6, 12, 18];
 
-  function buildDateMap(dataArray: [number, number][]) {
+    if (!validHours.includes(hour)) return false;
+
+    return minute >= 55 || minute <= 5;
+  };
+
+  function buildDateMap(dataArray: [number, number][], interval: number) {
     const map = new Map<string, number>();
     dataArray.forEach(([timestamp, value]) => {
-      const dateStr = formatDate(timestamp);
-      if (!map.has(dateStr)) {
-        map.set(dateStr, value);
-      }
+      const key =
+        interval === 1 ? formatTime(timestamp) : formatDate(timestamp);
+      map.set(key, value);
     });
     return map;
   }
@@ -121,46 +129,40 @@ export default function Charts() {
   const volumes1 = (firstChart?.total_volumes ?? []) as [number, number][];
   const volumes2 = (secondChart?.total_volumes ?? []) as [number, number][];
 
-  const allDates = [
-    ...prices1.map(([t]) => formatDate(t)),
-    ...prices2.map(([t]) => formatDate(t)),
-    ...volumes1.map(([t]) => formatDate(t)),
-    ...volumes2.map(([t]) => formatDate(t)),
+  const filteredPrices1 =
+    interval === 1 ? prices1.filter(([t]) => isSixHourMark(t)) : prices1;
+  const filteredPrices2 =
+    interval === 1 ? prices2.filter(([t]) => isSixHourMark(t)) : prices2;
+  const filteredVolumes1 =
+    interval === 1 ? volumes1.filter(([t]) => isSixHourMark(t)) : volumes1;
+  const filteredVolumes2 =
+    interval === 1 ? volumes2.filter(([t]) => isSixHourMark(t)) : volumes2;
+
+  const priceMap1 = buildDateMap(filteredPrices1, interval);
+  const priceMap2 = buildDateMap(filteredPrices2, interval);
+  const volumeMap1 = buildDateMap(filteredVolumes1, interval);
+  const volumeMap2 = buildDateMap(filteredVolumes2, interval);
+
+  const allXLabels = [
+    ...priceMap1.keys(),
+    ...priceMap2.keys(),
+    ...volumeMap1.keys(),
+    ...volumeMap2.keys(),
   ];
 
-  const sortedDates = Array.from(new Set(allDates)).sort();
-  const minDate = sortedDates[0];
-  const maxDate = sortedDates[sortedDates.length - 1];
+  const sortedXLabels = Array.from(new Set(allXLabels)).sort();
 
-  const fullDateRange = getDateRange(minDate, maxDate);
+  const chartDataRecharts = sortedXLabels.map((xLabel) => ({
+    month: xLabel,
+    mobile: priceMap1.get(xLabel) ?? 0,
+    desktop: priceMap2.get(xLabel) ?? null,
+  }));
 
-  const priceMap1 = buildDateMap(prices1);
-  const priceMap2 = buildDateMap(prices2);
-  const volumeMap1 = buildDateMap(volumes1);
-  const volumeMap2 = buildDateMap(volumes2);
-
-  const seenDays = new Set<string>();
-  const chartDataRecharts = [];
-  const barChartData = [];
-
-  for (const dateStr of fullDateRange) {
-    const day = dateStr.split("-")[2];
-    if (!seenDays.has(day)) {
-      seenDays.add(day);
-
-      chartDataRecharts.push({
-        month: day,
-        mobile: priceMap1.get(dateStr) ?? 0,
-        desktop: priceMap2.get(dateStr) ?? null,
-      });
-
-      barChartData.push({
-        month: day,
-        mobile: volumeMap1.get(dateStr) ?? 0,
-        desktop: volumeMap2.get(dateStr) ?? null,
-      });
-    }
-  }
+  const barChartData = sortedXLabels.map((xLabel) => ({
+    month: xLabel,
+    mobile: volumeMap1.get(xLabel) ?? 0,
+    desktop: volumeMap2.get(xLabel) ?? null,
+  }));
 
   const chartConfig = {
     visitors: {
@@ -230,8 +232,8 @@ export default function Charts() {
                       dataKey="month"
                       tickLine={false}
                       axisLine={false}
-                      tickMargin={8}
-                      tickFormatter={(value) => value.slice(0, 3)}
+                      tickMargin={10}
+                      tickFormatter={(value) => value}
                     />
                     <ChartTooltip
                       cursor={false}
@@ -337,9 +339,9 @@ export default function Charts() {
                     <XAxis
                       dataKey="month"
                       tickLine={false}
-                      tickMargin={10}
                       axisLine={false}
-                      tickFormatter={(value) => value.slice(0, 3)}
+                      tickMargin={10}
+                      tickFormatter={(value) => value}
                     />
                     <ChartTooltip
                       cursor={false}

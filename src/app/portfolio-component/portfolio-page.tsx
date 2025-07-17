@@ -127,140 +127,150 @@ function PortfolioPage() {
       <Card></Card>
       <>
         {showPopup ? (
-          <Card
-            className={`positionedBox ${boolean ? "positionedBox--hidden" : "positionedBox--visible"} popup bg-popupContainer`}
-          >
-            <Card className="popup-items-height-width">
-              <CardContent className="popup-content">
-                <CardTitle className="popup-select-coin">
-                  Select coins
-                </CardTitle>
-                <CardTitle
-                  className="pointer"
-                  onClick={() => {
-                    setFilterByName("");
-                    setShowPopUp(!showPopup);
-                    dispatch(toggleBoolean());
-                  }}
-                >
-                  X
-                </CardTitle>
-              </CardContent>
-              <Card className="instructions-container bg-popupContainer">
-                <CardContent className="instructions-styling">
-                  <div className="flex center align column instructions-gap">
-                    <div>
-                      <img className="instructions-image" src={coinImageUrl} />
-                    </div>
-                    <Card>
-                      <div className="flex">
-                        <p> {name ?? ""}</p>
-                        <p>{symbol ? <>({symbol})</> : <></>}</p>
+          <Card className="flex justify-center items-center">
+            <Card
+              className={`positionedBox ${boolean ? "positionedBox--hidden" : "positionedBox--visible"} popup bg-popupContainer`}
+            >
+              <Card className="popup-items-height-width">
+                <CardContent className="popup-content">
+                  <CardTitle className="popup-select-coin">
+                    Select coins
+                  </CardTitle>
+                  <CardTitle
+                    className="pointer"
+                    onClick={() => {
+                      setFilterByName("");
+                      setShowPopUp(!showPopup);
+                      dispatch(toggleBoolean());
+                    }}
+                  >
+                    X
+                  </CardTitle>
+                </CardContent>
+                <Card className="instructions-container bg-popupContainer">
+                  <CardContent className="instructions-styling">
+                    <div className="flex center align column instructions-gap">
+                      <div>
+                        <img
+                          className="instructions-image"
+                          src={coinImageUrl}
+                        />
                       </div>
+                      <Card>
+                        <div className="flex">
+                          <p> {name ?? ""}</p>
+                          <p>{symbol ? <>({symbol})</> : <></>}</p>
+                        </div>
+                      </Card>
+                    </div>
+                  </CardContent>
+                  <CardContent className="user-input-spacing">
+                    <Card>
+                      <input
+                        className="input-coin-name bg-searchBar"
+                        type="text"
+                        value={filterByName}
+                        onChange={(e) => {
+                          setFilterByName(e.currentTarget.value);
+                        }}
+                        placeholder="Select coins"
+                      />
+                      <Card className="filterList">
+                        {filterByName ? (
+                          <Card className="bg-coinList filter-list-width">
+                            {filtered?.map((data) => (
+                              <div key={data.id} className="flex align">
+                                <img
+                                  className="filter-list-image m-2"
+                                  src={data.image}
+                                  alt="coin image"
+                                />
+                                <p
+                                  className="pointer"
+                                  onClick={() => {
+                                    setName(data.name.toLocaleLowerCase()),
+                                      setSymbol(
+                                        data.symbol.toLocaleUpperCase()
+                                      );
+                                    setCoinImageUrl(data.image);
+                                    setFilterByName(data.name);
+                                  }}
+                                >
+                                  {data.name}
+                                </p>
+                              </div>
+                            ))}
+                          </Card>
+                        ) : (
+                          <></>
+                        )}
+                      </Card>
                     </Card>
-                  </div>
-                </CardContent>
-                <CardContent className="user-input-spacing">
-                  <Card>
-                    <input
-                      className="input-coin-name bg-searchBar"
-                      type="text"
-                      value={filterByName}
-                      onChange={(e) => {
-                        setFilterByName(e.currentTarget.value);
-                      }}
-                      placeholder="Select coins"
-                    />
-                    <Card className="filterList">
-                      {filterByName ? (
-                        <Card className="bg-coinList filter-list-width">
-                          {filtered?.map((data) => (
-                            <div key={data.id} className="flex align">
-                              <img
-                                className="filter-list-image m-2"
-                                src={data.image}
-                                alt="coin image"
-                              />
-                              <p
-                                className="pointer"
-                                onClick={() => {
-                                  setName(data.name.toLocaleLowerCase()),
-                                    setSymbol(data.symbol.toLocaleUpperCase());
-                                  setCoinImageUrl(data.image);
-                                  setFilterByName(data.name);
-                                }}
-                              >
-                                {data.name}
-                              </p>
-                            </div>
-                          ))}
-                        </Card>
-                      ) : (
-                        <></>
-                      )}
+                    <Card>
+                      <input
+                        min={"1"}
+                        value={
+                          purchasedAmount ? purchasedAmount : "Purchased amount"
+                        }
+                        onChange={(e) =>
+                          setPurchasedAmount(+e.currentTarget.value)
+                        }
+                        type="number"
+                        placeholder="Purchased amount"
+                        className="input-coin-amount bg-searchBar"
+                      />
                     </Card>
-                  </Card>
-                  <Card>
-                    <input
-                      min={"1"}
-                      value={
-                        purchasedAmount ? purchasedAmount : "Purchased amount"
-                      }
-                      onChange={(e) =>
-                        setPurchasedAmount(+e.currentTarget.value)
-                      }
-                      type="number"
-                      placeholder="Purchased amount"
-                      className="input-coin-amount bg-searchBar"
-                    />
-                  </Card>
-                  <Card>
-                    <input
-                      max={noFuturePurchases.toLocaleDateString()}
-                      value={purchasedDate}
-                      onChange={(e) => setPurchasedDate(e.currentTarget.value)}
-                      placeholder="Purchased date"
-                      type="date"
-                      className="input-coin-date bg-searchBar"
-                    />
-                  </Card>
-                  <Card className="save-cancel-spacing">
-                    <p
-                      className="cancel-button-styling bg-cancelCoin pointer"
-                      onClick={() => {
-                        setFilterByName("");
-                        setShowPopUp(!showPopup);
-                        dispatch(toggleBoolean());
-                      }}
-                    >
-                      Cancel
-                    </p>
-                    <p className="save-button-styling bg-saveCoin pointer">
-                      {name.length === 0 ||
-                      purchasedDate.length === 0 ||
-                      purchasedAmount === 0 ? (
-                        <p>Fill the required info</p>
-                      ) : (
-                        <p
-                          onClick={() => {
-                            setFilterByName("");
-                            setShowPopUp(!showPopup), dispatch(toggleBoolean());
-                            dispatch(
-                              addCoins({
-                                id: name,
-                                date: newFormat,
-                                amount: purchasedAmount,
-                                idUnique: Math.random(),
-                              })
-                            );
-                          }}
-                        >
-                          Save and Continue
-                        </p>
-                      )}
-                    </p>
-                  </Card>
-                </CardContent>
+                    <Card>
+                      <input
+                        max={noFuturePurchases.toLocaleDateString()}
+                        value={purchasedDate}
+                        onChange={(e) =>
+                          setPurchasedDate(e.currentTarget.value)
+                        }
+                        placeholder="Purchased date"
+                        type="date"
+                        className="input-coin-date bg-searchBar"
+                      />
+                    </Card>
+                    <Card className="save-cancel-spacing">
+                      <p
+                        className="cancel-button-styling bg-cancelCoin pointer"
+                        onClick={() => {
+                          setFilterByName("");
+                          setShowPopUp(!showPopup);
+                          dispatch(toggleBoolean());
+                        }}
+                      >
+                        Cancel
+                      </p>
+                      <p className="save-button-styling bg-saveCoin pointer">
+                        {name.length === 0 ||
+                        purchasedDate.length === 0 ||
+                        purchasedAmount === 0 ? (
+                          <p>Fill the required info</p>
+                        ) : (
+                          <p
+                            onClick={() => {
+                              setFilterByName("");
+                              setShowPopUp(!showPopup),
+                                dispatch(toggleBoolean());
+                              dispatch(
+                                addCoins({
+                                  id: name,
+                                  date: newFormat,
+                                  amount: purchasedAmount,
+                                  idUnique: Math.random(),
+                                })
+                              );
+                            }}
+                          >
+                            Save and Continue
+                          </p>
+                        )}
+                      </p>
+                    </Card>
+                  </CardContent>
+                </Card>
               </Card>
             </Card>
           </Card>
