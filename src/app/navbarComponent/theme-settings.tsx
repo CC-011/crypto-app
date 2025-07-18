@@ -8,7 +8,6 @@ import { toggleBoolean } from "./hide-chart";
 import { useState, useEffect } from "react";
 import { fetchTableChart } from "../tableChart/table";
 import { useAppDispatch } from "../lib/hooks";
-import { setLocalStorage, getLocalStorage } from "../localStorage/localStorage";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { setString } from "../coin-converter/currency-selector";
@@ -40,11 +39,7 @@ export function Theme() {
   const chartCurrencyEPage = useSelector(
     (state: RootState) => state.converterCurrency
   );
-  const usd = "$";
-  const euro = "€";
-  const gbp = "£";
-  const bitcoin = "₿";
-  const ethereum = "Ξ";
+
   const { data: tableChart } = useQuery({
     queryKey: ["tableData", defaultMarket, chartCurrencyEPage, rows],
     queryFn: () => fetchTableChart({ defaultMarket, chartCurrencyEPage, rows }),
@@ -54,14 +49,49 @@ export function Theme() {
     data.name.toLocaleLowerCase().startsWith(filterByName)
   );
 
-  useEffect(() => {
-    const previousTheme = getLocalStorage("theme");
-    setTheme(previousTheme ?? "dark");
-  });
+  const getLocalStorage = (key: string) => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(key);
+  };
 
-  useEffect(() => {
-    setLocalStorage("theme", theme);
-  }, [theme]);
+  const setLocalStorage = (key: string, value: string) => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(key, value);
+  };
+
+  function ThemeCardToggle() {
+    const [theme, setTheme] = useState<string | null>(null);
+    useEffect(() => {
+      const previousTheme = getLocalStorage("theme");
+      setTheme(previousTheme ?? "dark");
+    }, []);
+
+    useEffect(() => {
+      if (theme) {
+        setLocalStorage("theme", theme);
+        document.documentElement.classList.toggle("dark", theme === "dark");
+      }
+    }, [theme]);
+
+    const handleTheme = () => {
+      setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    };
+
+    if (!theme) return null;
+
+    return (
+      <Card
+        onClick={handleTheme}
+        className="theme-icon-container pointer bg-themeContainer"
+      >
+        {theme === "dark" ? (
+          <Sun className="h-[1.2rem] w-[1.2rem] text-white rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-100" />
+        ) : (
+          <Moon className="text-[#424286] h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-100" />
+        )}
+      </Card>
+    );
+  }
 
   const [chartCurrencyEPagePrev, setChartCurrencyEPagePrev] = useState(() => {
     if (typeof window !== "undefined") {
@@ -77,6 +107,48 @@ export function Theme() {
   const handleTheme = (theme: string) => {
     theme === "dark" ? setTheme("light") : setTheme("dark");
   };
+
+  function CurrencySelector() {
+    const [currency, setCurrency] = useState<string | null>(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      const stored = localStorage.getItem("currency");
+      if (stored) {
+        setCurrency(stored);
+        dispatch(setString(stored.toUpperCase()));
+      }
+      setMounted(true);
+    }, [dispatch]);
+
+    if (!mounted) return null;
+
+    return (
+      <Select
+        onValueChange={(value) => {
+          setChartCurrencyEPagePrev(value.toLocaleUpperCase());
+          dispatch(setString(value.toLocaleUpperCase()));
+          localStorage.setItem("currency", value);
+          setCurrency(value);
+        }}
+      >
+        <SelectTrigger
+          style={{ color: "hsl(var(--currency-color))" }}
+          className="w-[180px] max-[600px]:w-[70px] bg-currencyContainer selectCurrencyLandingPage 
+            border-0 focus:outline-none focus:ring-0 focus:border-0 shadow-none"
+        >
+          <SelectValue placeholder={`${currency?.toLocaleUpperCase()}`} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="usd">USD</SelectItem>
+          <SelectItem value="gbp">GBP</SelectItem>
+          <SelectItem value="eur">EUR</SelectItem>
+          <SelectItem value="btc">BTC</SelectItem>
+          <SelectItem value="eth">ETH</SelectItem>
+        </SelectContent>
+      </Select>
+    );
+  }
 
   const HomeSvg = () => {
     return (
@@ -176,39 +248,12 @@ export function Theme() {
             </div>
           </Card>
         </Card>
-        <Select
-          onValueChange={(value) => {
-            setChartCurrencyEPagePrev(value.toLocaleUpperCase());
-            dispatch(setString(value.toLocaleUpperCase()));
-          }}
-        >
-          <SelectTrigger
-            style={{ color: "hsl(var(--currency-color))" }}
-            className="w-[180px] max-[600px]:w-[70px] bg-currencyContainer selectCurrencyLandingPage flex space-between
-            border-0 focus:outline-none focus:ring-0 focus:border-0 shadow-none"
-          >
-            <SelectValue
-              placeholder={`
-                 ${chartCurrencyEPagePrev.toLocaleUpperCase()}`}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="usd">{usd} USD</SelectItem>
-            <SelectItem value="gbp">{gbp} GBP</SelectItem>
-            <SelectItem value="eur">{euro} EUR</SelectItem>
-            <SelectItem value="btc">{bitcoin} BTC</SelectItem>
-            <SelectItem value="eth">{ethereum} ETH</SelectItem>
-          </SelectContent>
-        </Select>
+        <CurrencySelector />
         <Card
           onClick={() => handleTheme(theme ?? "dark")}
           className="theme-icon-container pointer bg-themeContainer"
         >
-          {theme === "dark" ? (
-            <Sun className="h-[1.2rem] w-[1.2rem] text-white rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-100" />
-          ) : (
-            <Moon className="text-[#424286] h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-100" />
-          )}
+          <ThemeCardToggle />
         </Card>
       </Card>
       {showMobileSearchInput && (
