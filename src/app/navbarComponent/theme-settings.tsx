@@ -109,7 +109,7 @@ export function Theme() {
   };
 
   function CurrencySelector() {
-    const [currency, setCurrency] = useState<string | null>(null);
+    const [currency, setCurrency] = useState<string>("USD");
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -117,6 +117,9 @@ export function Theme() {
       if (stored) {
         setCurrency(stored);
         dispatch(setString(stored.toUpperCase()));
+      } else {
+        localStorage.setItem("currency", "USD");
+        dispatch(setString("USD"));
       }
       setMounted(true);
     }, [dispatch]);
@@ -125,9 +128,10 @@ export function Theme() {
 
     return (
       <Select
+        value={currency}
         onValueChange={(value) => {
-          setChartCurrencyEPagePrev(value.toLocaleUpperCase());
-          dispatch(setString(value.toLocaleUpperCase()));
+          setChartCurrencyEPagePrev(value.toUpperCase());
+          dispatch(setString(value.toUpperCase()));
           localStorage.setItem("currency", value);
           setCurrency(value);
         }}
@@ -135,9 +139,9 @@ export function Theme() {
         <SelectTrigger
           style={{ color: "hsl(var(--currency-color))" }}
           className="w-[180px] max-[600px]:w-[70px] bg-currencyContainer selectCurrencyLandingPage 
-            border-0 focus:outline-none focus:ring-0 focus:border-0 shadow-none"
+          border-0 focus:outline-none focus:ring-0 focus:border-0 shadow-none"
         >
-          <SelectValue placeholder={`${currency?.toLocaleUpperCase()}`} />
+          <SelectValue placeholder="USD" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="usd">USD</SelectItem>
