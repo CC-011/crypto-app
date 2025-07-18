@@ -141,7 +141,7 @@ export function Theme() {
           className="w-[180px] max-[600px]:w-[70px] bg-currencyContainer selectCurrencyLandingPage 
           border-0 focus:outline-none focus:ring-0 focus:border-0 shadow-none"
         >
-          <SelectValue placeholder={currency.toUpperCase()} />
+          <SelectValue placeholder="USD" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="usd">USD</SelectItem>
